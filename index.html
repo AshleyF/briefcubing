@@ -20,6 +20,7 @@
             }
 
             function load() {
+                document.getElementById("diagram").style.height = screen.height + "px";
                 function delay() { settingsUpdate(); }
                 window.setTimeout(delay, 1);
             }
@@ -124,7 +125,7 @@
                 <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
                 <h1><img src="logo.svg" width="24px" height="24px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
             </div>
-            <div role="main" class="ui-content">
+            <div id="diagram" role="main" class="ui-content">
                 <h1 id="status"></h1>
                 <div id="ll"></div>
             </div>

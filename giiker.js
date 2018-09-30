@@ -20,6 +20,8 @@ var Giiker = (function () {
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             console.log("Attempting to pair.")
+            alert("Navigator: " + navigator);
+            alert("Bluetooth: " + bluetooth);
             device = await navigator.bluetooth.requestDevice({
             filters: [{
                 namePrefix: "GiC"

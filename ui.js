@@ -29,20 +29,20 @@ var Ui = (function () {
         switch (status) {
             case "correct":
                 correct.play();
-                document.body.style.backgroundColor = "green";
+                document.getElementById("diagram").style.backgroundColor = "green";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
                 window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
                 break;
             case "incorrect":
                 incorrect.play();
-                document.body.style.backgroundColor = "darkred";
+                document.getElementById("diagram").style.backgroundColor = "darkred";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
                 window.setTimeout(function () { if (lastStatus == "incorrect") waiting = true; }, 500);
                 break;
             case "progress":
-                document.body.style.backgroundColor = "#333";
+                document.getElementById("diagram").style.backgroundColor = "#444";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
                 waiting = false;
@@ -50,14 +50,14 @@ var Ui = (function () {
                 break;
             case "init":
                 document.getElementById("status").innerHTML = "&nbsp;";
-                document.body.style.backgroundColor = "black";
+                document.getElementById("diagram").style.backgroundColor = "transparent";
                 document.getElementById("retry").disabled = true;
                 document.getElementById("next").disabled = false;
                 waiting = false;
                 break;
             case "error":
                 document.getElementById("status").innerHTML = "&nbsp;";
-                document.body.style.backgroundColor = "black";
+                document.getElementById("diagram").style.backgroundColor = "transparent";
                 document.getElementById("retry").disabled = true;
                 document.getElementById("next").disabled = true;
                 waiting = false;
