@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Brief Cubing</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Brief Cubing</title>
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+        <link rel="stylesheet" href="theme-classic.css" />
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     </head>
     <body>
-        <h1>Be Brief!</h1>
-        <p>Coming soon...</p>
+        <div id="main" data-role="page">
+            <div data-role="header">
+                <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
+                <h1><img src="logo.svg" width="24px" height="24px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
+            </div>
+            <div role="main" class="ui-content">
+                <p>Main</p>
+            </div>
+            <div data-role="footer" data-position="fixed" style="height:52px">
+                <button class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
+                <button class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
+            </div>
+        </div>
+        <div id="options" data-role="page">
+            <div data-role="header">
+                <a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all"></a>
+                <h1>Options</h1>
+            </div>
+            <div role="main" class="ui-content">
+                <button class="ui-btn ui-mini">Connect Giiker Supercube</button>
+                <a target="_blank" href="https://amzn.to/2NRuqq9">I don't have one</a>
+            </div>
+        </div>
     </body>
 </html>
