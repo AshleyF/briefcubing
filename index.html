@@ -2,6 +2,13 @@
 <html lang="en">
     <head>
         <title>Brief Cubing</title>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75630988-2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-75630988-2');
+        </script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css" />
@@ -16,12 +23,18 @@
         <script src="ui.js"></script>
         <script>
             function update(cube) {
-                Display.displayLL(Cube.faces(cube), "ll");
+                Display.displayLL(Cube.faces(cube), "cube");
             }
 
             function load() {
                 function delay() { settingsUpdate(); }
                 window.setTimeout(delay, 1);
+                $("#main").on("pageshow", function(event) {
+                    if (!Giiker.connected()) {
+                        Ui.showConnectButton();
+                        Ui.retry();
+                    }
+                });
             }
 
             var colors = ["yellow", "white", "red", "orange", "green", "blue"];
@@ -125,8 +138,12 @@
                 <h1><img src="logo.svg" width="24px" height="24px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
             </div>
             <div id="diagram" role="main" class="ui-content" style="min-height: 100vh">
-                <h1 id="status" style="text-align: center"></h1>
-                <div id="ll" style="text-align: center; margin-left: -16px"></div>
+                <div id="giiker">
+                    <button id="giikerConnect" onclick="Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
+                    <a target="_blank" href="https://amzn.to/2NRuqq9" style="padding-left: 20px">I don't have one</a>
+                </div>
+                <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
+                <div id="cube" style="text-align: center; margin-left: -16px; margin-top: -80px"></div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
                 <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
@@ -139,8 +156,8 @@
                 <h1>Options</h1>
             </div>
             <div role="main" class="ui-content">
-                <button id="giiker" onclick="Ui.giiker()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
-                <a target="_blank" href="https://amzn.to/2NRuqq9">I don't have one</a>
+                <button id="giikerDisconnect" onclick="Ui.giikerDisconnect()" class="ui-btn ui-mini" disabled="true">Disconnect Giiker Supercube</button>
+                <a target="_blank" href="https://amzn.to/2NRuqq9" style="padding-left: 20px">I don't have one</a>
                 <fieldset>
                     <legend>Method</legend>
                     <select id="method" onchange="settingsUpdate()">

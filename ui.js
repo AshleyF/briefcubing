@@ -1,15 +1,4 @@
 var Ui = (function () {
-    function displayAlg(alg) {
-        var cube = Cube.alg(alg, Cube.solved);
-        document.getElementById("debug").innerText = Cube.toString(cube);
-        function delay() {
-            Display.display3DCube(Cube.faces(cube), "cube");
-            Display.displayLL(Cube.faces(cube), "ll");
-            Display.displayUF(Cube.faces(cube), "uf");
-        }
-        window.setTimeout(delay, 1);
-    }
-
     var timer;
     function checkProgress() {
         if (timer) window.clearTimeout(timer);
@@ -144,37 +133,40 @@ var Ui = (function () {
         check();
     }
 
-    function connected() {
-        var btn = document.getElementById("giiker");
-        btn.disabled = false;
-        btn.innerText = "Disconnect Giiker Supercube";
-    }
-
-    function disconnect() {
-        var btn = document.getElementById("giiker");
+    function showConnectButton() {
+        var btn = document.getElementById("giikerConnect");
         btn.disabled = false;
         btn.innerText = "Connect Giiker Supercube";
-        Giiker.disconnect();
+        document.getElementById("cube").style.marginTop = "-80px";
+        document.getElementById("giiker").style.display = "";
+        document.getElementById("giikerDisconnect").disabled = true;
+    }
+
+    function hideConnectButton() {
+        document.getElementById("giiker").style.display = "none";
+        document.getElementById("cube").style.marginTop = "0";
+        document.getElementById("giikerDisconnect").disabled = false;
+    }
+
+    function connected() {
+        hideConnectButton();
     }
 
     function error(ex) {
-        var btn = document.getElementById("giiker");
-        btn.disabled = false;
-        btn.innerText = "Connect Giiker Supercube";
+        showConnectButton();
         alert("Error: " + ex.message);
     }
 
-    function giiker() {
-        var btn = document.getElementById("giiker");
-        if (Giiker.connected()) {
-            btn.disabled = false;
-            btn.innerText = "Connect Giiker Supercube";
-            Giiker.disconnect();
-        } else {
-            btn.disabled = true;
-            btn.innerText = "Connecting...";
-            Giiker.connect(connected, twist, error);
-        }
+    function giikerConnect() {
+        var btn = document.getElementById("giikerConnect");
+        btn.disabled = true;
+        btn.innerText = "Connecting...";
+        Giiker.connect(connected, twist, error);
+    }
+
+    function giikerDisconnect() {
+        showConnectButton();
+        Giiker.disconnect();
     }
 
     var settings = {};
@@ -184,6 +176,7 @@ var Ui = (function () {
     var kind;
 
     function next() {
+        ga("send", "event", "nav", "next");
         function randomElement(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
@@ -261,17 +254,19 @@ var Ui = (function () {
     }
 
     function retry() {
+        ga("send", "event", "nav", "retry");
         alg = "";
         update(instance);
         setStatus("init");
     }
 
     return {
-        displayAlg: displayAlg,
         twist: twist,
-        giiker: giiker,
+        giikerConnect: giikerConnect,
+        giikerDisconnect: giikerDisconnect,
         next: next,
         retry: retry,
-        settings: settings
+        settings: settings,
+        showConnectButton: showConnectButton
     };
 }());
