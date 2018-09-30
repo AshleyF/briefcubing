@@ -147,20 +147,20 @@ var Ui = (function () {
     function connected() {
         var btn = document.getElementById("giiker");
         btn.disabled = false;
-        btn.innerText = "Disconnect";
+        btn.innerText = "Disconnect Giiker Supercube";
     }
 
     function disconnect() {
         var btn = document.getElementById("giiker");
         btn.disabled = false;
-        btn.innerText = "Connect";
+        btn.innerText = "Connect Giiker Supercube";
         Giiker.disconnect();
     }
 
     function error(ex) {
         var btn = document.getElementById("giiker");
         btn.disabled = false;
-        btn.innerText = "Connect";
+        btn.innerText = "Connect Giiker Supercube";
         alert("Error: " + ex.message);
     }
 
@@ -168,7 +168,7 @@ var Ui = (function () {
         var btn = document.getElementById("giiker");
         if (Giiker.connected()) {
             btn.disabled = false;
-            btn.innerText = "Connect";
+            btn.innerText = "Connect Giiker Supercube";
             Giiker.disconnect();
         } else {
             btn.disabled = true;

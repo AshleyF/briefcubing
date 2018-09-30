@@ -20,7 +20,6 @@
             }
 
             function load() {
-                document.getElementById("diagram").style.height = screen.height + "px";
                 function delay() { settingsUpdate(); }
                 window.setTimeout(delay, 1);
             }
@@ -121,13 +120,13 @@
     </head>
     <body onload="load()">
         <div id="main" data-role="page">
-            <div data-role="header">
+            <div data-role="header" style="height:40px">
                 <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
                 <h1><img src="logo.svg" width="24px" height="24px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
             </div>
-            <div id="diagram" role="main" class="ui-content">
-                <h1 id="status"></h1>
-                <div id="ll"></div>
+            <div id="diagram" role="main" class="ui-content" style="min-height: 100vh">
+                <h1 id="status" style="text-align: center"></h1>
+                <div id="ll" style="text-align: center; margin-left: -16px"></div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
                 <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
@@ -232,6 +231,7 @@
                     <input id="pcll_a" type="checkbox" value="R U R' F' R U R' U' R' F R2 U' R'" onchange="settingsUpdate()"><label for="pcll_a">Adjacent</label><br />
                     <input id="pcll_d" type="checkbox" value="F R U' R' U' R U R' F' R U R' U' R' F R F'" onchange="settingsUpdate()"><label for="pcll_d">Diagonal</label><br />
                 </fieldset>
+                <p>Version 0.1.1</p>
             </div>
         </div>
     </body>

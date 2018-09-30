@@ -43,7 +43,7 @@ var Display = (function () {
     function displayLL(faces, target) {
         document.getElementById(target).innerHTML =
             '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
-                'width="100%" height="100%"' +
+                'width="100vmin" height="100vmin"' +
                 'viewBox="-0.9 -0.9 1.8 1.8">' +
                 '<rect fill="transparent" x="-0.9" y="-0.9" width="1.8" height="1.8"/>' +
                 '<g style="stroke-width:0.1;stroke-linejoin:round;opacity:1">' +
