@@ -1,3 +1,7 @@
 body {
     background-color: black;
 }
+
+.ui-checkbox {
+    margin: 0 !important;
+}
