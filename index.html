@@ -26,16 +26,19 @@
                 Display.displayLL(Cube.faces(cube), "cube");
             }
 
-            function load() {
-                function delay() { settingsUpdate(); }
-                window.setTimeout(delay, 1);
-                $("#main").on("pageshow", function(event) {
-                    if (!Giiker.connected()) {
-                        Ui.showConnectButton();
-                        Ui.retry();
-                    }
-                });
-            }
+            // $(document).on("pageinit", "#main", function() {
+            //     $.mobile.initializePage("options");
+            //     window.setTimeout(settingsUpdate, 2000);
+            // });
+            $(document).on("pageinit", "#options", function() {
+                settingsUpdate();
+            });
+            $("#main").on("pageshow", function(event) {
+                if (!Giiker.connected()) {
+                    Ui.showConnectButton();
+                    Ui.retry();
+                }
+            });
 
             var colors = ["yellow", "white", "red", "orange", "green", "blue"];
             var ocllCases = ["ocll_s", "ocll_as", "ocll_l", "ocll_u", "ocll_t", "ocll_pi", "ocll_h"];
@@ -131,7 +134,7 @@
             }
         </script>
     </head>
-    <body onload="load()">
+    <body>
         <div id="main" data-role="page">
             <div data-role="header" style="height:40px">
                 <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
