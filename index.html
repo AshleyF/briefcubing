@@ -26,18 +26,16 @@
                 Display.displayLL(Cube.faces(cube), "cube");
             }
 
-            // $(document).on("pageinit", "#main", function() {
-            //     $.mobile.initializePage("options");
-            //     window.setTimeout(settingsUpdate, 2000);
-            // });
-            $(document).on("pageinit", "#options", function() {
-                settingsUpdate();
-            });
             $("#main").on("pageshow", function(event) {
                 if (!Giiker.connected()) {
                     Ui.showConnectButton();
                     Ui.retry();
                 }
+                document.getElementById("auf").checked = Ui.settings.auf;
+            });
+
+            $(document).on("pageinit", "#options", function() {
+                settingsToUi();
             });
 
             var colors = ["yellow", "white", "red", "orange", "green", "blue"];
@@ -51,6 +49,28 @@
                              "cmll_s_Columns", "cmll_s_right_bar", "cmll_s_back_slash", "cmll_as_right_bar", "cmll_as_columns",
                              "cmll_as_back_slash", "cmll_as_x_checkerboard", "cmll_as_forward_slash", "cmll_as_left_bar", "cmll_l_mirror",
                              "cmll_l_inverse", "cmll_l_pure_1", "cmll_l_pure_2", "cmll_l_front_commutator", "cmll_l_diag", "cmll_l_back_commutator"];
+
+            function settingsToUi() {
+                document.getElementById("method").value = Ui.settings.method;
+                document.getElementById("auf").checked = Ui.settings.auf;
+                for (var c in colors) {
+                    var col = colors[c];
+                    document.getElementById(col).checked = Ui.settings[col];
+                }
+                for (var i = 0; i < ocllCases.length; i++) {
+                    var cas = ocllCases[i];
+                    document.getElementById(cas).checked = Ui.settings[cas];
+                }
+                for (var i = 0; i < pcllCases.length; i++) {
+                    var cas = pcllCases[i];
+                    document.getElementById(cas).checked = Ui.settings[cas];
+                }
+                for (var i = 0; i < cmllCases.length; i++) {
+                    var cas = cmllCases[i];
+                    document.getElementById(cas).checked = Ui.settings[cas];
+                }
+                settingsUpdate();
+            }
 
             function settingsUpdate() {
                 function addAlgIfChecked(name, kind) {
@@ -94,6 +114,7 @@
                     $("#anyCmllCase").prop('checked', (c == cmllCases.length)).checkboxradio('refresh');
                 }
                 document.getElementById("cmllFieldset").style.display = Ui.settings.method == "roux" ? "" : "none";
+                Ui.saveSettings();
                 Ui.next();
             }
 
@@ -165,14 +186,14 @@
                     <option value="cfop">Method: CFOP</option>
                     <option value="roux" selected="selected">Method: Roux</option>
                 </select>
-                <input id="auf" type="checkbox" value="auf" checked="checked" onchange="settingsUpdate()" data-mini="true"><label for="auf">Random AUF</label><br />
+                <input id="auf" type="checkbox" value="auf" onchange="settingsUpdate()" data-mini="true"><label for="auf">Random AUF</label><br />
                 <div id="upColorFieldset" data-role="collapsible" data-mini="true">
                     <h3>Up Color</h3>
                     <input id="anyColor" type="checkbox" value="anyColor" onchange="settingsAnyColorUpdate()" data-mini="true"><label for="anyColor">Any</label>
                     <hr style="border-color:#222;" />
                     <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate()" data-mini="true"><label for="yellow">Yellow</label><br />
                     <input id="white" type="checkbox" value="white" onchange="settingsUpdate()" data-mini="true"><label for="white">White</label><br />
-                    <input id="red" checked="checked" type="checkbox" value="red" onchange="settingsUpdate()" data-mini="true"><label for="red">Red</label><br />
+                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate()" data-mini="true"><label for="red">Red</label><br />
                     <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate()" data-mini="true"><label for="orange">Orange</label><br />
                     <input id="green" type="checkbox" value="green" onchange="settingsUpdate()" data-mini="true"><label for="green">Green</label><br />
                     <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate()" data-mini="true"><label for="blue">Blue</label><br />
@@ -231,10 +252,10 @@
                         <h3>OCLL</h3>
                         <input id="anyOcllCase" type="checkbox" value="anyOcllCase" onchange="settingsAnyOcllCaseUpdate()" data-mini="true"><label for="anyOcllCase">Any</label>
                         <hr style="border-color:#222;" />
-                        <input id="ocll_s" checked="checked" type="checkbox" value="R U R' U R U2 R'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_s">Sune</label><br />
+                        <input id="ocll_s" type="checkbox" value="R U R' U R U2 R'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_s">Sune</label><br />
                         <input id="ocll_as" type="checkbox" value="R' U' R U' R' U2 R" onchange="settingsUpdate()" data-mini="true"><label for="ocll_as">Anti-Sune</label><br />
                         <input id="ocll_l" type="checkbox" value="R U2 R' U' R U R' U' R U R' U' R U' R'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_l">L case (bow tie, triple-sune)</label><br />
-                        <input id="ocll_u" checked="checked" type="checkbox" value="F R U R' U' F'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_u">U case (headlights)</label><br />
+                        <input id="ocll_u" type="checkbox" value="F R U R' U' F'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_u">U case (headlights)</label><br />
                         <input id="ocll_t" type="checkbox" value="R U R' U' R' F R F'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_t">T case (blinkers, chameleon)</label><br />
                         <input id="ocll_pi" type="checkbox" value="F R U R' U' R U R' U' F'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_pi">Pi case (bruno)</label><br />
                         <input id="ocll_h" type="checkbox" value="F R U R' U' R U R' U' R U R' U' F'" onchange="settingsUpdate()" data-mini="true"><label for="ocll_h">H case (double-headlights, double-sune)</label><br />

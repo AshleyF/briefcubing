@@ -169,7 +169,24 @@ var Ui = (function () {
         Giiker.disconnect();
     }
 
-    var settings = {};
+    var settings = { // defaults
+        method: "cfop",
+        auf: true,
+        yellow: true,
+        ocll_s: true // OCLL Sune case
+    };
+    if (localStorage.settings) {
+        settings = JSON.parse(localStorage.settings);
+    }
+
+    function saveSettings() {
+        localStorage.settings = JSON.stringify(settings);
+    }
+
+    function deleteSettings() {
+        localStorage.removeItem("settings");
+    }
+
     var instance = Cube.solved;
     var alg = "";
     var solution = "";
@@ -267,6 +284,8 @@ var Ui = (function () {
         next: next,
         retry: retry,
         settings: settings,
+        saveSettings: saveSettings,
+        deleteSettings: deleteSettings,
         showConnectButton: showConnectButton
     };
 }());
