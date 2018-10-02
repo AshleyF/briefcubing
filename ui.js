@@ -193,7 +193,6 @@ var Ui = (function () {
     var kind;
 
     function next() {
-        ga("send", "event", "nav", "next");
         function randomElement(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
@@ -260,7 +259,7 @@ var Ui = (function () {
             }
         }
         alg = "";
-        if (settings.cases.length > 0) {
+        if (settings.cases && settings.cases.length > 0) {
             challenge(randomElement(settings.cases));
             setStatus("init");
         } else {
@@ -271,7 +270,6 @@ var Ui = (function () {
     }
 
     function retry() {
-        ga("send", "event", "nav", "retry");
         alg = "";
         update(instance);
         setStatus("init");

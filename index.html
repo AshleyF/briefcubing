@@ -26,15 +26,15 @@
                 Display.displayLL(Cube.faces(cube), "cube");
             }
 
-            $("#main").on("pageshow", function(event) {
+            $(document).on("pagebeforeshow", "#main", function(event) {
                 if (!Giiker.connected()) {
                     Ui.showConnectButton();
                     Ui.retry();
                 }
-                document.getElementById("auf").checked = Ui.settings.auf;
+                Ui.next();
             });
 
-            $(document).on("pageinit", "#options", function() {
+            $(document).on("pagebeforeshow", "#options", function() {
                 settingsToUi();
             });
 
@@ -51,23 +51,23 @@
                              "cmll_l_inverse", "cmll_l_pure_1", "cmll_l_pure_2", "cmll_l_front_commutator", "cmll_l_diag", "cmll_l_back_commutator"];
 
             function settingsToUi() {
-                document.getElementById("method").value = Ui.settings.method;
-                document.getElementById("auf").checked = Ui.settings.auf;
+                $("#method").prop('value', Ui.settings.method).selectmenu('refresh');
+                $("#auf").prop('checked', Ui.settings.auf).checkboxradio('refresh');
                 for (var c in colors) {
                     var col = colors[c];
-                    document.getElementById(col).checked = Ui.settings[col];
+                    $('#' + col).prop('checked', Ui.settings[col]).checkboxradio('refresh');
                 }
                 for (var i = 0; i < ocllCases.length; i++) {
                     var cas = ocllCases[i];
-                    document.getElementById(cas).checked = Ui.settings[cas];
+                    $('#' + cas).prop('checked', Ui.settings[cas]).checkboxradio('refresh');
                 }
                 for (var i = 0; i < pcllCases.length; i++) {
                     var cas = pcllCases[i];
-                    document.getElementById(cas).checked = Ui.settings[cas];
+                    $('#' + cas).prop('checked', Ui.settings[cas]).checkboxradio('refresh');
                 }
                 for (var i = 0; i < cmllCases.length; i++) {
                     var cas = cmllCases[i];
-                    document.getElementById(cas).checked = Ui.settings[cas];
+                    $('#' + cas).prop('checked', Ui.settings[cas]).checkboxradio('refresh');
                 }
                 settingsUpdate();
             }
