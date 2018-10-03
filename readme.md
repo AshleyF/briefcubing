@@ -13,6 +13,7 @@ The Giiker may be held in any orientation (I even took the stickers off mine!). 
 * Change feedback link to briefcubing.com
 * 2-look corners
 * Desktop support (nice rendering, keyboard support, ...)
+* No sleep
 
 ## Backlog
 

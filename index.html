@@ -24,12 +24,22 @@
         <script src="algs.js"></script>
         <script src="ui.js"></script>
         <script>
+            function setMainHeightToFit() {
+                var screen = $.mobile.getScreenHeight();
+                var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
+                var footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
+                var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
+                var content = screen - header - footer - contentCurrent;
+                $(".ui-content").height(content);
+            }
+
             $(document).on("pagebeforeshow", "#main", function(event) {
+                setMainHeightToFit();
                 if (!Giiker.connected()) Ui.showConnectButton();
                 Ui.next();
             });
 
-            $(document).on("pagebeforeshow", "#options", function() {
+            $(document).on("panelbeforeopen", "#options", function() {
                 settingsToUi();
             });
 
@@ -77,6 +87,7 @@
                     document.getElementById(s + "_title").style.color = (some ? "#6ad" : "white");
                 }
                 Settings.save();
+                Ui.next();
             }
 
             function settingsAllCasesUpdate(name) {
@@ -95,30 +106,7 @@
     </head>
     <body>
         <div id="main" data-role="page">
-            <div data-role="header" style="height:40px">
-                <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
-                <h1><img src="logo.svg" width="24px" height="24px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
-            </div>
-            <div id="diagram" role="main" class="ui-content" style="min-height: 100vh; margin-left: -16px">
-                <div id="giiker">
-                    <button id="giikerConnect" onclick="Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
-                    <a target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px">I don't have one</a>
-                </div>
-                <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
-                <div id="cube" style="text-align: center; margin-top: -80px"></div>
-                <!--button id="test" onclick="test()" class="ui-btn ui-mini ui-corner-all">Test</button-->
-            </div>
-            <div data-role="footer" data-position="fixed" style="height:52px">
-                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
-                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
-            </div>
-        </div>
-        <div id="options" data-role="page">
-            <div data-role="header">
-                <a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all"></a>
-                <h1>Options</h1>
-            </div>
-            <div role="main" class="ui-content">
+            <div id="options" data-role="panel" data-display="overlay">
                 <div id="giikerDisconnectSection" style="display:none">
                     <button id="giikerDisconnect" onclick="Ui.giikerDisconnect()" class="ui-btn ui-mini" disabled="true" data-mini="true">Disconnect Giiker Supercube</button>
                     <hr />
@@ -132,7 +120,7 @@
                     <legend>Up Colors</legend>
                     <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate()" data-mini="true" /><label for="yellow"><span class="yellow swatch"></span></label>
                     <input id="white" type="checkbox" value="white" onchange="settingsUpdate()" data-mini="true" /><label for="white"><span class="white swatch"></span></label>
-                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate()" data-mini="true" /><label for="red"><span class="red swatch"></span></label>
+                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate()" data-mini="true" /><label for="red"><span class="red swatch"></span></label><br />
                     <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate()" data-mini="true" /><label for="orange"><span class="orange swatch"></span></label>
                     <input id="green" type="checkbox" value="green" onchange="settingsUpdate()" data-mini="true" /><label for="green"><span class="green swatch"></span></label>
                     <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
@@ -189,6 +177,23 @@
                 </div>
                 <a href="mailto:feedback@briefrobotics.com?Subject=Feedback">Feedback</a>
                 <p>Version 0.1.1</p>
+            </div>
+            <div data-role="header" style="height:40px">
+                <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
+                <h1><img src="logo.svg" width="24px" height="24px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
+            </div>
+            <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
+                <div id="giiker">
+                    <button id="giikerConnect" onclick="Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
+                    <a target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px">I don't have one</a>
+                </div>
+                <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
+                <div id="cube" style="text-align: center; margin-top: -80px"></div>
+                <!--button id="test" onclick="test()" class="ui-btn ui-mini ui-corner-all">Test</button-->
+            </div>
+            <div data-role="footer" data-position="fixed" style="height:52px">
+                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
+                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
             </div>
         </div>
     </body>
