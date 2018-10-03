@@ -23,6 +23,13 @@ var Ui = (function () {
                 document.getElementById("next").disabled = false;
                 window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
                 break;
+            case "partial":
+                document.getElementById("diagram").style.backgroundColor = "goldenrod";
+                document.getElementById("retry").disabled = false;
+                document.getElementById("next").disabled = false;
+                waiting = false;
+                // TODO: update diagram
+                break;
             case "incorrect":
                 incorrect.play();
                 document.getElementById("diagram").style.backgroundColor = "darkred";
@@ -55,52 +62,57 @@ var Ui = (function () {
     }
 
     function verify(result) {
-        switch (kind) {
-            case "ocll":
-                var pat;
-                switch (Ui.settings.method) {
-                    case "cfop":
-                        pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
-                        break;
-                    case "roux":
-                        pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
-                        break;
-                    default: throw "Unknown method: " + Ui.settings.method;
-                }
-                return Cube.matchPattern(pat, result);
-            case "cmll":
-            case "pcll":
-                var pat;
-                switch (Ui.settings.method) {
-                    case "cfop":
-                        pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // whole first two layers
-                        break;
-                    case "roux":
-                        pat = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // M-slice free
-                        break;
-                    default: throw "Unknown method: " + Ui.settings.method;
-                }
-                if (Cube.matchPattern(pat, result)) return true;
-                if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
-                if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
-                if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
-                if (Ui.settings.method == "roux") {
-                    // try flipping M-slice too because some algs (with wide moves) flip this
-                    if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L2 R2 U", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L2 R2 U'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L2 R2 U2", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L' R", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L' R U", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L' R U'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L' R U2", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L R'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L R' U", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L R' U'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
-                }
-                return false;
+        function matchWithAdjustments(pat) {
+            if (Cube.matchPattern(pat, result)) return true;
+            if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
+            if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
+            if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
+            if (scramble == "roux") {
+                // try flipping M-slice too because some algs (with wide moves) flip this
+                if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L2 R2 U", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L2 R2 U'", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L2 R2 U2", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L' R", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L' R U", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L' R U'", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L' R U2", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L R'", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L R' U", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L R' U'", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
+            }
         }
+        var pat;
+        switch (scramble) {
+            case "roux":
+                pat = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // M-slice free
+                break;
+            case "cfop":
+                pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // whole first two layers
+                break;
+            default: throw "Unknown scramble type: " + scramble;
+        }
+        if (matchWithAdjustments(pat)) {
+            setStatus("correct");
+            return true;
+        }
+        // check partial match (corners oriented, but not permuted)
+        switch (scramble) {
+            case "roux":
+                pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
+                break;
+            case "cfop":
+                pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
+                break;
+            default: throw "Unknown scramble type: " + scramble;
+        }
+        if (Cube.matchPattern(pat, result)) {
+            instance = result;
+            update(instance);
+            setStatus("partial");
+        }
+        return false;
     }
 
     function twist(t) {
@@ -115,10 +127,7 @@ var Ui = (function () {
                 var rot = rotations[i];
                 // apply rotation, alg, inverse rotation
                 var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
-                if (verify(result)) {
-                    setStatus("correct");
-                    return true;
-                }
+                if (verify(result)) return true;
             }
         }
         if (t == "") return;
@@ -139,13 +148,13 @@ var Ui = (function () {
         btn.innerText = "Connect Giiker Supercube";
         document.getElementById("cube").style.marginTop = "-80px";
         document.getElementById("giiker").style.display = "";
-        document.getElementById("giikerDisconnect").disabled = true;
+        document.getElementById("giikerDisconnectSection").style.display = "none";
     }
 
     function hideConnectButton() {
         document.getElementById("giiker").style.display = "none";
+        document.getElementById("giikerDisconnectSection").style.display = "";
         document.getElementById("cube").style.marginTop = "0";
-        document.getElementById("giikerDisconnect").disabled = false;
     }
 
     function connected() {
@@ -169,98 +178,65 @@ var Ui = (function () {
         Giiker.disconnect();
     }
 
-    var settings = { // defaults
-        method: "cfop",
-        auf: true,
-        yellow: true,
-        ocll_s: true // OCLL Sune case
-    };
-    if (localStorage.settings) {
-        settings = JSON.parse(localStorage.settings);
-    }
-
-    function saveSettings() {
-        localStorage.settings = JSON.stringify(settings);
-    }
-
-    function deleteSettings() {
-        localStorage.removeItem("settings");
-    }
-
     var instance = Cube.solved;
     var alg = "";
     var solution = "";
-    var kind;
+    var scramble = "";
+
+    function update(cube) {
+        Display.displayLL(Cube.faces(cube), "cube");
+    }
 
     function next() {
         function randomElement(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
+        function lookupAlg(name) {
+            for (var s in Algs.sets) {
+                var set = Algs.sets[s];
+                for (var a in set.algs) {
+                    var alg = set.algs[a];
+                    if (name == (s + '_' + alg.id)) return set.algs[a]
+                }
+            }
+            throw "Unknown alg: " + name;
+        }
         function challenge(cas) {
-            kind = cas.kind;
-            var auf = settings.auf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
+            scramble = cas.scramble;
+            var auf = Settings.values.randomAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
             solution = auf + cas.alg;
             instance = Cube.solved;
             // up color
             var rot = [];
-            if (settings.yellow) rot.push("");
-            if (settings.white) rot.push("x2");
-            if (settings.red) rot.push("x");
-            if (settings.orange) rot.push("x'");
-            if (settings.green) rot.push("z'");
-            if (settings.blue) rot.push("z");
+            var upcols = Settings.values.upColors;
+            if (upcols.yellow) rot.push("");
+            if (upcols.white) rot.push("x2");
+            if (upcols.red) rot.push("x");
+            if (upcols.orange) rot.push("x'");
+            if (upcols.green) rot.push("z'");
+            if (upcols.blue) rot.push("z");
             instance = Cube.random(rot, 1, instance);
             instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
             var upColor = Cube.faceColor("U", Cube.faces(instance));
-            switch (settings.method) {
-                case "cfop": break; // nothing extra
-                case "roux":
-                    // scramble M-slice with U-layer
-                    instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
-                    break;
-                default: throw "Unknown method: " + Ui.settings.method;
-                
-            }
-            switch (kind) {
-                case "cmll": break; // nothing extra
-                case "ocll":
-                    // scramble corners and edges
-                    var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
-                    var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
-                    for (var i = 0; i < 10; i++) {
-                        instance = Cube.random(["", "U", "U'", "U2"], 1, instance);
-                        instance = Cube.random([jperm_b, yperm], 1, instance);
-                    }
-                    break;
-                case "pcll": break; // nothing extra
-                default: throw "Unknown alg kind: " + kind;
+            if (cas.scramble == "roux") {
+                // scramble M-slice with U-layer
+                instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
             }
             // apply solution
             instance = Cube.alg(solution, instance, true);
-            switch (settings.method) {
-                case "cfop": break; // nothing extra
-                case "roux":
-                    var numColors = (settings.yellow ? 1 : 0) + (settings.white ? 1 : 0) + (settings.red ? 1 : 0) + (settings.orange ? 1 : 0) + (settings.green ? 1 : 0) + (settings.blue ? 1 : 0);
-                    if (numColors > 1) {
-                        switch (kind) {
-                            case "cmll":
-                            case "ocll":
-                                // adjust M-slice so center top indicates color (too confusing otherwise!)
-                                while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
-                                    instance = Cube.alg("M", instance);
-                                }
-                                break;
-                            case "pcll": break; // nothing extra
-                            default: throw "Unknown alg kind: " + kind;
-                        }
+            if (cas.scramble == "roux") {
+                var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
+                if (numColors > 1) {
+                    // adjust M-slice so center top indicates color (too confusing otherwise!)
+                    while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
+                        instance = Cube.alg("M", instance);
                     }
-                    break;
-                default: throw "Unknown method: " + Ui.settings.method;
+                }
             }
         }
         alg = "";
-        if (settings.cases && settings.cases.length > 0) {
-            challenge(randomElement(settings.cases));
+        if (Settings.values.algs.length > 0) {
+            challenge(lookupAlg(randomElement(Settings.values.algs)));
             setStatus("init");
         } else {
             instance = Cube.solved;
@@ -281,9 +257,6 @@ var Ui = (function () {
         giikerDisconnect: giikerDisconnect,
         next: next,
         retry: retry,
-        settings: settings,
-        saveSettings: saveSettings,
-        deleteSettings: deleteSettings,
         showConnectButton: showConnectButton
     };
 }());
