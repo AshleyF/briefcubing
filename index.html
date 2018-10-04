@@ -23,7 +23,10 @@
         <script src="settings.js"></script>
         <script src="algs.js"></script>
         <script src="ui.js"></script>
+        <script src="nosleep.min.js"></script>
         <script>
+            var nosleep = new NoSleep();
+
             function setMainHeightToFit() {
                 var screen = $.mobile.getScreenHeight();
                 var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
@@ -138,7 +141,7 @@
             </div>
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
                 <div id="giiker">
-                    <button id="giikerConnect" onclick="Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
+                    <button id="giikerConnect" onclick="nosleep.enable(); Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
                     <a target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px">I don't have one</a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
