@@ -33,6 +33,10 @@
                 $(".ui-content").height(content);
             }
 
+            $(document).on("pagecreate", "#main", function() {
+                buildAlgOptions();
+            });
+
             $(document).on("pagebeforeshow", "#main", function(event) {
                 setMainHeightToFit();
                 if (!Giiker.connected()) Ui.showConnectButton();
@@ -41,6 +45,14 @@
 
             $(document).on("panelbeforeopen", "#options", function() {
                 settingsToUi();
+            });
+
+            $(document).keypress(function(e) {
+                switch (e.which) {
+                    case 13:
+                        document.getElementById("debug").style.display = "";
+                        break;
+                }
             });
 
             var colors = ["yellow", "white", "red", "orange", "green", "blue"];
@@ -99,8 +111,20 @@
                 settingsUpdate();
             }
 
-            function test() {
-                Ui.twist("R' U' R U' R' U2' R");
+            function buildAlgOptions() {
+                var htm = "";
+                for (var s in Algs.sets) {
+                    var set = Algs.sets[s];
+                    htm += '<div id="cmllFieldset" data-role="collapsible"><h3><span id="' + s + '_title">' + set.name + '</span></h3>';
+                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">All ' + set.name + ' Cases</label><hr />';
+                    for (var a in set.algs) {
+                        var id = s + '_' + set.algs[a].id;
+                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '">' + set.algs[a].name + '</label>';
+                    }
+                    htm += "</div>";
+                }
+                document.getElementById("algs").innerHTML = htm;
+                $("#options").trigger("create");
             }
         </script>
     </head>
@@ -125,56 +149,7 @@
                     <input id="green" type="checkbox" value="green" onchange="settingsUpdate()" data-mini="true" /><label for="green"><span class="green swatch"></span></label>
                     <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
                 </fieldset>
-                <div id="algs" data-role="collapsibleset" data-mini="true">
-                    <div id="cmllFieldset" data-role="collapsible">
-                        <h3><span id="roux_cmll_title">Roux CMLL</span></h3>
-                        <input id="roux_cmll" type="checkbox" onchange="settingsAllCasesUpdate('roux_cmll')" data-mini="true" /><label for="roux_cmll">All Roux CMLL Cases</label>
-                        <hr />
-                        <input id="roux_cmll_o_adjacent_swap" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_o_adjacent_swap">O - Adjacent Swap</label>
-                        <input id="roux_cmll_o_diagonal_swap" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_o_diagonal_swap">O - Diagonal Swap</label>
-                        <input id="roux_cmll_h_columns" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_h_columns">H - Columns</label>
-                        <input id="roux_cmll_h_rows" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_h_rows">H - Rows</label>
-                        <input id="roux_cmll_h_column" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_h_column">H - Column</label>
-                        <input id="roux_cmll_h_row" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_h_row">H - Row</label>
-                        <input id="roux_cmll_pi_right_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_pi_right_bar">Pi - Right Bar</label>
-                        <input id="roux_cmll_pi_back_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_pi_back_slash">Pi - Back Slash</label>
-                        <input id="roux_cmll_pi_x_checkerboard" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_pi_x_checkerboard">Pi - X Checkerboard</label>
-                        <input id="roux_cmll_pi_forward_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_pi_forward_slash">Pi - Forward Slash</label>
-                        <input id="roux_cmll_pi_columns" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_pi_columns">Pi - Columns</label>
-                        <input id="roux_cmll_pi_left_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_pi_left_bar">Pi - Left Bar</label>
-                        <input id="roux_cmll_u_forward_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_u_forward_slash">U - Forward Slash</label>
-                        <input id="roux_cmll_u_back_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_u_back_slash">U - Back Slash</label>
-                        <input id="roux_cmll_u_front_row" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_u_front_row">U - Front Row</label>
-                        <input id="roux_cmll_u_rows" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_u_rows">U - Rows</label>
-                        <input id="roux_cmll_u_x_checkerboard" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_u_x_checkerboard">U - X Checkerboard</label>
-                        <input id="roux_cmll_u_back_row" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_u_back_row">U - Back Row</label>
-                        <input id="roux_cmll_t_left_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_t_left_bar">T - Left Bar</label>
-                        <input id="roux_cmll_t_right_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_t_right_bar">T - Right Bar</label>
-                        <input id="roux_cmll_t_rows" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_t_rows">T - Rows</label>
-                        <input id="roux_cmll_t_front_row" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_t_front_row">T - Front Row</label>
-                        <input id="roux_cmll_t_back_row" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_t_back_row">T - Back Row</label>
-                        <input id="roux_cmll_t_columns" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_t_columns">T - Columns</label>
-                        <input id="roux_cmll_s_left_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_s_left_bar">S - Left Bar</label>
-                        <input id="roux_cmll_s_x_checkerboard" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_s_x_checkerboard">S - X Checkerboard</label>
-                        <input id="roux_cmll_s_forward_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_s_forward_slash">S - Forward Slash</label>
-                        <input id="roux_cmll_s_Columns" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_s_Columns">S - Columns</label>
-                        <input id="roux_cmll_s_right_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_s_right_bar">S - Right Bar</label>
-                        <input id="roux_cmll_s_back_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_s_back_slash">S - Back Slash</label>
-                        <input id="roux_cmll_as_right_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_as_right_bar">As - Right Bar</label>
-                        <input id="roux_cmll_as_columns" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_as_columns">As - Columns</label>
-                        <input id="roux_cmll_as_back_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_as_back_slash">As - Back Slash</label>
-                        <input id="roux_cmll_as_x_checkerboard" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_as_x_checkerboard">As - X Checkerboard</label>
-                        <input id="roux_cmll_as_forward_slash" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_as_forward_slash">As - Forward Slash</label>
-                        <input id="roux_cmll_as_left_bar" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_as_left_bar">As - Left Bar</label>
-                        <input id="roux_cmll_l_mirror" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_mirror">L - Mirror</label>
-                        <input id="roux_cmll_l_inverse" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_inverse">L - Inverse</label>
-                        <input id="roux_cmll_l_pure_1" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_pure_1">L - Pure 1</label>
-                        <input id="roux_cmll_l_pure_2" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_pure_2">L - Pure 2</label>
-                        <input id="roux_cmll_l_front_commutator" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_front_commutator">L - Front Commutator</label>
-                        <input id="roux_cmll_l_diag" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_diag">L - Diag</label>
-                        <input id="roux_cmll_l_back_commutator" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="roux_cmll_l_back_commutator">L - Back Commutator</label>
-                    </div>
-                </div>
+                <div id="algs" data-role="collapsibleset" data-mini="true"></div>
                 <a href="mailto:feedback@briefrobotics.com?Subject=Feedback">Feedback</a>
                 <p>Version 0.1.1</p>
             </div>
@@ -189,7 +164,12 @@
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
                 <div id="cube" style="text-align: center; margin-top: -80px"></div>
-                <!--button id="test" onclick="test()" class="ui-btn ui-mini ui-corner-all">Test</button-->
+                <div id="debug" style="display: none">
+                    <button onclick="Ui.twist('R U R\' U')" class="ui-btn ui-mini ui-corner-all">Su</button>
+                    <button onclick="Ui.twist('R U2 R\'')" class="ui-btn ui-mini ui-corner-all">ne</button>
+                    <button onclick="Ui.twist('F R U\' R\' U\' R U R\' F\' R U R\' U\' R\' F R F\'')" class="ui-btn ui-mini ui-corner-all">Y-perm</button>
+                
+                </div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
                 <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>

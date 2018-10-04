@@ -6,14 +6,13 @@ The Giiker may be held in any orientation (I even took the stickers off mine!). 
 
 ## TODO
 
-* Two-look CMLL support
 * Roofpig-less (optimization)
-* Random AUF as a switch (not checkbox)
 * Cube status icon (top right) -> battery, disconnect, etc.
 * Change feedback link to briefcubing.com
-* 2-look corners
 * Desktop support (nice rendering, keyboard support, ...)
 * No sleep
+* Roux EO/EOLR support
+* F2L/SB support
 
 ## Backlog
 

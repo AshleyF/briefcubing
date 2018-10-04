@@ -199,7 +199,7 @@ var Ui = (function () {
                     if (name == (s + '_' + alg.id)) return set.algs[a]
                 }
             }
-            throw "Unknown alg: " + name;
+            return { id: "unknown", name: "Unknown", alg: "", scramble: "cfop" }; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
         }
         function challenge(cas) {
             scramble = cas.scramble;

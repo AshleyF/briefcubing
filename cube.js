@@ -409,29 +409,25 @@ var Cube = (function () {
     }
 
     function matchPattern(pattern, cube) {
-        // compare all (24) orientations
-        // for (o in orientations) {
-            // var reoriented = map({ v: orientations[o] }, cube);
-            var reoriented = cube;
-            var state = toString(reoriented);
-            var mapping = {};
-            var matched = true;
-            for (var i in pattern) {
-                var p = pattern[i];
-                if (p != '.') {
-                    if (!mapping[p]) {
-                        mapping[p] = state[i];
-                        continue;
-                    }
-                    if (mapping[p] != state[i])
-                    {
-                        matched = false;
-                        break;
-                    }
+        var reoriented = cube;
+        var state = toString(reoriented);
+        var mapping = {};
+        var matched = true;
+        for (var i in pattern) {
+            var p = pattern[i];
+            if (p != '.') {
+                if (!mapping[p]) {
+                    mapping[p] = state[i];
+                    continue;
+                }
+                if (mapping[p] != state[i])
+                {
+                    matched = false;
+                    break;
                 }
             }
-            if (matched) return true;
-        // }
+        }
+        if (matched) return true;
         return false;
     }
 
