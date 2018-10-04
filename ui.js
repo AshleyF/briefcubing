@@ -8,6 +8,7 @@
         var lastStatus = "init";
         var waiting = false;
         var partial = null;
+        var initiallyPartial = false;
 
         var incorrect = new Audio("incorrect.wav");
         incorrect.load();
@@ -24,6 +25,7 @@
                     document.getElementById("next").disabled = false;
                     window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
                     partial = null;
+                    initiallyPartial = false;
                     break;
                 case "partial":
                     document.getElementById("status").innerHTML = "&nbsp;";
@@ -39,6 +41,7 @@
                     document.getElementById("next").disabled = false;
                     window.setTimeout(function () { if (lastStatus == "incorrect") waiting = true; }, 500);
                     partial = null;
+                    initiallyPartial = false;
                     break;
                 case "progress":
                     document.getElementById("diagram").style.backgroundColor = (partial ? "goldenrod" : "#444");
@@ -54,6 +57,7 @@
                     document.getElementById("next").disabled = false;
                     waiting = false;
                     partial = null;
+                    initiallyPartial = verifyPartial(instance);
                     break;
                 case "error":
                     document.getElementById("status").innerHTML = "&nbsp;";
@@ -63,6 +67,21 @@
                     waiting = false;
                     break;
             }
+        }
+
+        function verifyPartial(result) {
+            // check partial match (corners oriented, but not permuted)
+            var pat;
+            switch (scramble) {
+                case "roux":
+                    pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
+                    break;
+                case "cfop":
+                    pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
+                    break;
+                default: throw "Unknown scramble type: " + scramble;
+            }
+            return Cube.matchPattern(pat, result);
         }
 
         function verify(result) {
@@ -101,24 +120,12 @@
                 setStatus("correct");
                 return true;
             }
-            // check partial match (corners oriented, but not permuted)
-            switch (scramble) {
-                case "roux":
-                    pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
-                    break;
-                case "cfop":
-                    pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
-                    break;
-                default: throw "Unknown scramble type: " + scramble;
-            }
-            if (Cube.matchPattern(pat, result)) {
-                if (!partial) {
-                    partial = instance; // record for retry
-                    instance = result;
-                    update(instance);
-                    alg = "";
-                    setStatus("partial");
-                }
+            if (!partial && !initiallyPartial && verifyPartial(result)) {
+                partial = instance; // record for retry
+                instance = result;
+                update(instance);
+                alg = "";
+                setStatus("partial");
             }
             return false;
         }
