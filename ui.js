@@ -247,7 +247,7 @@
                 challenge(lookupAlg(randomElement(Settings.values.algs)));
                 setStatus("init");
             } else {
-                instance = Cube.solved;
+                challenge(lookupAlg(""));
                 setStatus("error");
             }
             update(instance);
