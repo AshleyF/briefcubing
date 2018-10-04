@@ -192,7 +192,7 @@
         var scramble = "";
 
         function update(cube) {
-            Display.displayLL(Cube.faces(cube), "cube");
+            Display.displayLL(Cube.faces(cube), Settings.values.simpleDiagram, "cube");
         }
 
         function next() {

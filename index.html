@@ -59,6 +59,7 @@
 
             function settingsToUi() {
                 $("#auf").prop('value', Settings.values.randomAuf ? "on" : "off").slider('refresh');
+                $("#simple").prop('value', Settings.values.simpleDiagram ? "on" : "off").slider('refresh');
                 for (var c in Settings.values.upColors) {
                     $('#' + c).prop('checked', Settings.values.upColors[c]).checkboxradio('refresh');
                 }
@@ -71,6 +72,7 @@
 
             function settingsUpdate() {
                 Settings.values.randomAuf = document.getElementById("auf").value == "on";
+                Settings.values.simpleDiagram = document.getElementById("simple").value == "on";
                 var upcols = Settings.values.upColors;
                 for (var c in colors) {
                     var col = colors[c];
@@ -140,6 +142,11 @@
                     <option value="off">Off</option>
                     <option value="on">On</option>
                 </select>
+                <label for="simple">Simplified Diagram</label>
+                <select id="simple" data-role="slider" data-mini="true" onchange="settingsUpdate()">
+                    <option value="off">Off</option>
+                    <option value="on">On</option>
+                </select>
                 <fieldset data-role="controlgroup" data-type="horizontal">
                     <legend>Up Colors</legend>
                     <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate()" data-mini="true" /><label for="yellow"><span class="yellow swatch"></span></label>
@@ -151,7 +158,7 @@
                 </fieldset>
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
                 <a href="mailto:feedback@briefrobotics.com?Subject=Feedback">Feedback</a>
-                <p>Version 0.1.1</p>
+                <p style="font-size: x-small">Version 0.1.1</p>
             </div>
             <div data-role="header" style="height:40px">
                 <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
