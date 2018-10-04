@@ -40,9 +40,13 @@ var Display = (function () {
         return faceToCssColor(Cube.faceColor(face, faces));
     }
 
-    function displayLL(faces, simple, target) {
+    function displayLL(faces, center, edges, corners, target) {
         function col(face) {
-            if (simple && face.length < 3) return "#222";
+            const gray = "#222";
+            var len = face.length;
+            if (!center && len == 1) return gray;
+            if (!edges && len == 2) return gray;
+            if (!corners && len == 3) return gray;
             return faceColor(face, faces);
         }
         document.getElementById(target).innerHTML =
