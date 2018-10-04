@@ -201,8 +201,9 @@
         function update(cube) {
             var upcols = Settings.values.upColors;
             var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
-            var edges = !Settings.values.simpleDiagram;
-            var center = numColors > 1;
+            var simple = Settings.values.simpleDiagram;
+            var edges = !simple;
+            var center = !simple || numColors > 1;
             Display.displayLL(Cube.faces(cube), center, edges, true, "cube");
         }
 

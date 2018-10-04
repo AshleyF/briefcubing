@@ -132,6 +132,28 @@
     </head>
     <body>
         <div id="main" data-role="page">
+            <div data-role="header" style="height:40px">
+                <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
+                <h1><img src="logo.svg" width="20px" height="20px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
+            </div>
+            <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
+                <div id="giiker">
+                    <button id="giikerConnect" onclick="Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
+                    <a target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px">I don't have one</a>
+                </div>
+                <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
+                <div id="cube" style="text-align: center; margin-top: -80px"></div>
+                <div id="debug" style="display: none">
+                    <button onclick="Ui.twist('R U R\' U')" class="ui-btn ui-mini ui-corner-all">Su</button>
+                    <button onclick="Ui.twist('R U2 R\'')" class="ui-btn ui-mini ui-corner-all">ne</button>
+                    <button onclick="Ui.twist('F R U\' R\' U\' R U R\' F\' R U R\' U\' R\' F R F\'')" class="ui-btn ui-mini ui-corner-all">Y-perm</button>
+                
+                </div>
+            </div>
+            <div data-role="footer" data-position="fixed" style="height:52px">
+                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
+                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
+            </div>
             <div id="options" data-role="panel" data-display="overlay">
                 <div id="giikerDisconnectSection" style="display:none">
                     <button id="giikerDisconnect" onclick="Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true">Disconnect Giiker Supercube</button>
@@ -159,28 +181,6 @@
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
                 <a href="mailto:feedback@briefrobotics.com?Subject=Feedback">Feedback</a>
                 <p style="font-size: x-small">Version 0.1.2</p>
-            </div>
-            <div data-role="header" style="height:40px">
-                <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
-                <h1><img src="logo.svg" width="20px" height="20px" style="vertical-align: middle; margin-left: -12px" /> Brief Drills</h1>
-            </div>
-            <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
-                <div id="giiker">
-                    <button id="giikerConnect" onclick="Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
-                    <a target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px">I don't have one</a>
-                </div>
-                <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
-                <div id="cube" style="text-align: center; margin-top: -80px"></div>
-                <div id="debug" style="display: none">
-                    <button onclick="Ui.twist('R U R\' U')" class="ui-btn ui-mini ui-corner-all">Su</button>
-                    <button onclick="Ui.twist('R U2 R\'')" class="ui-btn ui-mini ui-corner-all">ne</button>
-                    <button onclick="Ui.twist('F R U\' R\' U\' R U R\' F\' R U R\' U\' R\' F R F\'')" class="ui-btn ui-mini ui-corner-all">Y-perm</button>
-                
-                </div>
-            </div>
-            <div data-role="footer" data-position="fixed" style="height:52px">
-                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
-                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
             </div>
         </div>
     </body>
