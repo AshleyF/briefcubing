@@ -146,6 +146,7 @@
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
+                    htm += '<a target="_blank" href="' + set.source + '">&#x1f6c8; More info</a>';
                     htm += '</div>';
                 }
                 document.getElementById("algs").innerHTML = htm;

@@ -34,6 +34,8 @@ var Display = (function () {
             var len = face.length;
             var col = faceColor(face, faces);
             switch (kind) {
+                case "oll":
+                case "pll":
                 case "full": return col;
                 case "cmll": return len == 3 ? col : gray;
                 case "cmll_c": return len == 2 ? gray : col;
