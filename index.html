@@ -27,12 +27,14 @@
         <script>
             var nosleep = new NoSleep();
 
+            $(window).resize(setMainHeightToFit);
+
             function setMainHeightToFit() {
-                var screen = $.mobile.getScreenHeight();
+                var screenHeight = $.mobile.getScreenHeight();
                 var header = $(".ui-header").hasClass("ui-header-fixed") ? $(".ui-header").outerHeight()  - 1 : $(".ui-header").outerHeight();
                 var footer = $(".ui-footer").hasClass("ui-footer-fixed") ? $(".ui-footer").outerHeight() - 1 : $(".ui-footer").outerHeight();
-                var contentCurrent = $(".ui-content").outerHeight() - $(".ui-content").height();
-                var content = screen - header - footer - contentCurrent;
+                var contentHeight = $(".ui-content").outerHeight() - $(".ui-content").height();
+                var content = screenHeight - header - footer - contentHeight;
                 $(".ui-content").height(content);
             }
 
@@ -159,7 +161,7 @@
             </div>
             <div id="options" data-role="panel" data-display="overlay">
                 <div id="giikerDisconnectSection" style="display:none">
-                    <button id="giikerDisconnect" onclick="Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true">Disconnect Giiker Supercube</button>
+                    <button id="giikerDisconnect" onclick="nosleep.disable(); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true">Disconnect Giiker Supercube</button>
                     <hr />
                 </div>
                 <label for="auf">Random AUF</label>
@@ -182,7 +184,7 @@
                     <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
                 </fieldset>
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
-                <a href="mailto:feedback@briefrobotics.com?Subject=Feedback">Feedback</a>
+                <a href="mailto:feedback@briefcubing.com?Subject=Feedback">Feedback</a>
                 <p style="font-size: x-small">Version 0.1.2</p>
             </div>
         </div>
