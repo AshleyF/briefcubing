@@ -204,7 +204,7 @@
             var simple = Settings.values.simpleDiagram;
             var edges = !simple;
             var center = !simple || numColors > 1;
-            Display.displayLL(Cube.faces(cube), center, edges, true, "cube");
+            document.getElementById("cube").innerHTML = Display.diagramLL(Cube.faces(cube), center, edges, true);
         }
 
         function next() {

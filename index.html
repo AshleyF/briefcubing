@@ -126,7 +126,8 @@
                     htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">All ' + set.name + ' Cases</label><hr />';
                     for (var a in set.algs) {
                         var id = s + '_' + set.algs[a].id;
-                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '">' + set.algs[a].name + '</label>';
+                        var diag = Display.diagramLLAlg(set.algs[a].alg, true, true, true, "2em");
+                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '">' + diag + '</label>';
                     }
                     htm += "</div>";
                 }
@@ -160,6 +161,7 @@
                 <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
             </div>
             <div id="options" data-role="panel" data-display="overlay">
+                <span id="test"></span>
                 <div id="giikerDisconnectSection" style="display:none">
                     <button id="giikerDisconnect" onclick="nosleep.disable(); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true">Disconnect Giiker Supercube</button>
                     <hr />
