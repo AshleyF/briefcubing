@@ -118,21 +118,48 @@
                 settingsUpdate();
             }
 
+            function upColorToRot() {
+                var upcols = Settings.values.upColors;
+                if (upcols.yellow) return "";
+                if (upcols.white) return "x2 ";
+                if (upcols.red) return "x ";
+                if (upcols.orange) return "x' ";
+                if (upcols.green) return "z' ";
+                if (upcols.blue) return "z ";
+            }
+
             function buildAlgOptions() {
+                var rot = upColorToRot();
                 var htm = "";
                 for (var s in Algs.sets) {
                     var set = Algs.sets[s];
                     htm += '<div id="cmllFieldset" data-role="collapsible"><h3><span id="' + s + '_title">' + set.name + '</span></h3>';
-                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">All ' + set.name + ' Cases</label><hr />';
+                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">All ' + set.name + ' Cases</label>';
+                    htm += '<fieldset data-role="controlgroup" data-type="horizontal">';
                     for (var a in set.algs) {
-                        var id = s + '_' + set.algs[a].id;
-                        var diag = Display.diagramLLAlg(set.algs[a].alg, true, true, true, "2em");
-                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '">' + diag + '</label>';
+                        var alg = set.algs[a];
+                        var id = s + '_' + alg.id;
+                        var diag = Display.diagramLLAlg(rot + alg.alg, alg.kind, "5.1em");
+                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
-                    htm += "</div>";
+                    htm += '</fieldset>';
+                    htm += '</div>';
                 }
                 document.getElementById("algs").innerHTML = htm;
                 $("#options").trigger("create");
+            }
+
+            function updateAlgColors() {
+                var rot = upColorToRot();
+                for (var s in Algs.sets) {
+                    var set = Algs.sets[s];
+                    for (var a in set.algs) {
+                        var alg = set.algs[a];
+                        var id = "diag_" + s + '_' + alg.id;
+                        var diag = Display.diagramLLAlg(rot + alg.alg, alg.kind, "5.1em");
+                        document.getElementById(id).innerHTML = diag;
+                    }
+                }
             }
         </script>
     </head>
@@ -176,14 +203,14 @@
                     <option value="off">Off</option>
                     <option value="on">On</option>
                 </select>
-                <fieldset data-role="controlgroup" data-type="horizontal">
+                <fieldset id="upColors" data-role="controlgroup" data-type="horizontal">
                     <legend>Up Colors</legend>
-                    <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate()" data-mini="true" /><label for="yellow"><span class="yellow swatch"></span></label>
-                    <input id="white" type="checkbox" value="white" onchange="settingsUpdate()" data-mini="true" /><label for="white"><span class="white swatch"></span></label>
-                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate()" data-mini="true" /><label for="red"><span class="red swatch"></span></label><br />
-                    <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate()" data-mini="true" /><label for="orange"><span class="orange swatch"></span></label>
-                    <input id="green" type="checkbox" value="green" onchange="settingsUpdate()" data-mini="true" /><label for="green"><span class="green swatch"></span></label>
-                    <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
+                    <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="yellow"><span class="yellow swatch"></span></label>
+                    <input id="white" type="checkbox" value="white" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="white"><span class="white swatch"></span></label>
+                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="red"><span class="red swatch"></span></label>
+                    <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="orange"><span class="orange swatch"></span></label>
+                    <input id="green" type="checkbox" value="green" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="green"><span class="green swatch"></span></label>
+                    <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
                 </fieldset>
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
                 <a href="mailto:feedback@briefcubing.com?Subject=Feedback">Feedback</a>

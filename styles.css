@@ -32,11 +32,19 @@ body {
 
 .swatch {
     display: block;
-    width: 1.6em;
-    height: 1.6em;
+    width: 1.9em;
+    height: 1.92em;
     border: 1px solid black;
 }
 
 hr {
     border: 1px solid #222;
+}
+
+#upColors label {
+    padding: 0.52em;
+}
+
+#algs fieldset label {
+    padding: 0.1em;
 }

@@ -24,18 +24,24 @@ var Display = (function () {
         return faceToCssColor(Cube.faceColor(face, faces));
     }
 
-    function diagramLLAlg(alg, center, edges, corners, size) {
-        return diagramLL(Cube.faces(Cube.alg(alg, Cube.solved)), center, edges, corners, size);
+    function diagramLLAlg(alg, kind, size) {
+        return diagramLL(Cube.faces(Cube.alg(alg, Cube.solved)), kind, size);
     }
 
-    function diagramLL(faces, center, edges, corners, size) {
+    function diagramLL(faces, kind, size) {
         function col(face) {
             const gray = "#222";
             var len = face.length;
-            if (!center && len == 1) return gray;
-            if (!edges && len == 2) return gray;
-            if (!corners && len == 3) return gray;
-            return faceColor(face, faces);
+            var col = faceColor(face, faces);
+            switch (kind) {
+                case "full": return col;
+                case "cmll": return len == 3 ? col : gray;
+                case "cmll_c": return len == 2 ? gray : col;
+                case "coll":
+                    if (len == 1 || len == 3) return col;
+                    return face.indexOf('U') == -1 ? gray : col;
+                default: throw "Unknown diagram kind: " + kind;
+            }
         }
         return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
                    'style="max-width: 70vh; max-height: 70vh"' +

@@ -72,14 +72,14 @@
         function verifyPartial(result) {
             // check partial match (corners oriented, but not permuted)
             var pat;
-            switch (scramble) {
-                case "roux":
+            switch (kind) {
+                case "cmll":
                     pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
                     break;
-                case "cfop":
+                case "coll":
                     pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
                     break;
-                default: throw "Unknown scramble type: " + scramble;
+                default: throw "Unknown kind type: " + kind;
             }
             return Cube.matchPattern(pat, result);
         }
@@ -90,7 +90,7 @@
                 if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
-                if (scramble == "roux") {
+                if (kind == "cmll") {
                     // try flipping M-slice too because some algs (with wide moves) flip this
                     if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
                     if (Cube.matchPattern(pat, Cube.alg("L2 R2 U", result))) return true;
@@ -107,14 +107,14 @@
                 }
             }
             var pat;
-            switch (scramble) {
-                case "roux":
+            switch (kind) {
+                case "cmll":
                     pat = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // M-slice free
                     break;
-                case "cfop":
+                case "coll":
                     pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // whole first two layers
                     break;
-                default: throw "Unknown scramble type: " + scramble;
+                default: throw "Unknown kind type: " + kind;
             }
             if (matchWithAdjustments(pat)) {
                 setStatus("correct");
@@ -196,15 +196,17 @@
         var instance = Cube.solved;
         var alg = "";
         var solution = "";
-        var scramble = "";
+        var kind = "";
 
         function update(cube) {
             var upcols = Settings.values.upColors;
-            var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
             var simple = Settings.values.simpleDiagram;
-            var edges = !simple;
-            var center = !simple || numColors > 1;
-            document.getElementById("cube").innerHTML = Display.diagramLL(Cube.faces(cube), center, edges, true);
+            var diagKind = simple ? kind : "full";
+            if (diagKind == "cmll") {
+                var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
+                if (numColors > 1) diagKind += "_c";
+            }
+            document.getElementById("cube").innerHTML = Display.diagramLL(Cube.faces(cube), diagKind);
         }
 
         function next() {
@@ -219,10 +221,10 @@
                         if (name == (s + '_' + alg.id)) return set.algs[a]
                     }
                 }
-                return { id: "unknown", name: "Unknown", alg: "", scramble: "cfop" }; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
+                return { id: "unknown", name: "Unknown", alg: "", kind: "coll" }; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
             }
             function challenge(cas) {
-                scramble = cas.scramble;
+                kind = cas.kind;
                 var auf = Settings.values.randomAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
                 solution = auf + cas.alg;
                 instance = Cube.solved;
@@ -238,13 +240,13 @@
                 instance = Cube.random(rot, 1, instance);
                 instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
                 var upColor = Cube.faceColor("U", Cube.faces(instance));
-                if (cas.scramble == "roux") {
+                if (cas.kind == "roux") {
                     // scramble M-slice with U-layer
                     instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
                 }
                 // apply solution
                 instance = Cube.alg(solution, instance, true);
-                if (cas.scramble == "roux") {
+                if (cas.kind == "roux") {
                     var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
                     if (numColors > 1) {
                         // adjust M-slice so center top indicates color (too confusing otherwise!)
