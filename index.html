@@ -121,15 +121,18 @@
             function upColorToRot() {
                 var upcols = Settings.values.upColors;
                 if (upcols.yellow) return "";
-                if (upcols.white) return "x2 ";
-                if (upcols.red) return "x ";
-                if (upcols.orange) return "x' ";
-                if (upcols.green) return "z' ";
-                if (upcols.blue) return "z ";
+                if (upcols.white) return "x2";
+                if (upcols.red) return "x";
+                if (upcols.orange) return "x'";
+                if (upcols.green) return "z'";
+                if (upcols.blue) return "z";
             }
 
+            var lastRot = undefined;
             function buildAlgOptions() {
                 var rot = upColorToRot();
+                if (rot == lastRot) return;
+                lastRot = rot;
                 var htm = "";
                 for (var s in Algs.sets) {
                     var set = Algs.sets[s];
@@ -139,7 +142,7 @@
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = s + '_' + alg.id;
-                        var diag = Display.diagramLLAlg(rot + alg.alg, alg.kind, "5.1em");
+                        var diag = Display.diagramLLAlg(rot, alg.alg, alg.kind, "5.1em");
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
@@ -156,7 +159,7 @@
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = "diag_" + s + '_' + alg.id;
-                        var diag = Display.diagramLLAlg(rot + alg.alg, alg.kind, "5.1em");
+                        var diag = Display.diagramLLAlg(rot, alg.alg, alg.kind, "5.1em");
                         document.getElementById(id).innerHTML = diag;
                     }
                 }

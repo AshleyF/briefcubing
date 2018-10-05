@@ -240,13 +240,13 @@
                 instance = Cube.random(rot, 1, instance);
                 instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
                 var upColor = Cube.faceColor("U", Cube.faces(instance));
-                if (cas.kind == "roux") {
+                if (cas.kind == "cmll") {
                     // scramble M-slice with U-layer
                     instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
                 }
                 // apply solution
                 instance = Cube.alg(solution, instance, true);
-                if (cas.kind == "roux") {
+                if (cas.kind == "cmll") {
                     var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
                     if (numColors > 1) {
                         // adjust M-slice so center top indicates color (too confusing otherwise!)
