@@ -15,10 +15,55 @@
         var correct = new Audio("correct.wav");
         correct.load();
 
+        var recognitionStart = null;
+        var executionStart = null;
+        var executionStop = null;
+
+        function renderTimer() {
+            function renderSpan(span) {
+                var ms = span % 1000;
+                span = (span - ms) / 1000;
+                var s = span % 60;
+                span = (span - s) / 60;
+                var m = span % 60;
+                span = (span - m) / 60;
+                var h = span % 60;
+                return (h > 0 ? h + ':' : '') + 
+                       (m > 0 ? (h > 0 && m < 10 ? '0' : '') + m + ':' : '') +
+                       (m > 0 && s < 10 ? '0' : '') + s + '.' +
+                       (ms < 100 ? '0' : '') + (ms < 10 ? '0' : '') + ms;
+            }
+            var now = new Date();
+            var reco = recognitionStart ? (executionStart || now) - recognitionStart : 0;
+            var exec = executionStart ? (executionStop || now) - executionStart : 0;
+            var htm = '<table style="margin-left:auto;margin-right:auto">';
+            htm += '<tr><td align="right">Recognition:</td><td>' + renderSpan(reco) + '</td></tr>';
+            htm += '<tr><td align="right">Execution:</td><td>' + renderSpan(exec) + '</td></tr>';
+            htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + '</td></tr>';
+            htm += '</table>';
+            document.getElementById("timer").innerHTML = htm;
+        }
+
+        function startRecognition() {
+            recognitionStart = new Date();
+            executionStart = null;
+            executionStop = null;
+        }
+
+        function startOrContinueExecution() {
+            if (!executionStart)  executionStart = new Date();
+        }
+
+        function stopExecution() {
+            executionStop = new Date();
+        }
+
         function setStatus(status) {
             lastStatus = status;
             switch (status) {
                 case "correct":
+                    stopExecution();
+                    renderTimer();
                     correct.play();
                     document.getElementById("diagram").style.backgroundColor = "green";
                     document.getElementById("retry").disabled = false;
@@ -35,6 +80,7 @@
                     waiting = false;
                     break;
                 case "incorrect":
+                    stopExecution();
                     incorrect.play();
                     document.getElementById("diagram").style.backgroundColor = "darkred";
                     document.getElementById("retry").disabled = false;
@@ -44,6 +90,7 @@
                     initiallyPartial = false;
                     break;
                 case "progress":
+                    startOrContinueExecution();
                     document.getElementById("diagram").style.backgroundColor = (partial ? "goldenrod" : "#444");
                     document.getElementById("retry").disabled = false;
                     document.getElementById("next").disabled = false;
@@ -51,6 +98,7 @@
                     checkProgress();
                     break;
                 case "init":
+                    startRecognition();
                     document.getElementById("status").innerHTML = "&nbsp;";
                     document.getElementById("diagram").style.backgroundColor = "transparent";
                     document.getElementById("retry").disabled = true;
@@ -58,8 +106,10 @@
                     waiting = false;
                     partial = null;
                     initiallyPartial = verifyPartial(instance);
+                    document.getElementById("timer").innerText = "";
                     break;
                 case "error":
+                    stopExecution();
                     document.getElementById("status").innerHTML = "&nbsp;";
                     document.getElementById("diagram").style.backgroundColor = "transparent";
                     document.getElementById("retry").disabled = true;
@@ -182,6 +232,7 @@
 
         function connected() {
             hideConnectButton();
+            next();
         }
 
         function error(ex) {
