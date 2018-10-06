@@ -114,7 +114,11 @@
                     pat = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // M-slice free
                     break;
                 case "oll":
+                    pat = "UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // all oriented + whole first two layers
+                    break;
                 case "pll":
+                    pat = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"; // all oriented + whole first two layers
+                    break;
                 case "coll":
                     pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // whole first two layers
                     break;
