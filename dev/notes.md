@@ -10,6 +10,9 @@
 
 ## Script
 
+* Quick overview
+    * briefcubing.com
+    * 
 * Hold any orientation
 * Execute any alg
 * Two-look

@@ -37,8 +37,8 @@
             var reco = recognitionStart ? (executionStart || now) - recognitionStart : 0;
             var exec = executionStart ? (executionStop || now) - executionStart : 0;
             var htm = '<table style="margin-left:auto;margin-right:auto">';
-            htm += '<tr><td align="right">Recognition:</td><td>' + renderSpan(reco) + '</td></tr>';
-            htm += '<tr><td align="right">Execution:</td><td>' + renderSpan(exec) + '</td></tr>';
+            htm += '<tr><td align="right">' + Localization.getString("recognitionTime") + ':</td><td>' + renderSpan(reco) + '</td></tr>';
+            htm += '<tr><td align="right">' + Localization.getString("executionTime") + ':</td><td>' + renderSpan(exec) + '</td></tr>';
             htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + '</td></tr>';
             htm += '</table>';
             document.getElementById("timer").innerHTML = htm;
@@ -218,7 +218,7 @@
         function showConnectButton() {
             var btn = document.getElementById("giikerConnect");
             btn.disabled = false;
-            btn.innerText = "Connect Giiker Supercube";
+            btn.innerText = Localization.getString("giikerConnect");
             document.getElementById("cube").style.marginTop = "-80px";
             document.getElementById("giiker").style.display = "";
             document.getElementById("giikerDisconnectSection").style.display = "none";
@@ -237,13 +237,13 @@
 
         function error(ex) {
             showConnectButton();
-            alert("Error: " + ex.message);
+            alert(ex.message);
         }
 
         function giikerConnect() {
             var btn = document.getElementById("giikerConnect");
             btn.disabled = true;
-            btn.innerText = "Connecting...";
+            btn.innerText = Localization.getString("giikerConnecting");
             Giiker.connect(connected, twist, error);
         }
 

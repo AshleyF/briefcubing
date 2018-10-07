@@ -6,7 +6,8 @@ var Settings = (function () {
         version: VERSION,
         randomAuf: true,
         upColors: { yellow: true, red: true, blue: false },
-        algs: ["cmll_s_left_bar"]
+        algs: ["cmll_s_left_bar"],
+        lang: "en"
     };
     if (localStorage.settings) {
         var stored = JSON.parse(localStorage.settings);

@@ -25,6 +25,7 @@
         <script src="giiker.js"></script>
         <script src="settings.js"></script>
         <script src="algs.js"></script>
+        <script src="localization.js"></script>
         <script src="ui.js"></script>
         <script src="nosleep.min.js"></script>
         <script>
@@ -47,6 +48,7 @@
             });
 
             $(document).on("pagebeforeshow", "#main", function(event) {
+                localize();
                 setMainHeightToFit();
                 if (!Giiker.connected()) Ui.showConnectButton();
                 Ui.next();
@@ -76,6 +78,15 @@
                     var id = Settings.values.algs[a];
                     $('#' + id).prop('checked', true).checkboxradio('refresh');
                 }
+                var htm = "";
+                for (var l in Localization.langs) {
+                    var lang = Localization.langs[l];
+                    var chosen = Settings.values.lang || "en";
+                    htm += '<option id="lang_' + l + '" value="' + l + '"' + (chosen == l ? ' selected="selected"' : '') + '>' + Localization.getString("lang_" + l) + '</option>';
+                }
+                document.getElementById("language").innerHTML = htm;
+                $("#language").selectmenu("refresh");
+
                 settingsUpdate(); // consistency checks
             }
 
@@ -109,8 +120,37 @@
                     $('#' + s).prop('checked', all).checkboxradio('refresh');
                     document.getElementById(s + "_title").style.color = (some ? "#6ad" : "white");
                 }
+                Settings.values.lang = $("#language option:selected").val();
                 Settings.save();
                 Ui.next();
+            }
+
+            function localize() {
+                $("#drills").text(Localization.getString("briefDrills"));
+                for (var l in Localization.langs) {
+                    $("#lang_" + l).text(Localization.getString("lang_" + l));
+                }
+                $("#auf_label").text(Localization.getString("randomAuf"));
+                $("#auf").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
+                $("#auf").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
+                $("#simple_label").text(Localization.getString("simplifiedDiagram"));
+                $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
+                $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
+                $("#upColors_label").text(Localization.getString("upColors"));
+                $("#feedback").text(Localization.getString("feedback"));
+                $("#giikerConnect").text(Localization.getString("giikerConnect"));
+                $("#giikerDisconnect").text(Localization.getString("giikerDisconnect"));
+                $("#giikerBuy").text(Localization.getString("giikerBuy"));
+                $("#retry").text(Localization.getString("retry"));
+                $("#next").text(Localization.getString("next"));
+            }
+
+            function localizationUpdate() {
+                Settings.values.lang = $("#language option:selected").val();
+                localize();
+                lastRot = undefined; // force rebuild
+                buildAlgOptions();
+                settingsUpdate();
             }
 
             function settingsAllCasesUpdate(name) {
@@ -141,7 +181,7 @@
                 for (var s in Algs.sets) {
                     var set = Algs.sets[s];
                     htm += '<div id="cmllFieldset" data-role="collapsible"><h3><span id="' + s + '_title">' + set.name + '</span></h3>';
-                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">All ' + set.name + ' Cases</label>';
+                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">' + Localization.getString("allCases").replace("[ALG]", set.name) + '</label>';
                     htm += '<fieldset data-role="controlgroup" data-type="horizontal">';
                     for (var a in set.algs) {
                         var alg = set.algs[a];
@@ -150,7 +190,7 @@
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
-                    htm += '<a target="_blank" href="' + set.source + '">More info</a>';
+                    htm += '<a target="_blank" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
                     htm += '</div>';
                 }
                 document.getElementById("algs").innerHTML = htm;
@@ -175,12 +215,12 @@
         <div id="main" data-role="page">
             <div data-role="header" style="height:40px">
                 <a href="#options" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
-                <h1><img src="logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-left: -12px; margin-top: -7px" /> Brief Drills</h1>
+                <h1><img src="logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-left: -12px; margin-top: -7px" /> <span id="drills"></span></h1>
             </div>
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
                 <div id="giiker">
-                    <button id="giikerConnect" onclick="nosleep.enable(); Ui.giikerConnect()" class="ui-btn ui-mini">Connect Giiker Supercube</button>
-                    <a target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px">I don't have one</a>
+                    <button id="giikerConnect" onclick="nosleep.enable(); Ui.giikerConnect()" class="ui-btn ui-mini"></button>
+                    <a id="giikerBuy" target="_blank" href="https://amzn.to/2NVExu3" style="padding-left: 20px"></a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden" style="display: none"></h1>
                 <div id="cube" style="text-align: center; margin-top: -80px"></div>
@@ -193,27 +233,16 @@
                 </div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
-                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh">Retry</button>
-                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r">Next</button>
+                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh"></button>
+                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r"></button>
             </div>
             <div id="options" data-role="panel" data-display="overlay">
-                <span id="test"></span>
                 <div id="giikerDisconnectSection" style="display:none">
-                    <button id="giikerDisconnect" onclick="nosleep.disable(); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true">Disconnect Giiker Cube</button>
+                    <button id="giikerDisconnect" onclick="nosleep.disable(); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true"></button>
                     <hr />
                 </div>
-                <label for="auf">Random AUF</label>
-                <select id="auf" data-role="slider" data-mini="true" onchange="settingsUpdate()">
-                    <option value="off">Off</option>
-                    <option value="on">On</option>
-                </select>
-                <label for="simple">Simplified Diagram</label>
-                <select id="simple" data-role="slider" data-mini="true" onchange="settingsUpdate()">
-                    <option value="off">Off</option>
-                    <option value="on">On</option>
-                </select>
                 <fieldset id="upColors" data-role="controlgroup" data-type="horizontal">
-                    <legend>Up Colors</legend>
+                    <legend id="upColors_label"></legend>
                     <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="yellow"><span class="yellow swatch"></span></label>
                     <input id="white" type="checkbox" value="white" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="white"><span class="white swatch"></span></label>
                     <input id="red" type="checkbox" value="red" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="red"><span class="red swatch"></span></label>
@@ -222,8 +251,22 @@
                     <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
                 </fieldset>
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
-                <a href="mailto:feedback@briefcubing.com?Subject=Feedback%20%28v0.1.3%29%0A">Feedback</a>
-                <p style="font-size: xx-small; text-align: right">Version 0.1.3 &nbsp;&nbsp; Copyright &copy; Ashley Nathan Feniello&nbsp;</p>
+                <label id="auf_label" for="auf"></label>
+                <select id="auf" data-role="slider" data-mini="true" onchange="settingsUpdate()">
+                    <option value="off"></option>
+                    <option value="on"></option>
+                </select>
+                <label id="simple_label" for="simple"></label>
+                <select id="simple" data-role="slider" data-mini="true" onchange="settingsUpdate()">
+                    <option value="off"></option>
+                    <option value="on"></option>
+                </select>
+                <div class="ui-field-contain">
+                    <select name="language" id="language" data-mini="true" onchange="localizationUpdate()">
+                    </select>
+                </div>
+                <a id="feedback" href="mailto:feedback@briefcubing.com?Subject=Feedback%20%28v0.1.3%29%0A"></a>
+                <p style="font-size: xx-small; text-align: right">v0.1.3 &nbsp;&nbsp; &copy; Ashley Nathan Feniello&nbsp;</p>
             </div>
         </div>
     </body>
