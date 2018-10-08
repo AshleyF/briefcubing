@@ -14,9 +14,10 @@
         <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles.css" />
         <link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css" />
         <link rel="stylesheet" href="theme-classic.css" />
+        <link rel="stylesheet" href="spectrum/spectrum.css" />
+        <link rel="stylesheet" href="styles.css" />
         <script src="jquery/jquery-1.11.1.min.js"></script>
         <script src="jquery/jquery.mobile-1.4.5.min.js"></script>
         <script src="roofpig_and_three.min.js"></script>
@@ -28,6 +29,7 @@
         <script src="localization.js"></script>
         <script src="ui.js"></script>
         <script src="nosleep.min.js"></script>
+        <script src="spectrum/spectrum.js"></script>
         <script>
             const version = "0.1.3";
             var nosleep = new NoSleep();
@@ -45,6 +47,11 @@
 
             $(document).on("pagecreate", "#main", function() {
                 buildAlgOptions();
+                $(".spectrum").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer"
+                });
             });
 
             $(document).on("pagebeforeshow", "#main", function(event) {
@@ -140,7 +147,7 @@
                 $("#simple_label").text(Localization.getString("simplifiedDiagram"));
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
-                $("#upColors_label").text(Localization.getString("upColors"));
+                $("#upColors_label").html(Localization.getString("upColors") + ' <a href="#colorScheme" data-rel="popup" style="font-size: small; float: right">' + Localization.getString("customScheme") + '</a>');
                 $("#feedback").text(Localization.getString("feedback"));
                 $("#giikerConnect").text(Localization.getString("giikerConnect"));
                 $("#giikerDisconnect").text(Localization.getString("giikerDisconnect"));
@@ -269,6 +276,46 @@
                 </div>
                 <a id="feedback" href="mailto:feedback@briefcubing.com?Subject=Feedback%20%28v0.1.3%29%0A"></a>
                 <p style="font-size: xx-small; text-align: right">v0.1.3 &nbsp;&nbsp; &copy; Ashley Nathan Feniello&nbsp;</p>
+            </div>
+            <div id="colorScheme" data-role="popup">
+                <div style="padding: 1em">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" class="spectrum" value="#ff0000" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" class="spectrum" value="#ff0000" />
+                            </td>
+                            <td>
+                                <input type="text" class="spectrum" value="#ff0000" />
+                            </td>
+                            <td>
+                                <input type="text" class="spectrum" value="#ff0000" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" class="spectrum" value="#ff0000" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" class="spectrum" value="#ff0000" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <br />
+                    <a href="" style="font-size: small">Reset to default colors</a>
+                </div>
             </div>
         </div>
     </body>

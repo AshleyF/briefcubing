@@ -20,6 +20,7 @@ var Localization = (function () {
             moreInfo: "More info",
             recognitionTime: "Recognition",
             executionTime: "Execution",
+            customScheme: "Custom scheme",
             language: "Language"
         },
         zh: {
@@ -42,6 +43,7 @@ var Localization = (function () {
             moreInfo: "更多信息",
             recognitionTime: "认可",
             executionTime: "执行",
+            customScheme: "自定义配色方案",
             language: "语言"
         }
     }

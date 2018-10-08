@@ -29,6 +29,7 @@ var Display = (function () {
     }
 
     function diagramLL(faces, kind, size) {
+        return "";
         function col(face) {
             const gray = "#222";
             var len = face.length;
