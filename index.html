@@ -182,6 +182,7 @@
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#upColors_label").html(Localization.getString("upColors") + ' <a href="#colorScheme" data-rel="popup" style="font-size: small; float: right">' + Localization.getString("customScheme") + '</a>');
+                $("#customSchemeReset").text(Localization.getString("customSchemeReset"));
                 $("#feedback").text(Localization.getString("feedback"));
                 $("#giikerConnect").text(Localization.getString("giikerConnect"));
                 $("#giikerDisconnect").text(Localization.getString("giikerDisconnect"));
@@ -365,7 +366,7 @@
                         </tr>
                     </table>
                     <br />
-                    <a href="javascript:resetColorScheme()" style="font-size: small">Reset to default colors</a>
+                    <a id="customSchemeReset" href="javascript:resetColorScheme()" style="font-size: small"></a>
                 </div>
             </div>
         </div>

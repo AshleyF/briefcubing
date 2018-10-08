@@ -21,6 +21,7 @@ var Localization = (function () {
             recognitionTime: "Recognition",
             executionTime: "Execution",
             customScheme: "Custom scheme",
+            customSchemeReset: "Reset to default colors",
             language: "Language"
         },
         zh: {
@@ -44,6 +45,7 @@ var Localization = (function () {
             recognitionTime: "认可",
             executionTime: "执行",
             customScheme: "自定义配色方案",
+            customSchemeReset: "重置为默认颜色",
             language: "语言"
         }
     }
