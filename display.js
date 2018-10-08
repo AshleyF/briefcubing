@@ -8,12 +8,12 @@ var Display = (function () {
 
     function faceToCssColor(face) {
         switch (face) {
-            case 'U': return "#EF0";
-            case 'D': return "#FFF";
-            case 'L': return "#08F";
-            case 'R': return "#0C0";
-            case 'F': return "#F10";
-            case 'B': return "#F90";
+            case 'U': return Settings.values.colorSchemeU || "#EF0";
+            case 'D': return Settings.values.colorSchemeD || "#FFF";
+            case 'L': return Settings.values.colorSchemeL || "#08F";
+            case 'R': return Settings.values.colorSchemeR || "#0C0";
+            case 'F': return Settings.values.colorSchemeF || "#F10";
+            case 'B': return Settings.values.colorSchemeB || "#F90";
             // case 'P': return "#B4F";
             // case '*': return "#000";
             // default: return "#333";
@@ -119,6 +119,7 @@ var Display = (function () {
 
     return {
         diagramLL: diagramLL,
-        diagramLLAlg: diagramLLAlg
+        diagramLLAlg: diagramLLAlg,
+        faceToCssColor: faceToCssColor
     };
 }());

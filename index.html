@@ -14,9 +14,10 @@
         <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles.css" />
         <link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css" />
         <link rel="stylesheet" href="theme-classic.css" />
+        <link rel="stylesheet" href="spectrum/spectrum.css" />
+        <link rel="stylesheet" href="styles.css" />
         <script src="jquery/jquery-1.11.1.min.js"></script>
         <script src="jquery/jquery.mobile-1.4.5.min.js"></script>
         <script src="roofpig_and_three.min.js"></script>
@@ -28,6 +29,7 @@
         <script src="localization.js"></script>
         <script src="ui.js"></script>
         <script src="nosleep.min.js"></script>
+        <script src="spectrum/spectrum.js"></script>
         <script>
             const version = "0.1.3";
             var nosleep = new NoSleep();
@@ -45,6 +47,36 @@
 
             $(document).on("pagecreate", "#main", function() {
                 buildAlgOptions();
+                $("#colorSchemeU").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer",
+                    change: function(c) { setColorScheme("colorSchemeU", c.toHexString()); } });
+                $("#colorSchemeD").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer",
+                    change: function(c) { setColorScheme("colorSchemeD", c.toHexString()); } });
+                $("#colorSchemeL").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer",
+                    change: function(c) { setColorScheme("colorSchemeL", c.toHexString()); } });
+                $("#colorSchemeR").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer",
+                    change: function(c) { setColorScheme("colorSchemeR", c.toHexString()); } });
+                $("#colorSchemeF").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer",
+                    change: function(c) { setColorScheme("colorSchemeF", c.toHexString()); } });
+                $("#colorSchemeB").spectrum({
+                    showButtons: false,
+                    containerClassName: "spectrum-container",
+                    replacerClassName: "spectrum-replacer",
+                    change: function(c) { setColorScheme("colorSchemeB", c.toHexString()); } });
             });
 
             $(document).on("pagebeforeshow", "#main", function(event) {
@@ -66,13 +98,16 @@
                 }
             });
 
-            var colors = ["yellow", "white", "red", "orange", "green", "blue"];
+            var colors = ["yellow", "white", "blue", "green", "red", "orange"];
 
             function settingsToUi() {
                 $("#auf").prop('value', Settings.values.randomAuf ? "on" : "off").slider('refresh');
                 $("#simple").prop('value', Settings.values.simpleDiagram ? "on" : "off").slider('refresh');
                 for (var c in Settings.values.upColors) {
                     $('#' + c).prop('checked', Settings.values.upColors[c]).checkboxradio('refresh');
+                }
+                for (var i = 0; i < colors.length; i++) {
+                    $('#' + colors[i] + "Swatch").css("backgroundColor", Display.faceToCssColor("UDLRFB"[i]));
                 }
                 for (var a in Settings.values.algs) {
                     var id = Settings.values.algs[a];
@@ -86,6 +121,12 @@
                 }
                 document.getElementById("language").innerHTML = htm;
                 $("#language").selectmenu("refresh");
+                $("#colorSchemeU").spectrum("set", Display.faceToCssColor("U"));
+                $("#colorSchemeD").spectrum("set", Display.faceToCssColor("D"));
+                $("#colorSchemeL").spectrum("set", Display.faceToCssColor("L"));
+                $("#colorSchemeR").spectrum("set", Display.faceToCssColor("R"));
+                $("#colorSchemeF").spectrum("set", Display.faceToCssColor("F"));
+                $("#colorSchemeB").spectrum("set", Display.faceToCssColor("B"));
 
                 settingsUpdate(); // consistency checks
             }
@@ -140,7 +181,7 @@
                 $("#simple_label").text(Localization.getString("simplifiedDiagram"));
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
-                $("#upColors_label").text(Localization.getString("upColors"));
+                $("#upColors_label").html(Localization.getString("upColors") + ' <a href="#colorScheme" data-rel="popup" style="font-size: small; float: right">' + Localization.getString("customScheme") + '</a>');
                 $("#feedback").text(Localization.getString("feedback"));
                 $("#giikerConnect").text(Localization.getString("giikerConnect"));
                 $("#giikerDisconnect").text(Localization.getString("giikerDisconnect"));
@@ -211,6 +252,23 @@
                     }
                 }
             }
+
+            function setColorScheme(id, color) {
+                Settings.values[id] = color;
+                settingsToUi();
+                updateAlgColors();
+            }
+
+            function resetColorScheme() {
+                Settings.values.colorSchemeU = "#EF0";
+                Settings.values.colorSchemeD = "#FFF";
+                Settings.values.colorSchemeL = "#08F";
+                Settings.values.colorSchemeR = "#0C0";
+                Settings.values.colorSchemeF = "#F10";
+                Settings.values.colorSchemeB = "#F90";
+                settingsToUi();
+                updateAlgColors();
+            }
         </script>
     </head>
     <body>
@@ -245,12 +303,12 @@
                 </div>
                 <fieldset id="upColors" data-role="controlgroup" data-type="horizontal">
                     <legend id="upColors_label"></legend>
-                    <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="yellow"><span class="yellow swatch"></span></label>
-                    <input id="white" type="checkbox" value="white" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="white"><span class="white swatch"></span></label>
-                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="red"><span class="red swatch"></span></label>
-                    <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="orange"><span class="orange swatch"></span></label>
-                    <input id="green" type="checkbox" value="green" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="green"><span class="green swatch"></span></label>
-                    <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="blue"><span class="blue swatch"></span></label>
+                    <input id="yellow" type="checkbox" value="yellow" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="yellow"><span id="yellowSwatch" class="swatch"></span></label>
+                    <input id="white" type="checkbox" value="white" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="white"><span id="whiteSwatch" class="swatch"></span></label>
+                    <input id="red" type="checkbox" value="red" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="red"><span id="redSwatch" class="swatch"></span></label>
+                    <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="orange"><span id="orangeSwatch" class="swatch"></span></label>
+                    <input id="green" type="checkbox" value="green" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="green"><span id="greenSwatch" class="swatch"></span></label>
+                    <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate(); updateAlgColors()" data-mini="true" /><label for="blue"><span id="blueSwatch" class="swatch"></span></label>
                 </fieldset>
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
                 <label id="auf_label" for="auf"></label>
@@ -269,6 +327,46 @@
                 </div>
                 <a id="feedback" href="mailto:feedback@briefcubing.com?Subject=Feedback%20%28v0.1.3%29%0A"></a>
                 <p style="font-size: xx-small; text-align: right">v0.1.3 &nbsp;&nbsp; &copy; Ashley Nathan Feniello&nbsp;</p>
+            </div>
+            <div id="colorScheme" data-role="popup" data-transition="pop">
+                <div style="padding: 1em">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input id="colorSchemeU" type="text" class="spectrum" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="colorSchemeL" type="text" class="spectrum" />
+                            </td>
+                            <td>
+                                <input id="colorSchemeF" type="text" class="spectrum" />
+                            </td>
+                            <td>
+                                <input id="colorSchemeR" type="text" class="spectrum" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input id="colorSchemeD" type="text" class="spectrum" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input id="colorSchemeB" type="text" class="spectrum" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <br />
+                    <a href="javascript:resetColorScheme()" style="font-size: small">Reset to default colors</a>
+                </div>
             </div>
         </div>
     </body>
