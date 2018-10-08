@@ -6,30 +6,6 @@ body {
     margin: 0 !important;
 }
 
-.yellow  {
-    background-color: #EF0;
-}
-
-.white  {
-    background-color: #FFF;
-}
-
-.blue  {
-    background-color: #08F;
-}
-
-.green  {
-    background-color: #0C0;
-}
-
-.red  {
-    background-color: #F10;
-}
-
-.orange  {
-    background-color: #F90;
-}
-
 .swatch {
     display: block;
     width: 1.9em;
