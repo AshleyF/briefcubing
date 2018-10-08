@@ -130,6 +130,10 @@
                 for (var l in Localization.langs) {
                     $("#lang_" + l).text(Localization.getString("lang_" + l));
                 }
+                for (var s in Algs.sets) {
+                    $("#all_" + s).text(Localization.getString("allCases").replace("[ALG]", Algs.sets[s].name));
+                    $("#info_" + s).text(Localization.getString("moreInfo"));
+                }
                 $("#auf_label").text(Localization.getString("randomAuf"));
                 $("#auf").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#auf").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
@@ -148,8 +152,6 @@
             function localizationUpdate() {
                 Settings.values.lang = $("#language option:selected").val();
                 localize();
-                lastRot = undefined; // force rebuild
-                buildAlgOptions();
                 settingsUpdate();
             }
 
@@ -181,7 +183,7 @@
                 for (var s in Algs.sets) {
                     var set = Algs.sets[s];
                     htm += '<div id="cmllFieldset" data-role="collapsible"><h3><span id="' + s + '_title">' + set.name + '</span></h3>';
-                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label for="' + s + '">' + Localization.getString("allCases").replace("[ALG]", set.name) + '</label>';
+                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label id="all_' + s + '" for="' + s + '">' + Localization.getString("allCases").replace("[ALG]", set.name) + '</label>';
                     htm += '<fieldset data-role="controlgroup" data-type="horizontal">';
                     for (var a in set.algs) {
                         var alg = set.algs[a];
@@ -190,7 +192,7 @@
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
-                    htm += '<a target="_blank" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                    htm += '<a id="info_' + s + '" target="_blank" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
                     htm += '</div>';
                 }
                 document.getElementById("algs").innerHTML = htm;
