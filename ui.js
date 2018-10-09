@@ -175,6 +175,7 @@
                 default: throw "Unknown kind type: " + kind;
             }
             if (matchWithAdjustments(pat)) {
+                update(result);
                 setStatus("correct");
                 return true;
             }
@@ -201,7 +202,7 @@
                     for (var a = 0; a < 4; a++) {
                         var auf = ["", "U", "U'", "U2"][a];
                         // apply rotation, auf, alg, inverse rotation
-                        var result = Cube.alg(rot, Cube.alg(auf, Cube.alg(alg, Cube.alg(rot, instance))), true);
+                        var result = Cube.alg(auf, Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true));
                         if (verify(result)) return true;
                     }
                 }

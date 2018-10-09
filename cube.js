@@ -409,8 +409,7 @@ var Cube = (function () {
     }
 
     function matchPattern(pattern, cube) {
-        var reoriented = cube;
-        var state = toString(reoriented);
+        var state = toString(cube);
         var mapping = {};
         var matched = true;
         for (var i in pattern) {
