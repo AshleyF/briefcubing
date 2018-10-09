@@ -189,6 +189,7 @@
             return false;
         }
 
+        var queued = 0; // count of queued check() calls
         function twist(t) {
             if (waiting) {
                 // retry/next with X/X'
@@ -196,6 +197,7 @@
                 return;
             }
             function check() {
+                if (--queued > 0) return; // skip checking - let future queued calls get to it
                 var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
                 for (var i = 0; i < rotations.length; i++) {
                     var rot = rotations[i];
@@ -216,7 +218,8 @@
             }
             document.getElementById("status").innerHTML = progress;
             setStatus("progress");
-            check();
+            queued++;
+            window.setTimeout(check, 50);
         }
 
         function showConnectButton() {

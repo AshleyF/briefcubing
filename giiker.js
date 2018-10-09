@@ -8,13 +8,6 @@ var Giiker = (function () {
     const SYSTEM_READ_UUID = "0000aaab-0000-1000-8000-00805f9b34fb";
     const SYSTEM_WRITE_UUID = "0000aaac-0000-1000-8000-00805f9b34fb";
 
-    function giikerTwist(i, giikerState) {
-        var twists = "BDLURF";
-        var twist = giikerState[32 + i * 2] - 1;
-        var amount = giikerState[32 + 1 + i * 2];
-        return twists[twist] + (amount == 2 ? "2" : amount == 3 ? "'" : "");
-    }
-
     var device;
 
     async function connect(connectedCallback, twistCallback, errorCallback) {
