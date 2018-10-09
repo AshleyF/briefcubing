@@ -198,9 +198,12 @@
                 var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
                 for (var i = 0; i < rotations.length; i++) {
                     var rot = rotations[i];
-                    // apply rotation, alg, inverse rotation
-                    var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
-                    if (verify(result)) return true;
+                    for (var a = 0; a < 4; a++) {
+                        var auf = ["", "U", "U'", "U2"][a];
+                        // apply rotation, auf, alg, inverse rotation
+                        var result = Cube.alg(rot, Cube.alg(auf, Cube.alg(alg, Cube.alg(rot, instance))), true);
+                        if (verify(result)) return true;
+                    }
                 }
             }
             if (t == "") return;
