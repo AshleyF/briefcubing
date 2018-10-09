@@ -136,7 +136,7 @@
             return Cube.matchPattern(pat, result);
         }
 
-        function verify(result) {
+        function verify(result, includePartial) {
             function matchWithAdjustments(pat) {
                 if (Cube.matchPattern(pat, result)) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
@@ -179,7 +179,7 @@
                 setStatus("correct");
                 return true;
             }
-            if (!partial && !initiallyPartial && verifyPartial(result)) {
+            if (includePartial && !partial && !initiallyPartial && verifyPartial(result)) {
                 partial = instance; // record for retry
                 instance = result;
                 update(instance);
@@ -201,12 +201,15 @@
                 var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
                 for (var i = 0; i < rotations.length; i++) {
                     var rot = rotations[i];
-                    for (var a = 0; a < 4; a++) {
-                        var auf = ["", "U", "U'", "U2"][a];
-                        // apply rotation, auf, alg, inverse rotation
-                        var result = Cube.alg(auf, Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true));
-                        if (verify(result)) return true;
-                    }
+                    // apply rotation, auf, alg, inverse rotation
+                    var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
+                    if (verify(result, false)) return true;
+                }
+                // again, looking for partial matches
+                for (var i = 0; i < rotations.length; i++) {
+                    var rot = rotations[i];
+                    var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
+                    if (verify(result, true)) return true;
                 }
             }
             if (t == "") return;
