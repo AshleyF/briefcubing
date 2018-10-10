@@ -107,7 +107,7 @@
                     waiting = false;
                     partial = null;
                     initiallyPartial = verifyPartial(instance);
-                    document.getElementById("message").innerHTML = '<a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small; margin-left: 0.5em">' + Localization.getString("hint") + '</a>';
+                    document.getElementById("message").innerHTML = '<br /><br /><a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small; margin-left: 0.5em">' + Localization.getString("hint") + '</a>';
                     break;
                 case "error":
                     stopExecution();
