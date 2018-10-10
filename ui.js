@@ -41,7 +41,7 @@
             htm += '<tr><td align="right">' + Localization.getString("executionTime") + ':</td><td>' + renderSpan(exec) + '</td></tr>';
             htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + '</td></tr>';
             htm += '</table>';
-            document.getElementById("timer").innerHTML = htm;
+            document.getElementById("message").innerHTML = htm;
         }
 
         function startRecognition() {
@@ -106,7 +106,7 @@
                     waiting = false;
                     partial = null;
                     initiallyPartial = verifyPartial(instance);
-                    document.getElementById("timer").innerText = "";
+                    document.getElementById("message").innerHTML = '<a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small">Hint</a>';
                     break;
                 case "error":
                     stopExecution();
@@ -287,7 +287,10 @@
                     var set = Algs.sets[s];
                     for (var a in set.algs) {
                         var alg = set.algs[a];
-                        if (name == (s + '_' + alg.id)) return set.algs[a]
+                        if (name == (s + '_' + alg.id)) {
+                            document.getElementById("popup").innerHTML = '<h4>' + alg.alg + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                            return set.algs[a]
+                        }
                     }
                 }
                 return { id: "unknown", name: "Unknown", alg: "", kind: "coll" }; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)

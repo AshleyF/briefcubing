@@ -1,5 +1,5 @@
-# Trainer
+# Brief Drills
 
-Produce random cases across a set of algs. Solve them with a Giiker cube.
+Alg trainer producing random cases across alg sets. Solve them with a the GiiKER cube.
 
-The Giiker may be held in any orientation (I even took the stickers off mine!). The solution may be any alg that works (even mistakes/corrections).
+The GiiKER may be held in any orientation (even blank with stickers removed). The solution may be any alg that works (even mistakes/corrections).

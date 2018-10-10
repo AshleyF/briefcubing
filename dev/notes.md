@@ -7,18 +7,17 @@
 * Roux EO/EOLR support
 * F2L/SB support
 * Full-screen mode and no sleep then
+* More algs
+* Discoverability text about U/U' to Next/Retry
+* Connection error messaging and help page
 
-## Script
+## Bugs
 
-* Quick overview
-    * briefcubing.com
-    * 
-* Hold any orientation
-* Execute any alg
-* Two-look
+* Continue turning after solve
+* Scroll snapping to top
+* Color picker stays up
 
 ## Backlog
 
-* Localize UI + alg names
 * Roofpig-less (optimization)
 * Keyboard support
