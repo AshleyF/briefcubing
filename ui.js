@@ -71,6 +71,7 @@
                     window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
                     partial = null;
                     initiallyPartial = false;
+                    $("#popup").popup("close");
                     break;
                 case "partial":
                     document.getElementById("status").innerHTML = "&nbsp;";
@@ -106,7 +107,7 @@
                     waiting = false;
                     partial = null;
                     initiallyPartial = verifyPartial(instance);
-                    document.getElementById("message").innerHTML = '<a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small">Hint</a>';
+                    document.getElementById("message").innerHTML = '<a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small; margin-left: 0.5em">' + Localization.getString("hint") + '</a>';
                     break;
                 case "error":
                     stopExecution();
@@ -115,6 +116,7 @@
                     document.getElementById("retry").disabled = true;
                     document.getElementById("next").disabled = true;
                     waiting = false;
+                    document.getElementById("message").innerText = ""; // remove "Hint" link
                     break;
             }
         }
@@ -289,10 +291,11 @@
                         var alg = set.algs[a];
                         if (name == (s + '_' + alg.id)) {
                             document.getElementById("popup").innerHTML = '<h4>' + alg.alg + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
-                            return set.algs[a]
+                            return set.algs[a];
                         }
                     }
                 }
+                document.getElementById("popup").innerText = '';
                 return { id: "unknown", name: "Unknown", alg: "", kind: "coll" }; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
             }
             function challenge(cas) {
@@ -337,6 +340,7 @@
                 setStatus("error");
             }
             update(instance);
+            $("#popup").popup("close");
         }
 
         function retry() {
