@@ -2,6 +2,7 @@
 
 ## TODO
 
+* Allow algs with parenthesis
 * Use [jQuery custom bundle](http://jquerymobile.com/download-builder/)
 * Cube status icon (top right) -> battery, disconnect, etc.
 * Roux EO/EOLR support

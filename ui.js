@@ -138,7 +138,7 @@
             return Cube.matchPattern(pat, result);
         }
 
-        function verify(result, includePartial) {
+        function verifyComplete(result) {
             function matchWithAdjustments(pat) {
                 if (Cube.matchPattern(pat, result)) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
@@ -160,23 +160,17 @@
                     if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
                 }
             }
-            var pat;
             switch (kind) {
-                case "cmll":
-                    pat = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // M-slice free
-                    break;
-                case "oll":
-                    pat = "UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // all oriented + whole first two layers
-                    break;
-                case "pll":
-                    pat = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"; // all oriented + whole first two layers
-                    break;
-                case "coll":
-                    pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // whole first two layers
-                    break;
+                case "cmll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"); // M-slice free
+                case "oll": return matchWithAdjustments("UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // all oriented + whole first two layers
+                case "pll": return matchWithAdjustments("UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"); // all oriented + whole first two layers
+                case "coll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // whole first two layers
                 default: throw "Unknown kind type: " + kind;
             }
-            if (matchWithAdjustments(pat)) {
+        }
+
+        function verify(result, includePartial) {
+            if (verifyComplete(result)) {
                 update(result);
                 setStatus("correct");
                 return true;
@@ -266,6 +260,7 @@
 
         var instance = Cube.solved;
         var alg = "";
+        var auf = "";
         var solution = "";
         var kind = "";
 
@@ -284,23 +279,35 @@
             function randomElement(arr) {
                 return arr[Math.floor(Math.random() * arr.length)];
             }
+            function prependAuf(auf, alg) {
+                var sansAuf = alg;
+                if (alg.startsWith("U ")) sansAuf = alg.substr(2);
+                else if (alg.startsWith("U' ")) sansAuf = alg.substr(3);
+                else if (alg.startsWith("U2 ")) sansAuf = alg.substr(3);
+                var testInstance = Cube.alg(solution, Cube.solved, true); // apply random AUF + alg to solved
+                if (verifyComplete(Cube.alg(sansAuf, testInstance))) return sansAuf;
+                if (verifyComplete(Cube.alg("U " + sansAuf, testInstance))) return "(U) " + sansAuf;
+                if (verifyComplete(Cube.alg("U' " + sansAuf, testInstance))) return "(U') " + sansAuf;
+                if (verifyComplete(Cube.alg("U2 " + sansAuf, testInstance))) return "(U2) " + sansAuf;
+                throw "No possible solution!";
+            }
             function lookupAlg(name) {
                 for (var s in Algs.sets) {
                     var set = Algs.sets[s];
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         if (name == (s + '_' + alg.id)) {
-                            document.getElementById("popup").innerHTML = '<h4>' + alg.alg + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
-                            return set.algs[a];
+                            kind = set.algs[a].kind;
+                            return { set: set, alg: set.algs[a] };
                         }
                     }
                 }
                 document.getElementById("popup").innerText = '';
-                return { id: "unknown", name: "Unknown", alg: "", kind: "coll" }; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
+                kind = "pll"; // default
+                return { set: null, alg: { id: "unknown", name: "Unknown", alg: "", kind: "coll" }}; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
             }
             function challenge(cas) {
-                kind = cas.kind;
-                var auf = Settings.values.randomAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
+                auf = Settings.values.randomAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
                 solution = auf + cas.alg;
                 instance = Cube.solved;
                 // up color
@@ -333,10 +340,13 @@
             }
             alg = "";
             if (Settings.values.algs.length > 0) {
-                challenge(lookupAlg(randomElement(Settings.values.algs)));
+                var lookup = lookupAlg(randomElement(Settings.values.algs));
+                challenge(lookup.alg);
+                document.getElementById("popup").innerHTML = '<h4>' + prependAuf(auf, lookup.alg.alg) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                 setStatus("init");
             } else {
-                challenge(lookupAlg(""));
+                challenge(lookupAlg("").alg);
+                document.getElementById("popup").innerText = "";
                 setStatus("error");
             }
             update(instance);
