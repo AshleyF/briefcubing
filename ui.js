@@ -133,12 +133,23 @@
                 case "coll":
                     pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
                     break;
+                case "eo":
+                case "eolr":
+                    return false; // not possible
                 default: throw "Unknown kind type: " + kind;
             }
             return Cube.matchPattern(pat, result);
         }
 
         function verifyComplete(result) {
+            function checkEO() {
+                // check that edges are oriented
+                return true; // TODO
+            }
+            function checkLR() {
+                // UL/UR edges should be in DF/DB position
+                return true; // TODO
+            }
             function matchWithAdjustments(pat) {
                 if (Cube.matchPattern(pat, result)) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
@@ -160,11 +171,14 @@
                     if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
                 }
             }
+            const cmllPattern = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B";
             switch (kind) {
-                case "cmll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"); // M-slice free
+                case "cmll": return matchWithAdjustments(cmllPattern); // M-slice free
                 case "oll": return matchWithAdjustments("UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // all oriented + whole first two layers
                 case "pll": return matchWithAdjustments("UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"); // all oriented + whole first two layers
                 case "coll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // whole first two layers
+                case "eo": return matchWithAdjustments(cmllPattern) && checkEO();
+                case "eolr": return matchWithAdjustments(cmllPattern) && checkEO() && checkLR();
                 default: throw "Unknown kind type: " + kind;
             }
         }
@@ -267,12 +281,12 @@
         function update(cube) {
             var upcols = Settings.values.upColors;
             var simple = Settings.values.simpleDiagram;
-            var diagKind = simple ? kind : "full";
+            var diagKind = kind;
             if (diagKind == "cmll") {
                 var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
                 if (numColors > 1) diagKind += "_c";
             }
-            document.getElementById("cube").innerHTML = Display.diagramLL(Cube.faces(cube), diagKind);
+            document.getElementById("cube").innerHTML = Display.diagram(cube, diagKind, simple);
         }
 
         function next() {
@@ -302,11 +316,10 @@
                         }
                     }
                 }
-                document.getElementById("popup").innerText = '';
-                kind = "pll"; // default
-                return { set: null, alg: { id: "unknown", name: "Unknown", alg: "", kind: "coll" }}; // prevents errors if algs are removed but remain in settings (repaired by showing options pane)
+                return undefined;
             }
             function challenge(cas) {
+                if (!cas) cas = { id: "unknown", name: "Unknown", alg: "", kind: "coll" }; // solved (default)
                 auf = Settings.values.randomAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
                 solution = auf + cas.alg;
                 instance = Cube.solved;
@@ -320,7 +333,9 @@
                 if (upcols.green) rot.push("z'");
                 if (upcols.blue) rot.push("z");
                 instance = Cube.random(rot, 1, instance);
-                instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
+                if (cas.kind != "eo" && cas.kind != "eolr") { // TODO: support setting front color as well
+                    instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
+                }
                 var upColor = Cube.faceColor("U", Cube.faces(instance));
                 if (cas.kind == "cmll") {
                     // scramble M-slice with U-layer
@@ -339,13 +354,22 @@
                 }
             }
             alg = "";
-            if (Settings.values.algs.length > 0) {
-                var lookup = lookupAlg(randomElement(Settings.values.algs));
+            kind = "pll"; // default
+            while (Settings.values.algs.length > 0) {
+                var rand = randomElement(Settings.values.algs);
+                var lookup = lookupAlg(rand);
+                if (!lookup) {
+                    Settings.values.algs.splice(Settings.values.algs.indexOf(rand), 1); // remove
+                    Settings.save();
+                    continue;
+                }
                 challenge(lookup.alg);
                 document.getElementById("popup").innerHTML = '<h4>' + prependAuf(auf, lookup.alg.alg) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                 setStatus("init");
-            } else {
-                challenge(lookupAlg("").alg);
+                break;
+            }
+            if (Settings.values.algs.length == 0) {
+                challenge(undefined); // solved (default)
                 document.getElementById("popup").innerText = "";
                 setStatus("error");
             }

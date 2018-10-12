@@ -317,10 +317,28 @@ var Cube = (function () {
         return face.split('').sort().join('');
     }
 
-    function faces(cube) {
-        var corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
-        var edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
+    const corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
+    const edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
 
+    function isEdgeFlipped(edge, cube) {
+        for (var e = 0; e < 12; e++) {
+            if (edges[e] == edge) {
+                return cube.e[e].o == 2;
+            }
+        }
+        throw "Invalid edge name: " + edge;
+    }
+
+    function cornerOrientation(corner, cube) {
+        for (var c = 0; c < 8; c++) {
+            if (corners[c] == corner) {
+                return cube.c[c].o;
+            }
+        }
+        throw "Invalid corner name: " + corner;
+    }
+
+    function faces(cube) {
         function twistColors(colors, corner, twist) {
             var c0 = colors[0];
             var c1 = colors[1];
@@ -437,6 +455,8 @@ var Cube = (function () {
         same: same,
         faces: faces,
         faceColor: faceColor,
+        isEdgeFlipped: isEdgeFlipped,
+        cornerOrientation: cornerOrientation,
         toString: toString,
         matchPattern: matchPattern
     }

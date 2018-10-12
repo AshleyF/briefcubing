@@ -2,7 +2,6 @@
 
 ## TODO
 
-* Allow algs with parenthesis
 * Use [jQuery custom bundle](http://jquerymobile.com/download-builder/)
 * Cube status icon (top right) -> battery, disconnect, etc.
 * Roux EO/EOLR support
@@ -11,6 +10,7 @@
 * More algs
 * Discoverability text about U/U' to Next/Retry
 * Connection error messaging and help page
+* Allow algs with parenthesis
 
 ## Bugs
 

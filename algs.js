@@ -167,8 +167,14 @@ var Algs = (function () {
             { id: "v", alg: "R' U R' U' y R' F' R2 U' R' U R' F R F", kind: "pll" },
             { id: "nb", alg: "z U' R D' R2 U R' D U' R D' R2 U R' D z'", kind: "pll" },
             { id: "na", alg: "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'", kind: "pll" }]
+        },
+        eo: { name: "EO", source: "https://sites.google.com/view/kianroux/eo", algs: [
+            { id: "eo6", alg: "R U' r' U' M' U r U r'", kind: "eo" },
+            { id: "eo4a", alg: "M' U2 M' U2 M U' M'", kind: "eo" }]
         }
     }
+
+    delete sets.eo; // disabled for now
 
     return {
         sets: sets
