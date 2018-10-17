@@ -6,7 +6,7 @@
         }
 
         var lastStatus = "init";
-        var waiting = false;
+        var completed = false;
         var partial = null;
         var initiallyPartial = false;
 
@@ -68,7 +68,7 @@
                     document.getElementById("diagram").style.backgroundColor = "green";
                     document.getElementById("retry").disabled = false;
                     document.getElementById("next").disabled = false;
-                    window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
+                    completed = true;
                     partial = null;
                     initiallyPartial = false;
                     $("#popup").popup("close");
@@ -78,7 +78,7 @@
                     document.getElementById("diagram").style.backgroundColor = "goldenrod";
                     document.getElementById("retry").disabled = false;
                     document.getElementById("next").disabled = false;
-                    waiting = false;
+                    completed = false;
                     break;
                 case "incorrect":
                     stopExecution();
@@ -86,7 +86,7 @@
                     document.getElementById("diagram").style.backgroundColor = "darkred";
                     document.getElementById("retry").disabled = false;
                     document.getElementById("next").disabled = false;
-                    window.setTimeout(function () { if (lastStatus == "incorrect") waiting = true; }, 500);
+                    completed = true;
                     partial = null;
                     initiallyPartial = false;
                     break;
@@ -95,7 +95,7 @@
                     document.getElementById("diagram").style.backgroundColor = (partial ? "goldenrod" : "#444");
                     document.getElementById("retry").disabled = false;
                     document.getElementById("next").disabled = false;
-                    waiting = false;
+                    completed = false;
                     checkProgress();
                     break;
                 case "init":
@@ -104,7 +104,7 @@
                     document.getElementById("diagram").style.backgroundColor = "transparent";
                     document.getElementById("retry").disabled = true;
                     document.getElementById("next").disabled = false;
-                    waiting = false;
+                    completed = false;
                     partial = null;
                     initiallyPartial = verifyPartial(instance);
                     document.getElementById("message").innerHTML = '<br /><br /><a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small; margin-left: 0.5em">' + Localization.getString("hint") + '</a>';
@@ -115,7 +115,7 @@
                     document.getElementById("diagram").style.backgroundColor = "transparent";
                     document.getElementById("retry").disabled = true;
                     document.getElementById("next").disabled = true;
-                    waiting = false;
+                    completed = false;
                     document.getElementById("message").innerText = ""; // remove "Hint" link
                     break;
             }
@@ -185,7 +185,6 @@
 
         function verify(result, includePartial) {
             if (verifyComplete(result)) {
-                update(result);
                 setStatus("correct");
                 return true;
             }
@@ -200,14 +199,20 @@
         }
 
         var queued = 0; // count of queued check() calls
+        var lastTwist = undefined;
         function twist(t) {
-            if (waiting) {
-                // retry/next with X/X'
-                if (t.endsWith("'")) retry(); else next();
+            var now = new Date();
+            if (completed) {
+                if (lastTwist && (now - lastTwist) > 600) {
+                    // retry/next with X/X'
+                    if (t.endsWith("'")) retry(); else next();
+                }
                 return;
             }
+            lastTwist = now;
             function check() {
                 if (--queued > 0) return; // skip checking - let future queued calls get to it
+                if (completed) return; // skip checking if already completed
                 var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
                 for (var i = 0; i < rotations.length; i++) {
                     var rot = rotations[i];

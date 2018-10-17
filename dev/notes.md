@@ -14,7 +14,6 @@
 
 ## Bugs
 
-* Continue turning after solve
 * Scroll snapping to top
 * Color picker stays up
 
@@ -22,3 +21,11 @@
 
 * Roofpig-less (optimization)
 * Keyboard support
+
+## BTLE Support
+
+Device itself must support. Some MacBooks don't apparently.
+
+[WebBluetooth Implementation Status](https://github.com/WebBluetoothCG/web-bluetooth/blob/master/implementation-status.md)
+
+* Windows: [Chrome Canary](https://www.google.com/chrome/canary/)
