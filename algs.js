@@ -170,11 +170,18 @@ var Algs = (function () {
         },
         eo: { name: "EO", source: "https://sites.google.com/view/kianroux/eo", algs: [
             { id: "eo6", alg: "R U' r' U' M' U r U r'", kind: "eo" },
-            { id: "eo4a", alg: "M' U2 M' U2 M U' M'", kind: "eo" }]
+            { id: "eo4af", alg: "M' U' M'", kind: "eo" },
+            { id: "eo4ab", alg: "M U' M'", kind: "eo" },
+            { id: "eo4tc", alg: "M' U2 M' U2 M' U' M'", kind: "eo" },
+            { id: "eo4sc", alg: "M' U2 M' U2 M U' M", kind: "eo" },
+            { id: "eo4lb", alg: "M2 U' M' U' M'", kind: "eo" }, // AUF specific
+            { id: "eo2tb", alg: "M' U M U' M' U' M'", kind: "eo" },
+            { id: "eo2bb", alg: "M' U M' U' M U' M'", kind: "eo" },
+            { id: "eo2tl", alg: "M' U M' U2 M' U' M'", kind: "eo" }, // AUF specific
+            { id: "eo1ft", alg: "M' U' M' U' M U' M'", kind: "eo" },
+            { id: "eo1bt", alg: "M' U' M U' M' U' M'", kind: "eo" }]
         }
     }
-
-    delete sets.eo; // disabled for now
 
     return {
         sets: sets

@@ -320,24 +320,6 @@ var Cube = (function () {
     const corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
     const edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
 
-    function isEdgeFlipped(edge, cube) {
-        for (var e = 0; e < 12; e++) {
-            if (edges[e] == edge) {
-                return cube.e[e].o == 2;
-            }
-        }
-        throw "Invalid edge name: " + edge;
-    }
-
-    function cornerOrientation(corner, cube) {
-        for (var c = 0; c < 8; c++) {
-            if (corners[c] == corner) {
-                return cube.c[c].o;
-            }
-        }
-        throw "Invalid corner name: " + corner;
-    }
-
     function faces(cube) {
         function twistColors(colors, corner, twist) {
             var c0 = colors[0];
@@ -429,7 +411,6 @@ var Cube = (function () {
     function matchPattern(pattern, cube) {
         var state = toString(cube);
         var mapping = {};
-        var matched = true;
         for (var i in pattern) {
             var p = pattern[i];
             if (p != '.') {
@@ -437,15 +418,10 @@ var Cube = (function () {
                     mapping[p] = state[i];
                     continue;
                 }
-                if (mapping[p] != state[i])
-                {
-                    matched = false;
-                    break;
-                }
+                if (mapping[p] != state[i]) return false;
             }
         }
-        if (matched) return true;
-        return false;
+        return true;
     }
 
     return {
@@ -455,8 +431,6 @@ var Cube = (function () {
         same: same,
         faces: faces,
         faceColor: faceColor,
-        isEdgeFlipped: isEdgeFlipped,
-        cornerOrientation: cornerOrientation,
         toString: toString,
         matchPattern: matchPattern
     }

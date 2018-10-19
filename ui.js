@@ -143,12 +143,29 @@
 
         function verifyComplete(result) {
             function checkEO() {
-                // check that edges are oriented
-                return true; // TODO
-            }
-            function checkLR() {
-                // UL/UR edges should be in DF/DB position
-                return true; // TODO
+                function opposite(c) {
+                    switch (c) {
+                        case 'U': return 'D';
+                        case 'D': return 'U';
+                        case 'L': return 'R';
+                        case 'R': return 'L';
+                        case 'F': return 'B';
+                        case 'B': return 'F';
+                        default: throw "Unknown face: " + c;
+                    }
+                }
+                var state = Cube.toString(result);
+                var u = state[0]; // Ubl face
+                var d = opposite(u);
+                for (var i = 0; i < 9; i++) { // U face
+                    var s = state[i];
+                    if (s != u && s != d) return false;
+                }
+                for (var i = 36; i < 45; i++) { // D face
+                    var s = state[i];
+                    if (s != u && s != d) return false;
+                }
+                return true;
             }
             function matchWithAdjustments(pat) {
                 if (Cube.matchPattern(pat, result)) return true;
@@ -169,6 +186,12 @@
                     if (Cube.matchPattern(pat, Cube.alg("L R' U", result))) return true;
                     if (Cube.matchPattern(pat, Cube.alg("L R' U'", result))) return true;
                     if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
+                } else if (kind == "eo") {
+                    // try flipping up/down centers (maintaining edge orientation)
+                    if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L2 R2 U", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L2 R2 U'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L2 R2 U2", result))) return true;
                 }
             }
             const cmllPattern = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B";
@@ -178,7 +201,7 @@
                 case "pll": return matchWithAdjustments("UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"); // all oriented + whole first two layers
                 case "coll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // whole first two layers
                 case "eo": return matchWithAdjustments(cmllPattern) && checkEO();
-                case "eolr": return matchWithAdjustments(cmllPattern) && checkEO() && checkLR();
+                case "eolr": throw "NYI";
                 default: throw "Unknown kind type: " + kind;
             }
         }
@@ -345,6 +368,9 @@
                 if (cas.kind == "cmll") {
                     // scramble M-slice with U-layer
                     instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
+                } else if (cas.kind == "eo") {
+                    // scramble M-slice with U-layer (without flips)
+                    instance = Cube.random(["U", "U'", "U2", "M2", "R2 U R U R' U' R' U' R' U R'", "R U' R U R U R U' R' U' R2", "M2' U M2' U M' U2 M2' U2 M'", "M2' U M2' U2 M2' U M2'"], 100, instance);
                 }
                 // apply solution
                 instance = Cube.alg(solution, instance, true);

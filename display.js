@@ -104,6 +104,14 @@ var Display = (function () {
     }
 
     function diagramEO(cube, kind, simple, size) {
+        function edgeIsFlipped(edge, faces, u, d) {
+            if (edge[0] == "U" || edge[0] == "D") { // only U/D edges
+                udEdge = edge[0] + edge[1].toLowerCase();
+                var c = Cube.faceColor(udEdge, faces);
+                return c != u && c != d;
+            }
+            return false;
+        }
         var faces = Cube.faces(cube);
         function col(face) {
             var edge = face.length == 2 ? face.toUpperCase() : undefined;
@@ -111,7 +119,9 @@ var Display = (function () {
             switch (kind) {
                 case "eo":
                 case "eolr": // TODO: may need to show UL/UR
-                    return simple ? (edge && Cube.isEdgeFlipped(edge, cube) ? purple : gray) : col;
+                    var u = Cube.faceColor("Ubl", faces); // assumes top corners oriented
+                    var d = Cube.faceColor("Dbl", faces); // assumes FB solved
+                    return simple ? (edge && edgeIsFlipped(edge, faces, u, d) ? purple : gray) : col;
                 default: throw "Unknown diagram kind: " + kind;
             }
         }
