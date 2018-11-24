@@ -1,0 +1,44 @@
+body {
+    background-color: black;
+}
+
+.ui-checkbox {
+    margin: 0 !important;
+}
+
+.swatch {
+    display: block;
+    width: 1.9em;
+    height: 1.9em;
+    border: 1px solid black;
+}
+
+hr {
+    border: 1px solid #222;
+}
+
+#upColors label {
+    padding: 0.52em;
+}
+
+#algs fieldset label {
+    padding: 0.1em;
+}
+
+input.color {
+    width: 3em;
+    height: 3em;
+}
+
+.spectrum-container {
+    background-color: #222;
+}
+
+.spectrum-replacer {
+    background: #555;
+    border: 1px solid #777;
+}
+
+a {
+    color: #aaa !important;
+}
