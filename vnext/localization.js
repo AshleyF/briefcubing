@@ -23,6 +23,13 @@ var Localization = (function () {
             executionTime: "Execution",
             customScheme: "Custom scheme",
             customSchemeReset: "Reset to default colors",
+            btError: "Connection Error",
+            btSupport: "The following are supported:",
+            btAndroid: "Chrome on Android",
+            btIOS: "WebBLE App on iOS",
+            btMacOS: "Chrome on MacOS",
+            btLinux: "Chrome on Linux",
+            btWindows: "Chrome Canary on Windows",
             language: "Language"
         },
         zh: {
@@ -48,6 +55,13 @@ var Localization = (function () {
             executionTime: "执行",
             customScheme: "自定义配色方案",
             customSchemeReset: "重置为默认颜色",
+            btError: "连接错误",
+            btSupport: "支持以下内容：",
+            btAndroid: "Android上的Chrome",
+            btIOS: "iOS上的WebBLE应用程序",
+            btMacOS: "Chrome上的MacOS",
+            btLinux: "Chrome上的Linux",
+            btWindows: "Chrome Canary上的Windows",
             language: "语言"
         }
     }

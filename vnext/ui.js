@@ -285,7 +285,17 @@
 
         function error(ex) {
             showConnectButton();
-            alert(ex.message);
+            if (!ex.message.startsWith("User cancelled")) {
+                document.getElementById("btError").innerText = Localization.getString("btError");
+                document.getElementById("btSupport").innerText = Localization.getString("btSupport");
+                document.getElementById("btAndroid").innerText = Localization.getString("btAndroid");
+                document.getElementById("btIOS").innerText = Localization.getString("btIOS");
+                document.getElementById("btMacOS").innerText = Localization.getString("btMacOS");
+                document.getElementById("btLinux").innerText = Localization.getString("btLinux");
+                document.getElementById("btWindows").innerText = Localization.getString("btWindows");
+                document.getElementById("btInfo").innerText = Localization.getString("moreInfo");
+                $("#bluetooth-help").popup("open");
+            }
         }
 
         function giikerConnect() {
