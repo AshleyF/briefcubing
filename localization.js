@@ -3,6 +3,7 @@ var Localization = (function () {
         en: {
             lang_en: "English",
             lang_zh: "Chinese (中文)",
+            lang_es: "Spanish (Español)",
             briefDrills: "Brief Drills",
             giikerConnect: "Connect GiiKER Supercube",
             giikerConnecting: "Connecting...",
@@ -35,6 +36,7 @@ var Localization = (function () {
         zh: {
             lang_en: "英语 (English)",
             lang_zh: "中文",
+            lang_es: "西班牙语 (Español)",
             briefDrills: "Brief 演习",
             giikerConnect: "连接GiiKER Supercube",
             giikerConnecting: "连接过程...",
@@ -63,6 +65,39 @@ var Localization = (function () {
             btLinux: "Chrome上的Linux",
             btWindows: "Chrome Canary上的Windows",
             language: "语言"
+        },
+        es: {
+            lang_en: "Inglés (English)",
+            lang_zh: "Chino (中文)",
+            lang_es: "Español",
+            briefDrills: "Brief Ejercicios",
+            giikerConnect: "Conectar Supercube GiiKER",
+            giikerConnecting: "Conectando...",
+            giikerDisconnect: "Desconecta el cubo GiiKER",
+            giikerBuy: "No tengo uno",
+            retry: "Otra vez",
+            next: "Siguiente",
+            on: "", // doesn't fit
+            off: "", // doesn't fit
+            randomAuf: "AUF Aleatorio",
+            simplifiedDiagram: "Diagrama Simplificado",
+            upColors: "Colores hacia arriba",
+            feedback: "Enviar comentarios",
+            allCases: "Todos los casos [ALG]",
+            moreInfo: "Más información",
+            hint: "Insinuación",
+            recognitionTime: "Reconocimiento",
+            executionTime: "Ejecución",
+            customScheme: "Esquema personalizado",
+            customSchemeReset: "Restablecer los colores predeterminados",
+            btError: "Error de conexión",
+            btSupport: "Los siguientes son compatibles:",
+            btAndroid: "Chrome en Android",
+            btIOS: "Aplicación WebBLE en iOS",
+            btMacOS: "Chrome en MacOS",
+            btLinux: "Chrome en Linux",
+            btWindows: "Chrome Canary en Windows",
+            language: "Idioma"
         }
     }
 
