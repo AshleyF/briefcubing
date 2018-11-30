@@ -15,7 +15,7 @@ var Giiker = (function () {
             console.log("Attempting to pair.")
             device = await window.navigator.bluetooth.requestDevice({
             filters: [{
-                namePrefix: "GiC"
+                namePrefix: "Gi"
             }],
             optionalServices: [
                 SERVICE_UUID,
