@@ -107,7 +107,7 @@
                     completed = false;
                     partial = null;
                     initiallyPartial = verifyPartial(instance);
-                    document.getElementById("message").innerHTML = '<br /><br /><a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small; margin-left: 0.5em">' + Localization.getString("hint") + '</a>';
+                    document.getElementById("message").innerHTML = '<br /><br /><a href="#popup" data-rel="popup" data-transition="pop" style="font-size: small; margin-left: 0.5em; padding: 1em">' + Localization.getString("hint") + '</a>';
                     break;
                 case "error":
                     stopExecution();
@@ -268,6 +268,7 @@
             btn.disabled = false;
             btn.innerText = Localization.getString("giikerConnect");
             document.getElementById("cube").style.marginTop = "-80px";
+            document.getElementById("status").style.marginBottom = "80px";
             document.getElementById("giiker").style.display = "";
             document.getElementById("giikerDisconnectSection").style.display = "none";
         }
@@ -276,6 +277,7 @@
             document.getElementById("giiker").style.display = "none";
             document.getElementById("giikerDisconnectSection").style.display = "";
             document.getElementById("cube").style.marginTop = "0";
+            document.getElementById("status").style.marginBottom = "0";
         }
 
         function connected() {
