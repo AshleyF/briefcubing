@@ -6,7 +6,7 @@ var Settings = (function () {
         version: VERSION,
         randomAuf: true,
         upColors: { yellow: true, red: true, blue: false },
-        algs: ["cmll_s_left_bar"],
+        algs: ["all_edges1", "all_edges2", "all_edges3", "all_edges4", "all_edges5", "all_edges6", "all_edges7"],
         lang: "en"
     };
     if (localStorage.settings) {

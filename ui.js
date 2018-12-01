@@ -74,7 +74,7 @@
                     $("#popup").popup("close");
                     break;
                 case "partial":
-                    document.getElementById("status").innerHTML = "&nbsp;";
+                    document.getElementById("status").innerHTML = setName;
                     document.getElementById("diagram").style.backgroundColor = "goldenrod";
                     document.getElementById("retry").disabled = false;
                     document.getElementById("next").disabled = false;
@@ -100,7 +100,7 @@
                     break;
                 case "init":
                     startRecognition();
-                    document.getElementById("status").innerHTML = "&nbsp;";
+                    document.getElementById("status").innerHTML = setName;
                     document.getElementById("diagram").style.backgroundColor = "transparent";
                     document.getElementById("retry").disabled = true;
                     document.getElementById("next").disabled = false;
@@ -111,7 +111,7 @@
                     break;
                 case "error":
                     stopExecution();
-                    document.getElementById("status").innerHTML = "&nbsp;";
+                    document.getElementById("status").innerHTML = setName;
                     document.getElementById("diagram").style.backgroundColor = "transparent";
                     document.getElementById("retry").disabled = true;
                     document.getElementById("next").disabled = true;
@@ -315,6 +315,7 @@
         var auf = "";
         var solution = "";
         var kind = "";
+        var setName = "";
 
         function update(cube) {
             var upcols = Settings.values.upColors;
@@ -350,6 +351,7 @@
                         var alg = set.algs[a];
                         if (name == (s + '_' + alg.id)) {
                             kind = set.algs[a].kind;
+                            setName = set.name;
                             return { set: set, alg: set.algs[a] };
                         }
                     }
@@ -357,7 +359,7 @@
                 return undefined;
             }
             function challenge(cas) {
-                if (!cas) cas = { id: "unknown", name: "Unknown", alg: "", kind: "coll" }; // solved (default)
+                if (!cas) cas = { id: "unknown", name: "", alg: "", kind: "coll" }; // solved (default)
                 auf = Settings.values.randomAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
                 solution = auf + cas.alg;
                 instance = Cube.solved;
