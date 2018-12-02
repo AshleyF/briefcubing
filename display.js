@@ -17,6 +17,31 @@ var Display = (function () {
         }
     }
 
+    function dim(col) {
+        function dimChannel(c) {
+            switch (c) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                    return '0';
+                case '7': return '1';
+                case '8': return '2';
+                case '9': return '3';
+                case 'A': return '4';
+                case 'B': return '5';
+                case 'C': return '6';
+                case 'D': return '7';
+                case 'E': return '8';
+                case 'F': return '9';
+            }
+        }
+        return '#' + dimChannel(col[1]) + dimChannel(col[2]) + dimChannel(col[3]);
+    }
+
     const gray = "#222";
     const purple = "#B4F";
 
@@ -28,7 +53,9 @@ var Display = (function () {
         switch (kind) {
             case "eo":
             case "eolr":
-                return diagramEO(cube, kind, simple, size);
+                return diagramTF(cube, kind, simple, false, size);
+            case "l4e":
+                return diagramTF(cube, kind, simple, true, size);
             default:
                 return diagramLL(Cube.faces(cube), kind, simple, size);
         }
@@ -39,6 +66,8 @@ var Display = (function () {
             case "eo":
             case "eolr":
                 return diagramEOAlg(rot, alg, kind, size);
+            case "l4e":
+                return diagramL4EAlg(rot, alg, kind, size);
             default:
                 return diagramLLAlg(rot, alg, kind, size);
         }
@@ -100,10 +129,14 @@ var Display = (function () {
     }
 
     function diagramEOAlg(rot, alg, kind, size) {
-        return diagramEO(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), kind, true, size);
+        return diagramTF(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), kind, true, false, size);
     }
 
-    function diagramEO(cube, kind, simple, size) {
+    function diagramL4EAlg(rot, alg, kind, size) {
+        return diagramTF(Cube.alg("U' " + alg, Cube.alg(rot, Cube.solved), true), kind, true, true, size);
+    }
+
+    function diagramTF(cube, kind, simple, showLR, size) {
         function edgeIsFlipped(edge, faces, u, d) {
             if (edge[0] == "U" || edge[0] == "D") { // only U/D edges
                 udEdge = edge[0] + edge[1].toLowerCase();
@@ -122,6 +155,25 @@ var Display = (function () {
                     var u = Cube.faceColor("Ubl", faces); // assumes top corners oriented
                     var d = Cube.faceColor("Dbl", faces); // assumes FB solved
                     return simple ? (edge && edgeIsFlipped(edge, faces, u, d) ? purple : gray) : col;
+                case "l4e":
+                    if (simple) {
+                        switch (face) {
+                            case "ulF":
+                            case "uFr":
+                            case "Fl":
+                            case "Fr":
+                            case "dFl":
+                            case "drF":
+                            case "Ubl":
+                            case "Urb":
+                            case "Ulf":
+                            case "Ufr":
+                                return dim(col);
+                            default: return col;
+                        }
+                    } else {
+                        return col;
+                    }
                 default: throw "Unknown diagram kind: " + kind;
             }
         }
@@ -145,11 +197,11 @@ var Display = (function () {
                        '<polygon id="Ubl" fill="' + col("Ubl") + '" stroke="#000000" points="-0.475618407668,-0.691178232679 -0.192285074335,-0.691178232679 -0.199293694572,-0.51065468293 -0.496644268381,-0.51065468293"/>' +
                        '<polygon id="Ub" fill="' + col("Ub") + '" stroke="#000000" points="-0.141048258999,-0.691178232679 0.142285074335,-0.691178232679 0.149293694572,-0.51065468293 -0.148056879236,-0.51065468293"/>' +
                        '<polygon id="Urb" fill="' + col("Urb") + '" stroke="#000000" points="0.193521889671,-0.691178232679 0.476855223004,-0.691178232679 0.497881083717,-0.51065468293 0.200530509908,-0.51065468293"/>' +
-                       '<polygon id="uL"  fill="transparent" stroke="#000000" points="-0.60018227225,-0.477139502342 -0.551831698442,-0.477139502342 -0.575569881583,-0.278824338758 -0.627396821673,-0.277824338758"/>' +
+                       '<polygon id="uL"  fill="' + (showLR ? col("uL") : 'transparent') + '" stroke="#000000" points="-0.62018227225,-0.477139502342 -0.551831698442,-0.477139502342 -0.575569881583,-0.278824338758 -0.647396821673,-0.277824338758"/>' +
                        '<polygon id="Ul" fill="' + col("Ul") + '" stroke="#000000" points="-0.49918227225,-0.477139502342 -0.201831698442,-0.477139502342 -0.209569881583,-0.277824338758 -0.522396821673,-0.277824338758"/>' +
                        '<polygon id="U" fill="' + col("U") + '" stroke="#000000" points="-0.147992506039,-0.477139502342 0.14935806777,-0.477139502342 0.15709625091,-0.277824338758 -0.15573068918,-0.277824338758"/>' +
                        '<polygon id="Ur" fill="' + col("Ur") + '" stroke="#000000" points="0.203197260173,-0.477139502342 0.500547833981,-0.477139502342 0.523762383403,-0.277824338758 0.210935443313,-0.277824338758"/>' +
-                       '<polygon id="uR"  fill="transparent" stroke="#000000" points="0.553197260173,-0.477139502342 0.603197260173,-0.477139502342 0.629935443313,-0.277824338758 0.577935443313,-0.277824338758"/>' +
+                       '<polygon id="uR"  fill="' + (showLR ? col("uR") : 'transparent') + '" stroke="#000000" points="0.553197260173,-0.477139502342 0.623197260173,-0.477139502342 0.649935443313,-0.277824338758 0.577935443313,-0.277824338758"/>' +
                        '<polygon id="Ulf" fill="' + col("Ulf") + '" stroke="#000000" points="-0.525202921606,-0.240719878676 -0.212375981516,-0.240719878676 -0.220963898001,-0.0195178280008 -0.550966671063,-0.0195178280008"/>' +
                        '<polygon id="Uf" fill="' + col("Uf") + '" stroke="#000000" points="-0.155655712708,-0.240719878676 0.157171227382,-0.240719878676 0.165759143868,-0.0195178280008 -0.164243629194,-0.0195178280008"/>' +
                        '<polygon id="Ufr" fill="' + col("Ufr") + '" stroke="#000000" points="0.21389149619,-0.240719878676 0.52671843628,-0.240719878676 0.552482185737,-0.0195178280008 0.222479412675,-0.0195178280008"/>' +
