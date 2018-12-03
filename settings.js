@@ -5,6 +5,7 @@ var Settings = (function () {
     var settings = { // defaults
         version: VERSION,
         randomAuf: true,
+        randomOrder: false,
         upColors: { yellow: true, red: true, blue: false },
         algs: ["cmll_s_left_bar"],
         lang: "en"

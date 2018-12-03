@@ -9,6 +9,7 @@
             var completed = false;
             var partial = null;
             var initiallyPartial = false;
+            var algIndex = 0;
 
             var incorrect = new Audio("incorrect.wav");
             incorrect.load();
@@ -415,10 +416,16 @@
                 alg = "";
                 kind = "pll"; // default
                 while (Settings.values.algs.length > 0) {
-                    var rand = randomElement(Settings.values.algs);
-                    var lookup = lookupAlg(rand);
+                    var nextAlg;
+                    if (Settings.values.randomOrder) {
+                        nextAlg = randomElement(Settings.values.algs);
+                    } else {
+                        if (algIndex >= Settings.values.algs.length) algIndex = 0;
+                        nextAlg = Settings.values.algs[algIndex++];
+                    }
+                    var lookup = lookupAlg(nextAlg);
                     if (!lookup) {
-                        Settings.values.algs.splice(Settings.values.algs.indexOf(rand), 1); // remove
+                        Settings.values.algs.splice(Settings.values.algs.indexOf(nextAlg), 1); // remove
                         Settings.save();
                         continue;
                     }

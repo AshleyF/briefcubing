@@ -14,6 +14,7 @@ var Localization = (function () {
             on: "On",
             off: "Off",
             randomAuf: "Random AUF",
+            randomOrder: "Random Order",
             simplifiedDiagram: "Simplified Diagram",
             upColors: "Up Colors",
             feedback: "Send Feedback",
@@ -47,6 +48,7 @@ var Localization = (function () {
             on: "开",
             off: "关",
             randomAuf: "随机 AUF",
+            randomOrder: "随机顺序",
             simplifiedDiagram: "更简单的图表",
             upColors: "颜色朝上",
             feedback: "发送反馈",
@@ -80,6 +82,7 @@ var Localization = (function () {
             on: "", // doesn't fit
             off: "", // doesn't fit
             randomAuf: "AUF Aleatorio",
+            randomOrder: "Orden Aleatorio",
             simplifiedDiagram: "Diagrama Simplificado",
             upColors: "Colores hacia arriba",
             feedback: "Enviar comentarios",

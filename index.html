@@ -90,18 +90,12 @@
                 settingsToUi();
             });
 
-            $(document).keypress(function(e) {
-                switch (e.which) {
-                    case 13:
-                        document.getElementById("debug").style.display = "";
-                        break;
-                }
-            });
-
             var colors = ["yellow", "white", "blue", "green", "red", "orange"];
 
             function settingsToUi() {
+                algIndex = 0;
                 $("#auf").prop('value', Settings.values.randomAuf ? "on" : "off").slider('refresh');
+                $("#order").prop('value', Settings.values.randomOrder ? "on" : "off").slider('refresh');
                 $("#simple").prop('value', Settings.values.simpleDiagram ? "on" : "off").slider('refresh');
                 for (var c in Settings.values.upColors) {
                     $('#' + c).prop('checked', Settings.values.upColors[c]).checkboxradio('refresh');
@@ -133,6 +127,7 @@
 
             function settingsUpdate() {
                 Settings.values.randomAuf = document.getElementById("auf").value == "on";
+                Settings.values.randomOrder = document.getElementById("order").value == "on";
                 Settings.values.simpleDiagram = document.getElementById("simple").value == "on";
                 var upcols = Settings.values.upColors;
                 for (var c in colors) {
@@ -178,6 +173,9 @@
                 $("#auf_label").text(Localization.getString("randomAuf"));
                 $("#auf").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#auf").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
+                $("#order_label").text(Localization.getString("randomOrder"));
+                $("#order").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
+                $("#order").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#simple_label").text(Localization.getString("simplifiedDiagram"));
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
@@ -288,12 +286,6 @@
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden; margin-bottom: 80px" style="display: none"></h1>
                 <div id="cube" style="text-align: center; margin-top: -80px"></div>
                 <div id="message" style="text-align: center; margin-top: -3em"></div>
-                <div id="debug" style="display: none">
-                    <button onclick="Ui.twist('R U R\' U')" class="ui-btn ui-mini ui-corner-all">Su</button>
-                    <button onclick="Ui.twist('R U2 R\'')" class="ui-btn ui-mini ui-corner-all">ne</button>
-                    <button onclick="Ui.twist('F R U\' R\' U\' R U R\' F\' R U R\' U\' R\' F R F\'')" class="ui-btn ui-mini ui-corner-all">Y-perm</button>
-                
-                </div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
                 <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh"></button>
@@ -316,6 +308,11 @@
                 <div id="algs" data-role="collapsibleset" data-mini="true"></div>
                 <label id="auf_label" for="auf"></label>
                 <select id="auf" data-role="slider" data-mini="true" onchange="settingsUpdate()">
+                    <option value="off"></option>
+                    <option value="on"></option>
+                </select>
+                <label id="order_label" for="order"></label>
+                <select id="order" data-role="slider" data-mini="true" onchange="settingsUpdate()">
                     <option value="off"></option>
                     <option value="on"></option>
                 </select>
