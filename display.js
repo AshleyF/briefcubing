@@ -49,28 +49,36 @@ var Display = (function () {
         return faceToCssColor(Cube.faceColor(face, faces));
     }
 
-    function diagram(cube, kind, simple, size) {
+    function diagram(cube, kind, id, simple, size) {
         switch (kind) {
             case "eo":
-            case "eolr":
-                return diagramTF(cube, kind, simple, false, size);
-            case "l4e":
-                return diagramTF(cube, kind, simple, true, size);
-            default:
-                return diagramLL(Cube.faces(cube), kind, simple, size);
+            case "eolr": return diagramTF(cube, kind, simple, false, size);
+            case "l4e": return diagramTF(cube, kind, simple, true, size);
+            case "5sb": return diagram5SB(id, size);
+            default: return diagramLL(Cube.faces(cube), kind, simple, size);
         }
     }
 
-    function diagramAlg(rot, alg, kind, size) {
+    function diagramAlg(rot, alg, size) {
+        var kind = alg.kind;
         switch (kind) {
             case "eo":
-            case "eolr":
-                return diagramEOAlg(rot, alg, kind, size);
-            case "l4e":
-                return diagramL4EAlg(rot, alg, kind, size);
-            default:
-                return diagramLLAlg(rot, alg, kind, size);
+            case "eolr": return diagramEOAlg(rot, alg.alg, kind, size);
+            case "l4e": return diagramL4EAlg(rot, alg.alg, kind, size);
+            case "5sb": return diagram5SB(alg.id, size);
+            default: return diagramLLAlg(rot, alg.alg, kind, size);
         }
+    }
+
+    function diagram5SB(label, size) {
+        return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
+                   'width="' + (size || '100vmin') + '" height="' + (size || '100vmin') + '" viewBox="-0.9 -0.9 1.8 1.8">' +
+                   '<g>' +
+                       '<rect fill="black" x="-0.8" y="-0.8" width="1.6" height="1.6"/>' +
+                           '<text fill="white" font-size="0.5" dy="0.05" dominant-baseline="middle" text-anchor="middle">' + label.toUpperCase() + '</text>' +
+                       '</rect>' +
+                   '</g>' +
+               '</svg>';
     }
 
     function diagramLLAlg(rot, alg, kind, size) {
@@ -82,8 +90,7 @@ var Display = (function () {
             var len = face.length;
             var col = faceColor(face, faces);
             switch (kind) {
-                case "oll":
-                case "pll":
+                case "oll": case "pll":
                 case "full": return col;
                 case "cmll": return simple && len != 3 ? gray : col;
                 case "cmll_c": return simple && len == 2 ? gray : col;

@@ -137,6 +137,7 @@
                     case "eo":
                     case "eolr":
                     case "l4e":
+                    case "5sb":
                         return false; // not possible
                     default: throw "Unknown kind type: " + kind;
                 }
@@ -204,7 +205,9 @@
                     case "coll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // whole first two layers
                     case "eo": return matchWithAdjustments(cmllPattern) && checkEO();
                     case "eolr": throw "NYI";
-                    case "l4e": return Cube.same(Cube.solved, result);
+                    case "l4e":
+                    case "5sb":
+                        return Cube.same(Cube.solved, result);
                     default: throw "Unknown kind type: " + kind;
                 }
             }
@@ -321,6 +324,7 @@
             var alg = "";
             var auf = "";
             var solution = "";
+            var id = "";
             var kind = "";
             var setName = "";
 
@@ -332,7 +336,7 @@
                     var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
                     if (numColors > 1) diagKind += "_c";
                 }
-                document.getElementById("cube").innerHTML = Display.diagram(cube, diagKind, simple);
+                document.getElementById("cube").innerHTML = Display.diagram(cube, diagKind, id, simple);
             }
 
             function next() {
@@ -367,6 +371,7 @@
                         for (var a in set.algs) {
                             var alg = set.algs[a];
                             if (name == (s + '_' + alg.id)) {
+                                id = set.algs[a].id;
                                 kind = set.algs[a].kind;
                                 setName = set.name;
                                 return { set: set, alg: set.algs[a] };
@@ -378,6 +383,7 @@
                 function challenge(cas) {
                     if (!cas) cas = { id: "unknown", name: "", alg: "", kind: "coll" }; // solved (default)
                     auf = Settings.values.randomAuf ? randomElement(cas.kind == "l4e" ? ["U ", "U' "] : ["", "U ", "U' ", "U2 "]) : "";
+                    if (cas.kind == "5sb") auf = ""; // not supported
                     solution = auf + cas.alg;
                     instance = Cube.solved;
                     // up color
@@ -414,6 +420,7 @@
                     }
                 }
                 alg = "";
+                id = "";
                 kind = "pll"; // default
                 while (Settings.values.algs.length > 0) {
                     var nextAlg;

@@ -228,7 +228,11 @@
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = s + '_' + alg.id;
-                        var diag = Display.diagramAlg(rot, alg.alg, alg.kind, "5.1em");
+                        try {
+                            var diag = Display.diagramAlg(rot, alg, "5.1em");
+                        } catch (ex) {
+                            console.log("foo");
+                        }
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
@@ -246,7 +250,7 @@
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = "diag_" + s + '_' + alg.id;
-                        var diag = Display.diagramAlg(rot, alg.alg, alg.kind, "5.1em");
+                        var diag = Display.diagramAlg(rot, alg, "5.1em");
                         document.getElementById(id).innerHTML = diag;
                     }
                 }
