@@ -124,24 +124,8 @@
 
             function verifyPartial(result) {
                 // check partial match (corners oriented, but not permuted)
-                var pat;
-                switch (kind) {
-                    case "cmll":
-                        pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
-                        break;
-                    case "oll":
-                    case "pll":
-                    case "coll":
-                        pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
-                        break;
-                    case "eo":
-                    case "eolr":
-                    case "l4e":
-                    case "5sb":
-                        return false; // not possible
-                    default: throw "Unknown kind type: " + kind;
-                }
-                return Cube.matchPattern(pat, result);
+                var pat = Algs.kindToParams(kind).verify.partial;
+                return pat == undefined ? false : Cube.matchPattern(pat, result);
             }
 
             function verifyComplete(result) {
@@ -170,17 +154,20 @@
                     }
                     return true;
                 }
-                function matchWithAdjustments(pat) {
+                function matchWithAdjustments(pat, allowRandomM, allowRandomM2) {
                     if (Cube.matchPattern(pat, result)) return true;
                     if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
                     if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
                     if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
-                    if (kind == "cmll") {
-                        // try flipping M-slice too because some algs (with wide moves) flip this
+                    if (allowRandomM2 || allowRandomM) {
+                        // try flipping up/down centers (maintaining edge orientation)
                         if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L2 R2 U", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L2 R2 U'", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L2 R2 U2", result))) return true;
+                    }
+                    if (allowRandomM) {
+                        // try flipping M-slice too because some algs (with wide moves) flip this
                         if (Cube.matchPattern(pat, Cube.alg("L' R", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L' R U", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L' R U'", result))) return true;
@@ -189,27 +176,11 @@
                         if (Cube.matchPattern(pat, Cube.alg("L R' U", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L R' U'", result))) return true;
                         if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
-                    } else if (kind == "eo") {
-                        // try flipping up/down centers (maintaining edge orientation)
-                        if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
-                        if (Cube.matchPattern(pat, Cube.alg("L2 R2 U", result))) return true;
-                        if (Cube.matchPattern(pat, Cube.alg("L2 R2 U'", result))) return true;
-                        if (Cube.matchPattern(pat, Cube.alg("L2 R2 U2", result))) return true;
                     }
                 }
-                const cmllPattern = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B";
-                switch (kind) {
-                    case "cmll": return matchWithAdjustments(cmllPattern); // M-slice free
-                    case "oll": return matchWithAdjustments("UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // all oriented + whole first two layers
-                    case "pll": return matchWithAdjustments("UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"); // all oriented + whole first two layers
-                    case "coll": return matchWithAdjustments("U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"); // whole first two layers
-                    case "eo": return matchWithAdjustments(cmllPattern) && checkEO();
-                    case "eolr": throw "NYI";
-                    case "l4e":
-                    case "5sb":
-                        return Cube.same(Cube.solved, result);
-                    default: throw "Unknown kind type: " + kind;
-                }
+                var verify = Algs.kindToParams(kind).verify;
+                if (verify.eo && !checkEO()) return false;
+                return (verify.solved != undefined && matchWithAdjustments(verify.solved, verify.allowRandomM, verify.allowRandomM2));
             }
 
             function verify(result, includePartial) {
@@ -329,14 +300,9 @@
             var setName = "";
 
             function update(cube) {
-                var upcols = Settings.values.upColors;
                 var simple = Settings.values.simpleDiagram;
-                var diagKind = kind;
-                if (diagKind == "cmll") {
-                    var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
-                    if (numColors > 1) diagKind += "_c";
-                }
-                document.getElementById("cube").innerHTML = Display.diagram(cube, diagKind, id, simple);
+                var diag = Algs.kindToParams(kind).diagram;
+                document.getElementById("cube").innerHTML = Display.diagram(cube, diag, id, simple);
             }
 
             function next() {
@@ -344,7 +310,7 @@
                     return arr[Math.floor(Math.random() * arr.length)];
                 }
                 function prependAuf(auf, alg) {
-                    function simplifyL4EAuf(alg) {
+                    function simplifyAuf(alg) {
                         // applies to L4E algs
                         if (alg.startsWith("(U) U2 ")) return "U' " + alg.substr(7);
                         if (alg.startsWith("(U) U2' ")) return "U' " + alg.substr(8);
@@ -353,15 +319,15 @@
                         return alg;
                     }
                     var sansAuf = alg;
-                    if (kind != "l4e") {
+                    if (Algs.kindToParams(kind).diagram.stripAuf) {
                         if (alg.startsWith("U ")) sansAuf = alg.substr(2);
                         else if (alg.startsWith("U' ")) sansAuf = alg.substr(3);
                         else if (alg.startsWith("U2 ")) sansAuf = alg.substr(3);
                     }
                     var testInstance = Cube.alg(solution, Cube.solved, true); // apply random AUF + alg to solved
                     if (verifyComplete(Cube.alg(sansAuf, testInstance))) return sansAuf;
-                    if (verifyComplete(Cube.alg("U " + sansAuf, testInstance))) return simplifyL4EAuf("(U) " + sansAuf);
-                    if (verifyComplete(Cube.alg("U' " + sansAuf, testInstance))) return simplifyL4EAuf("(U') " + sansAuf);
+                    if (verifyComplete(Cube.alg("U " + sansAuf, testInstance))) return simplifyAuf("(U) " + sansAuf);
+                    if (verifyComplete(Cube.alg("U' " + sansAuf, testInstance))) return simplifyAuf("(U') " + sansAuf);
                     if (verifyComplete(Cube.alg("U2 " + sansAuf, testInstance))) return "(U2) " + sansAuf;
                     throw "No possible solution!";
                 }
@@ -381,9 +347,11 @@
                     return undefined;
                 }
                 function challenge(cas) {
+                    var params = Algs.kindToParams(kind);
+                    var scramble = params.scramble;
                     if (!cas) cas = { id: "unknown", name: "", alg: "", kind: "coll" }; // solved (default)
-                    auf = Settings.values.randomAuf ? randomElement(cas.kind == "l4e" ? ["U ", "U' "] : ["", "U ", "U' ", "U2 "]) : "";
-                    if (cas.kind == "5sb") auf = ""; // not supported
+                    auf = Settings.values.randomAuf && scramble.auf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
+                    if (scramble.randomSingleU) auf = randomElement(["U ", "U' "]); // used by L4E algs
                     solution = auf + cas.alg;
                     instance = Cube.solved;
                     // up color
@@ -396,20 +364,22 @@
                     if (upcols.green) rot.push("z'");
                     if (upcols.blue) rot.push("z");
                     instance = Cube.random(rot, 1, instance);
-                    if (cas.kind != "eo" && cas.kind != "eolr" & cas.kind != "l4e") { // TODO: support setting front color as well
+                    if (scramble.randomOrientationAroundY) {
                         instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
                     }
                     var upColor = Cube.faceColor("U", Cube.faces(instance));
-                    if (cas.kind == "cmll") {
-                        // scramble M-slice with U-layer
-                        instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
-                    } else if (cas.kind == "eo") {
-                        // scramble M-slice with U-layer (without flips)
-                        instance = Cube.random(["U", "U'", "U2", "M2", "R2 U R U R' U' R' U' R' U R'", "R U' R U R U R U' R' U' R2", "M2' U M2' U M' U2 M2' U2 M'", "M2' U M2' U2 M2' U M2'"], 100, instance);
+                    if (scramble.randomMU) {
+                        if (scramble.allowEOFlips) {
+                            // scramble M-slice with U-layer
+                            instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
+                        } else {
+                            // scramble M-slice with U-layer (without flips)
+                            instance = Cube.random(["U", "U'", "U2", "M2", "R2 U R U R' U' R' U' R' U R'", "R U' R U R U R U' R' U' R2", "M2' U M2' U M' U2 M2' U2 M'", "M2' U M2' U2 M2' U M2'"], 100, instance);
+                        }
                     }
                     // apply solution
                     instance = Cube.alg(solution, instance, true);
-                    if (cas.kind == "cmll") {
+                    if (params.diagram.simplified.hideUCenter) {
                         var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
                         if (numColors > 1) {
                             // adjust M-slice so center top indicates color (too confusing otherwise!)

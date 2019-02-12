@@ -1,6 +1,222 @@
 var Algs = (function () {
-    sets = {
-        coll: { name: "COLL", source: "http://www.cyotheking.com/coll", algs: [
+
+    function kindToParams(kind) {
+        var solvedPattern = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"; // complete
+        var solvedCmllPattern = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // F2B+CO
+        switch (kind) {
+            case "cmll": return { // corner orientation (ignoring M-slice) of last layer (Roux)
+                diagram: {
+                    type: "top",
+                    simplified: {
+                        hideUCenter: true,
+                        hideEdges: true,
+                        showEdgeU: false
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B...", // F2B+CO
+                    solved: solvedCmllPattern, // F2B+CO/CP
+                    eo: false,
+                    allowRandomM: true,
+                    allowRandomM2: true
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: true,
+                    allowEOFlips: true
+                }
+            };
+            case "coll": return { // corner orientation of last layer (CFOP)
+                diagram: {
+                    type: "top",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: true,
+                        showEdgeU: true
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+CO
+                    solved: "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            };
+            case "oll": return { // orientation of last layer (CFOP)
+                diagram: {
+                    type: "top",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: false,
+                    solved: "UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            };
+            case "pll": return { // permutation of last layer (CFOP)
+                diagram: {
+                    type: "top",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: false,
+                    solved: solvedPattern, // complete
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            };
+            case "eo": return { // edge orientation (Roux)
+                diagram: {
+                    type: "top-front",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false
+                    },
+                    stripAuf: true,
+                    eo: true
+                },
+                verify: {
+                    partial: false,
+                    solved: solvedCmllPattern, // F2B+CO/CP
+                    eo: true,
+                    allowRandomM: false,
+                    allowRandomM2: true
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: false,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            };
+            case "l4e": return { // last 5 edges (Roux 4c)
+                diagram: {
+                    type: "top-front-ul-ur",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false
+                    },
+                    stripAuf: false,
+                    eo: false
+                },
+                verify: {
+                    partial: false,
+                    solved: solvedPattern, // complete
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: false,
+                    randomSingleU: true,
+                    randomOrientationAroundY: false,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            };
+            case "5sb": return { // 5-style blind
+                diagram: {
+                    type: "bld",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false
+                    },
+                    stripAuf: false,
+                    eo: false
+                },
+                verify: {
+                    partial: false,
+                    solved: solvedPattern, // complete
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: false,
+                    randomSingleU: false,
+                    randomOrientationAroundY: false,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            };
+            default: throw "Unknown kind type: " + kind;
+        }
+    }
+
+    var sets = {
+        coll: { name: "COLL", source: "http://www.cyotheking.com/coll",
+            diagram: {
+                type: "top",
+                simplified: {
+                    hideUCenter: false,
+                    hideEdges: true,
+                    showEdgeU: true
+                },
+                stripAuf: true,
+                eo: false
+            },
+            verify: {
+                partial: "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+CO
+                solved: "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
+                eo: false,
+                allowRandomM: false,
+                allowRandomM2: false
+            },
+            scramble: {
+                allowAuf: true,
+                randomSingleU: false,
+                randomOrientationAroundY: true,
+                randomMU: false,
+                allowEOFlips: false
+            },
+            algs: [
             { id: "s_1", alg: "R U R' U R U2 R'", kind: "coll" },
             { id: "s_2", alg: "U' R U R' U R U' R D R' U' R D' R2'", kind: "coll" },
             { id: "s_3", alg: "U2 R U R' U R2 D R' U2 R D' R2'", kind: "coll" },
@@ -5240,6 +5456,7 @@ var Algs = (function () {
     }
 
     return {
-        sets: sets
+        sets: sets,
+        kindToParams: kindToParams
     };
 }());

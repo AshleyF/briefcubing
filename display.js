@@ -49,24 +49,24 @@ var Display = (function () {
         return faceToCssColor(Cube.faceColor(face, faces));
     }
 
-    function diagram(cube, kind, id, simple, size) {
-        switch (kind) {
-            case "eo":
-            case "eolr": return diagramTF(cube, kind, simple, false, size);
-            case "l4e": return diagramTF(cube, kind, simple, true, size);
-            case "5sb": return diagram5SB(id, size);
-            default: return diagramLL(Cube.faces(cube), kind, simple, size);
+    function diagram(cube, diag, id, simple, size) {
+        switch (diag.type) {
+            case "top": return diagramLL(Cube.faces(cube), diag, simple, size);
+            case "top-front": return diagramTF(cube, diag, simple, false, size);
+            case "top-front-ul-ur": return diagramTF(cube, diag, simple, true, size);
+            case "bld": return diagram5SB(id, size);
+            default: throw "Unknown diagram type: " + diag.type;
         }
     }
 
     function diagramAlg(rot, alg, size) {
-        var kind = alg.kind;
-        switch (kind) {
-            case "eo":
-            case "eolr": return diagramEOAlg(rot, alg.alg, kind, size);
-            case "l4e": return diagramL4EAlg(rot, alg.alg, kind, size);
-            case "5sb": return diagram5SB(alg.id, size);
-            default: return diagramLLAlg(rot, alg.alg, kind, size);
+        var diag = Algs.kindToParams(alg.kind).diagram;
+        switch (diag.type) {
+            case "top": return diagramLLAlg(rot, alg.alg, diag, size);
+            case "top-front": return diagramEOAlg(rot, alg.alg, diag, size);
+            case "top-front-ul-ur": return diagramL4EAlg(rot, alg.alg, diag, size);
+            case "bld": return diagram5SB(alg.id, size);
+            default: throw "Unknown diagram type: " + diag.type;
         }
     }
 
@@ -81,23 +81,26 @@ var Display = (function () {
                '</svg>';
     }
 
-    function diagramLLAlg(rot, alg, kind, size) {
-        return diagramLL(Cube.faces(Cube.alg(alg, Cube.alg(rot, Cube.solved), true)), kind, true, size);
+    function diagramLLAlg(rot, alg, diag, size) {
+        return diagramLL(Cube.faces(Cube.alg(alg, Cube.alg(rot, Cube.solved), true)), diag, true, size);
     }
 
-    function diagramLL(faces, kind, simple, size) {
+    function diagramLL(faces, diag, simple, size) {
         function col(face) {
-            var len = face.length;
             var col = faceColor(face, faces);
-            switch (kind) {
-                case "oll": case "pll":
-                case "full": return col;
-                case "cmll": return simple && len != 3 ? gray : col;
-                case "cmll_c": return simple && len == 2 ? gray : col;
-                case "coll":
-                    if (!simple || len == 1 || len == 3) return col;
-                    return simple && face.indexOf('U') == -1 ? gray : col;
-                default: throw "Unknown diagram kind: " + kind;
+            if (simple) {
+                var len = face.length;
+                if (diag.simplified.hideUCenter && len == 1) {
+                    var upcols = Settings.values.upColors;
+                    var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
+                    return numColors > 1 ? col : gray;
+                }
+                else if (diag.simplified.hideEdges && len == 2) {
+                    return diag.simplified.showEdgeU && face.indexOf('U') != -1 ? col : gray;
+                }
+                return col;
+            } else {
+                return col;
             }
         }
         return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
@@ -135,15 +138,15 @@ var Display = (function () {
                '</svg>';
     }
 
-    function diagramEOAlg(rot, alg, kind, size) {
-        return diagramTF(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), kind, true, false, size);
+    function diagramEOAlg(rot, alg, diag, size) {
+        return diagramTF(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), diag, true, false, size);
     }
 
-    function diagramL4EAlg(rot, alg, kind, size) {
-        return diagramTF(Cube.alg("U' " + alg, Cube.alg(rot, Cube.solved), true), kind, true, true, size);
+    function diagramL4EAlg(rot, alg, diag, size) {
+        return diagramTF(Cube.alg("U' " + alg, Cube.alg(rot, Cube.solved), true), diag, true, true, size);
     }
 
-    function diagramTF(cube, kind, simple, showLR, size) {
+    function diagramTF(cube, diag, simple, showLR, size) {
         function edgeIsFlipped(edge, faces, u, d) {
             if (edge[0] == "U" || edge[0] == "D") { // only U/D edges
                 udEdge = edge[0] + edge[1].toLowerCase();
@@ -156,32 +159,29 @@ var Display = (function () {
         function col(face) {
             var edge = face.length == 2 ? face.toUpperCase() : undefined;
             var col = faceColor(face, faces);
-            switch (kind) {
-                case "eo":
-                case "eolr": // TODO: may need to show UL/UR
-                    var u = Cube.faceColor("Ubl", faces); // assumes top corners oriented
-                    var d = Cube.faceColor("Dbl", faces); // assumes FB solved
-                    return simple ? (edge && edgeIsFlipped(edge, faces, u, d) ? purple : gray) : col;
-                case "l4e":
-                    if (simple) {
-                        switch (face) {
-                            case "ulF":
-                            case "uFr":
-                            case "Fl":
-                            case "Fr":
-                            case "dFl":
-                            case "drF":
-                            case "Ubl":
-                            case "Urb":
-                            case "Ulf":
-                            case "Ufr":
-                                return dim(col);
-                            default: return col;
-                        }
-                    } else {
-                        return col;
+            if (diag.eo) {
+                var u = Cube.faceColor("Ubl", faces); // assumes top corners oriented
+                var d = Cube.faceColor("Dbl", faces); // assumes FB solved
+                return simple ? (edge && edgeIsFlipped(edge, faces, u, d) ? purple : gray) : col;
+            } else {
+                if (simple) {
+                    switch (face) {
+                        case "ulF":
+                        case "uFr":
+                        case "Fl":
+                        case "Fr":
+                        case "dFl":
+                        case "drF":
+                        case "Ubl":
+                        case "Urb":
+                        case "Ulf":
+                        case "Ufr":
+                            return dim(col);
+                        default: return col;
                     }
-                default: throw "Unknown diagram kind: " + kind;
+                } else {
+                    return col;
+                }
             }
         }
         return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +

@@ -20,7 +20,6 @@
         <link rel="stylesheet" href="styles.css" />
         <script src="jquery/jquery-1.11.1.min.js"></script>
         <script src="jquery/jquery.mobile-1.4.5.min.js"></script>
-        <script src="roofpig_and_three.min.js"></script>
         <script src="cube.js"></script>
         <script src="display.js"></script>
         <script src="giiker.js"></script>
@@ -228,11 +227,7 @@
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = s + '_' + alg.id;
-                        try {
-                            var diag = Display.diagramAlg(rot, alg, "5.1em");
-                        } catch (ex) {
-                            console.log("foo");
-                        }
+                        var diag = Display.diagramAlg(rot, alg, "5.1em");
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
