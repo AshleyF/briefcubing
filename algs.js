@@ -191,32 +191,7 @@ var Algs = (function () {
     }
 
     var sets = {
-        coll: { name: "COLL", source: "http://www.cyotheking.com/coll",
-            diagram: {
-                type: "top",
-                simplified: {
-                    hideUCenter: false,
-                    hideEdges: true,
-                    showEdgeU: true
-                },
-                stripAuf: true,
-                eo: false
-            },
-            verify: {
-                partial: "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+CO
-                solved: "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
-                eo: false,
-                allowRandomM: false,
-                allowRandomM2: false
-            },
-            scramble: {
-                allowAuf: true,
-                randomSingleU: false,
-                randomOrientationAroundY: true,
-                randomMU: false,
-                allowEOFlips: false
-            },
-            algs: [
+        coll: { name: "COLL", source: "http://www.cyotheking.com/coll", algs: [
             { id: "s_1", alg: "R U R' U R U2 R'", kind: "coll" },
             { id: "s_2", alg: "U' R U R' U R U' R D R' U' R D' R2'", kind: "coll" },
             { id: "s_3", alg: "U2 R U R' U R2 D R' U2 R D' R2'", kind: "coll" },

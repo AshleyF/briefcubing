@@ -32,6 +32,7 @@ var Localization = (function () {
             btMacOS: "Chrome on MacOS",
             btLinux: "Chrome on Linux",
             btWindows: "Chrome Canary on Windows",
+            diagramCredit: "Diagrams thanks to [LINK]",
             language: "Language"
         },
         zh: {
@@ -66,6 +67,7 @@ var Localization = (function () {
             btMacOS: "Chrome上的MacOS",
             btLinux: "Chrome上的Linux",
             btWindows: "Chrome Canary上的Windows",
+            diagramCredit: "图表感谢[LINK]",
             language: "语言"
         },
         es: {
@@ -100,6 +102,7 @@ var Localization = (function () {
             btMacOS: "Chrome en MacOS",
             btLinux: "Chrome en Linux",
             btWindows: "Chrome Canary en Windows",
+            diagramCredit: "Diagramas gracias a [LINK]",
             language: "Idioma"
         }
     }

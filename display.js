@@ -54,7 +54,7 @@ var Display = (function () {
             case "top": return diagramLL(Cube.faces(cube), diag, simple, size);
             case "top-front": return diagramTF(cube, diag, simple, false, size);
             case "top-front-ul-ur": return diagramTF(cube, diag, simple, true, size);
-            case "bld": return diagram5SB(id, size);
+            case "bld": return diagramBLD(id, size);
             default: throw "Unknown diagram type: " + diag.type;
         }
     }
@@ -63,14 +63,14 @@ var Display = (function () {
         var diag = Algs.kindToParams(alg.kind).diagram;
         switch (diag.type) {
             case "top": return diagramLLAlg(rot, alg.alg, diag, size);
-            case "top-front": return diagramEOAlg(rot, alg.alg, diag, size);
-            case "top-front-ul-ur": return diagramL4EAlg(rot, alg.alg, diag, size);
-            case "bld": return diagram5SB(alg.id, size);
+            case "top-front": return diagramTFAlg(rot, alg.alg, diag, size);
+            case "top-front-ul-ur": return diagramTFULURAlg(rot, alg.alg, diag, size);
+            case "bld": return diagramBLD(alg.id, size);
             default: throw "Unknown diagram type: " + diag.type;
         }
     }
 
-    function diagram5SB(label, size) {
+    function diagramBLD(label, size) {
         return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
                    'width="' + (size || '100vmin') + '" height="' + (size || '100vmin') + '" viewBox="-0.9 -0.9 1.8 1.8">' +
                    '<g>' +
@@ -138,11 +138,11 @@ var Display = (function () {
                '</svg>';
     }
 
-    function diagramEOAlg(rot, alg, diag, size) {
+    function diagramTFAlg(rot, alg, diag, size) {
         return diagramTF(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), diag, true, false, size);
     }
 
-    function diagramL4EAlg(rot, alg, diag, size) {
+    function diagramTFULURAlg(rot, alg, diag, size) {
         return diagramTF(Cube.alg("U' " + alg, Cube.alg(rot, Cube.solved), true), diag, true, true, size);
     }
 
