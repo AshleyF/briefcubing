@@ -52,8 +52,8 @@ var Display = (function () {
     function diagram(cube, diag, id, simple, size) {
         switch (diag.type) {
             case "top": return diagramLL(Cube.faces(cube), diag, simple, size);
-            case "top-front": return diagramTF(cube, diag, simple, false, size);
-            case "top-front-ul-ur": return diagramTF(cube, diag, simple, true, size);
+            case "top-front": return diagramUF(cube, diag, simple, false, size);
+            case "top-front-ul-ur": return diagramUF(cube, diag, simple, true, size);
             case "bld": return diagramBLD(id, size);
             default: throw "Unknown diagram type: " + diag.type;
         }
@@ -63,8 +63,8 @@ var Display = (function () {
         var diag = Algs.kindToParams(alg.kind).diagram;
         switch (diag.type) {
             case "top": return diagramLLAlg(rot, alg.alg, diag, size);
-            case "top-front": return diagramTFAlg(rot, alg.alg, diag, size);
-            case "top-front-ul-ur": return diagramTFULURAlg(rot, alg.alg, diag, size);
+            case "top-front": return diagramUFAlg(rot, alg.alg, diag, size);
+            case "top-front-ul-ur": return diagramUFULURAlg(rot, alg.alg, diag, size);
             case "bld": return diagramBLD(alg.id, size);
             default: throw "Unknown diagram type: " + diag.type;
         }
@@ -138,15 +138,15 @@ var Display = (function () {
                '</svg>';
     }
 
-    function diagramTFAlg(rot, alg, diag, size) {
-        return diagramTF(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), diag, true, false, size);
+    function diagramUFAlg(rot, alg, diag, size) {
+        return diagramUF(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), diag, true, false, size);
     }
 
-    function diagramTFULURAlg(rot, alg, diag, size) {
-        return diagramTF(Cube.alg("U' " + alg, Cube.alg(rot, Cube.solved), true), diag, true, true, size);
+    function diagramUFULURAlg(rot, alg, diag, size) {
+        return diagramUF(Cube.alg("U' " + alg, Cube.alg(rot, Cube.solved), true), diag, true, true, size);
     }
 
-    function diagramTF(cube, diag, simple, showLR, size) {
+    function diagramUF(cube, diag, simple, showLR, size) {
         function edgeIsFlipped(edge, faces, u, d) {
             if (edge[0] == "U" || edge[0] == "D") { // only U/D edges
                 udEdge = edge[0] + edge[1].toLowerCase();
