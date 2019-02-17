@@ -2,6 +2,10 @@ body {
     background-color: black;
 }
 
+input {
+    display: none;
+}
+
 .ui-checkbox {
     margin: 0 !important;
 }

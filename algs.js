@@ -6,11 +6,13 @@ var Algs = (function () {
         switch (kind) {
             case "cmll": return { // corner orientation (ignoring M-slice) of last layer (Roux)
                 diagram: {
-                    type: "top",
+                    type: "up",
                     simplified: {
                         hideUCenter: true,
                         hideEdges: true,
-                        showEdgeU: false
+                        showEdgeU: false,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: true,
                     eo: false
@@ -32,11 +34,13 @@ var Algs = (function () {
             };
             case "coll": return { // corner orientation of last layer (CFOP)
                 diagram: {
-                    type: "top",
+                    type: "up",
                     simplified: {
                         hideUCenter: false,
                         hideEdges: true,
-                        showEdgeU: true
+                        showEdgeU: true,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: true,
                     eo: false
@@ -58,17 +62,19 @@ var Algs = (function () {
             };
             case "oll": return { // orientation of last layer (CFOP)
                 diagram: {
-                    type: "top",
+                    type: "up",
                     simplified: {
                         hideUCenter: false,
                         hideEdges: false,
-                        showEdgeU: false
+                        showEdgeU: false,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: true,
                     eo: false
                 },
                 verify: {
-                    partial: false,
+                    partial: undefined,
                     solved: "UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
                     eo: false,
                     allowRandomM: false,
@@ -84,17 +90,19 @@ var Algs = (function () {
             };
             case "pll": return { // permutation of last layer (CFOP)
                 diagram: {
-                    type: "top",
+                    type: "up",
                     simplified: {
                         hideUCenter: false,
                         hideEdges: false,
-                        showEdgeU: false
+                        showEdgeU: false,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: true,
                     eo: false
                 },
                 verify: {
-                    partial: false,
+                    partial: undefined,
                     solved: solvedPattern, // complete
                     eo: false,
                     allowRandomM: false,
@@ -110,17 +118,19 @@ var Algs = (function () {
             };
             case "eo": return { // edge orientation (Roux)
                 diagram: {
-                    type: "top-front",
+                    type: "up-front",
                     simplified: {
                         hideUCenter: false,
                         hideEdges: false,
-                        showEdgeU: false
+                        showEdgeU: false,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: true,
                     eo: true
                 },
                 verify: {
-                    partial: false,
+                    partial: undefined,
                     solved: solvedCmllPattern, // F2B+CO/CP
                     eo: true,
                     allowRandomM: false,
@@ -136,17 +146,19 @@ var Algs = (function () {
             };
             case "l4e": return { // last 5 edges (Roux 4c)
                 diagram: {
-                    type: "top-front-ul-ur",
+                    type: "up-front-ul-ur",
                     simplified: {
                         hideUCenter: false,
                         hideEdges: false,
-                        showEdgeU: false
+                        showEdgeU: false,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: false,
                     eo: false
                 },
                 verify: {
-                    partial: false,
+                    partial: undefined,
                     solved: solvedPattern, // complete
                     eo: false,
                     allowRandomM: false,
@@ -162,17 +174,19 @@ var Algs = (function () {
             };
             case "5sb": return { // 5-style blind
                 diagram: {
-                    type: "bld",
+                    type: "blind",
                     simplified: {
                         hideUCenter: false,
                         hideEdges: false,
-                        showEdgeU: false
+                        showEdgeU: false,
+                        hideULayer: false,
+                        hideMSlice: false
                     },
                     stripAuf: false,
                     eo: false
                 },
                 verify: {
-                    partial: false,
+                    partial: undefined,
                     solved: solvedPattern, // complete
                     eo: false,
                     allowRandomM: false,
@@ -184,6 +198,62 @@ var Algs = (function () {
                     randomOrientationAroundY: false,
                     randomMU: false,
                     allowEOFlips: false
+                }
+            };
+            case "f2l": return {
+                diagram: {
+                    type: "up-front-right",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideULayer: true,
+                        hideMSlice: false
+                    },
+                    stripAuf: false,
+                    eo: false
+                },
+                verify: {
+                    partial: undefined,
+                    solved: "............LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: false,
+                    randomMU: false,
+                    allowEOFlips: true
+                }
+            };
+            case "sb": return {
+                diagram: {
+                    type: "up-front-right",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideULayer: true,
+                        hideMSlice: true
+                    },
+                    stripAuf: false,
+                    eo: false
+                },
+                verify: {
+                    partial: undefined,
+                    solved: "............LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B...", // F2B
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: false,
+                    randomMU: true,
+                    allowEOFlips: true
                 }
             };
             default: throw "Unknown kind type: " + kind;
@@ -231,8 +301,8 @@ var Algs = (function () {
             { id: "h_1", alg: "R U R' U R U' R' U R U2 R'", kind: "coll" },
             { id: "h_2", alg: "U' F R U R' U' R U R' U' R U R' U' F'", kind: "coll" },
             { id: "h_3", alg: "F R U' R' U R U2 R' U' R U R' U' F'", kind: "coll" },
-            { id: "h_4", alg: "R' F' R U2 R U2 R' F U' R U' R'", kind: "coll" }]
-        },
+            { id: "h_4", alg: "R' F' R U2 R U2 R' F U' R U' R'", kind: "coll" }
+        ]},
         oll: { name: "OLL", source: "http://www.cyotheking.com/oll", algs: [
             { id: "all_edges1", alg: "R U R' U R U2 R'", kind: "oll" },
             { id: "all_edges2", alg: "R' U' R U' R' U2 R", kind: "oll" },
@@ -290,8 +360,8 @@ var Algs = (function () {
             { id: "awkward3", alg: "R U R' U R U2 R' F R U R' U' F'", kind: "oll" },
             { id: "awkward4", alg: "R' U' R U' R' U2 R F R U R' U' F'", kind: "oll" },
             { id: "all_corners1", alg: "r U R' U' r' R U R U' R'", kind: "oll" },
-            { id: "all_corners2", alg: "R U R' U' r R' U R U' r'", kind: "oll" }]
-        },
+            { id: "all_corners2", alg: "R U R' U' r R' U R U' r'", kind: "oll" }
+        ]},
         pll: { name: "PLL", source: "http://www.cyotheking.com/pll", algs: [
             { id: "ub", alg: "M2 U' M U2 M' U' M2", kind: "pll" },
             { id: "ua", alg: "M2 U M U2 M' U M2", kind: "pll" },
@@ -313,8 +383,51 @@ var Algs = (function () {
             { id: "e", alg: "x' R U' R' D R U R' D' R U R' D R U' R' D' x", kind: "pll" },
             { id: "v", alg: "R' U R' U' y R' F' R2 U' R' U R' F R F", kind: "pll" },
             { id: "nb", alg: "z U' R D' R2 U R' D U' R D' R2 U R' D z'", kind: "pll" },
-            { id: "na", alg: "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'", kind: "pll" }]
-        },
+            { id: "na", alg: "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'", kind: "pll" }
+        ]},
+        f2l: { name: "F2L", source: "https://www.cubeskills.com/uploads/pdf/tutorials/f2l.pdf", algs: [
+            { id: "f2l_1", alg: "U (R U' R')", kind: "f2l" },
+            { id: "f2l_2", alg: "y' U' (R' U R)", kind: "f2l" },
+            { id: "f2l_3", alg: "y' (R' U' R)", kind: "f2l" },
+            { id: "f2l_4", alg: "(R U R')", kind: "f2l" },
+            { id: "f2l_5", alg: "U' (R U' R' U) y' (R' U' R)", kind: "f2l" },
+            { id: "f2l_6", alg: "U' (R U R' U) (R U R')", kind: "f2l" },
+            { id: "f2l_7", alg: "U' (R U2' R' U) y' (R' U' R)", kind: "f2l" },
+            { id: "f2l_8", alg: "R' U2' R2 U R2' U R", kind: "f2l" },
+            { id: "f2l_9", alg: "y' U (R' U R U') (R' U' R)", kind: "f2l" },
+            { id: "f2l_10", alg: "U' (R U' R' U) (R U R')", kind: "f2l" },
+            { id: "f2l_11", alg: "(U' R U R') U2 (R U' R')", kind: "f2l" },
+            { id: "f2l_12", alg: "y' (U R' U' R) U2' (R' U R)", kind: "f2l" },
+            { id: "f2l_13", alg: "U' (R U2' R') U2 (R U' R')", kind: "f2l" },
+            { id: "f2l_14", alg: "y' U (R' U2 R) U2' (R' U R)", kind: "f2l" },
+            { id: "f2l_15", alg: "U (R U2 R') U (R U' R')", kind: "f2l" },
+            { id: "f2l_16", alg: "y' U' (R' U2 R) U' (R' U R)", kind: "f2l" },
+            { id: "f2l_17", alg: "U2 (R U R' U) (R U' R')", kind: "f2l" },
+            { id: "f2l_18", alg: "y' U2 (R' U' R) U' (R' U R)", kind: "f2l" },
+            { id: "f2l_19", alg: "y' (R' U R) U2' y (R U R')", kind: "f2l" },
+            { id: "f2l_20", alg: "(R U' R' U2) y' (R' U' R)", kind: "f2l" },
+            { id: "f2l_21", alg: "(R U2 R') U' (R U R')", kind: "f2l" },
+            { id: "f2l_22", alg: "y' (R' U2 R) U (R' U' R)", kind: "f2l" },
+            { id: "f2l_23", alg: "U (R U' R' U') (R U' R' U) (R U' R')", kind: "f2l" },
+            { id: "f2l_24", alg: "y' U' (R' U R U) (R' U R U') (R' U R)", kind: "f2l" },
+            { id: "f2l_25", alg: "U' F' (R U R' U') R' F R", kind: "f2l" },
+            { id: "f2l_26", alg: "U (R U' R') U' (F' U F)", kind: "f2l" },
+            { id: "f2l_27", alg: "(R U' R' U) (R U' R')", kind: "f2l" },
+            { id: "f2l_28", alg: "y' (R' U R U') (R' U R)", kind: "f2l" },
+            { id: "f2l_29", alg: "y' (R' U' R U) (R' U' R)", kind: "f2l" },
+            { id: "f2l_30", alg: "(R U R' U') (R U R')", kind: "f2l" },
+            { id: "f2l_31", alg: "(R U' R' U) y' (R' U R)", kind: "f2l" },
+            { id: "f2l_32", alg: "(U R U' R') (U R U' R') (U R U' R')", kind: "f2l" },
+            { id: "f2l_33", alg: "(U' R U' R') U2 (R U' R')", kind: "f2l" },
+            { id: "f2l_34", alg: "U (R U R') U2 (R U R')", kind: "f2l" },
+            { id: "f2l_35", alg: "(U' R U R') U y' (R' U' R)", kind: "f2l" },
+            { id: "f2l_36", alg: "U (F' U' F) U' (R U R')", kind: "f2l" },
+            { id: "f2l_37", alg: "(R U' R') d (R' U2 R) U2' (R' U R)", kind: "f2l" },
+            { id: "f2l_38", alg: "(R U' R' U') R U R' U2 (R U' R')", kind: "f2l" },
+            { id: "f2l_39", alg: "(R U' R' U) (R U2' R') U (R U' R')", kind: "f2l" },
+            { id: "f2l_40", alg: "(F' U F) U2 (R U R' U) (R U' R')", kind: "f2l" },
+            { id: "f2l_41", alg: "(R U R' U') (R U' R') U2 y' (R' U' R)", kind: "f2l" }
+        ]},
         cmll: { name: "CMLL", source: "https://sites.google.com/view/kianroux/cmll", algs: [
             { id: "o_adjacent_swap", alg: "R U R' F' R U R' U' R' F R2 U' R'", kind: "cmll" },
             { id: "o_diagonal_swap", alg: "r2 D r' U r D' R2 U' F' U' F", kind: "cmll" },
@@ -357,8 +470,8 @@ var Algs = (function () {
             { id: "l_pure", alg: "R U2 R' U' R U R' U' R U R' U' R U' R'", kind: "cmll" },
             { id: "l_front_commutator", alg: "R U2 R D R' U2 R D' R2'", kind: "cmll" },
             { id: "l_diag", alg: "R' U' R U R' F' R U R' U' R' F R2", kind: "cmll" },
-            { id: "l_back_commutator", alg: "U R' U2 R' D' R U2 R' D R2", kind: "cmll" }]
-        },
+            { id: "l_back_commutator", alg: "U R' U2 R' D' R U2 R' D R2", kind: "cmll" }
+        ]},
         eo: { name: "EO", source: "https://sites.google.com/view/kianroux/eo", algs: [
             { id: "eo6", alg: "R U' r' U' M' U r U r'", kind: "eo" },
             { id: "eo4af", alg: "M' U' M'", kind: "eo" },
@@ -370,8 +483,8 @@ var Algs = (function () {
             { id: "eo2bb", alg: "M' U M' U' M U' M'", kind: "eo" },
             { id: "eo2tl", alg: "M' U M' U2 M' U' M'", kind: "eo" }, // AUF specific
             { id: "eo1ft", alg: "M' U' M' U' M U' M'", kind: "eo" },
-            { id: "eo1bt", alg: "M' U' M U' M' U' M'", kind: "eo" }]
-        },
+            { id: "eo1bt", alg: "M' U' M U' M' U' M'", kind: "eo" }
+        ]},
         l4e: { name: "L4E", source: "https://www.youtube.com/watch?v=YL55b8FljnE", algs: [
             { id: "l4esimple0", alg: "M2", kind: "l4e" },
             { id: "l4ecycle0", alg: "M' U2 M' U2", kind: "l4e" },
@@ -395,8 +508,57 @@ var Algs = (function () {
             { id: "l4ecolumns0", alg: "M U2 M2 U2 M'", kind: "l4e" },
             { id: "l4ecolumns1", alg: "M U2 M2 U2 M", kind: "l4e" },
             { id: "l4edots0", alg: "E2 M E2 M", kind: "l4e" },
-            { id: "l4edots1", alg: "E2 M E2 M'", kind: "l4e" }]
-        }
+            { id: "l4edots1", alg: "E2 M E2 M'", kind: "l4e" }
+        ]},
+        sb: { name: "SB", source: "https://sites.google.com/view/kianroux/second-block", algs: [
+            { id: "sb_1", alg: "U R U' R'", kind: "sb" },
+            { id: "sb_2", alg: "r U r'", kind: "sb" },
+            { id: "sb_2", alg: "U2 M U' r U' r'", kind: "sb" },
+            { id: "sb_3", alg: "U' M U M' r U r'", kind: "sb" },
+            { id: "sb_4", alg: "U' M U2 r U' r'", kind: "sb" },
+            { id: "sb_5", alg: "r U2 M2 U' r'", kind: "sb" },
+            { id: "sb_6", alg: "M U r U' r'", kind: "sb" },
+            { id: "sb_7", alg: "R U' R' U' M R U' R'", kind: "sb" },
+            { id: "sb_8", alg: "R U R'", kind: "sb" },
+            { id: "sb_9", alg: "F' U' F", kind: "sb" },
+            { id: "sb_10", alg: "U' R U R' U R U R'", kind: "sb" },
+            { id: "sb_11", alg: "M2 U r U' r'", kind: "sb" },
+            { id: "sb_12", alg: "U' R U' R' U R U R'", kind: "sb" },
+            { id: "sb_13", alg: "U2 M2 U' r U' r'", kind: "sb" },
+            { id: "sb_14", alg: "r M2 U2 M' U' r'", kind: "sb" },
+            { id: "sb_15", alg: "U' M2 U2 r U' r'", kind: "sb" },
+            { id: "sb_16", alg: "U R U2 R' U R U' R'", kind: "sb" },
+            { id: "sb_17", alg: "r U' r' U2 M' r U r'", kind: "sb" },
+            { id: "sb_18", alg: "R U' R' U2 R U R'", kind: "sb" },
+            { id: "sb_19", alg: "r U' r' U2 r U r'", kind: "sb" },
+            { id: "sb_20", alg: "R U2 R' U' R U R'", kind: "sb" },
+            { id: "sb_21", alg: "M' U R U2 R' U R U' R'", kind: "sb" },
+            { id: "sb_22", alg: "r U2 r' U' M' r U r'", kind: "sb" },
+            { id: "sb_23", alg: "U r U2 r' U r U' r'", kind: "sb" },
+            { id: "sb_24", alg: "R U R' U' R U R'", kind: "sb" },
+            { id: "sb_25", alg: "M' U R U' R' U R U' R'", kind: "sb" },
+            { id: "sb_26", alg: "R U' R' U R U' R'", kind: "sb" },
+            { id: "sb_27", alg: "R U R' U' r U r'", kind: "sb" },
+            { id: "sb_28", alg: "U' r U' M U r' U'", kind: "sb" },
+            { id: "sb_29", alg: "U R U' M' U R'", kind: "sb" },
+            { id: "sb_30", alg: "U2 r U r' U r U' r'", kind: "sb" },
+            { id: "sb_31", alg: "R U' R' U2 r U r'", kind: "sb" },
+            { id: "sb_32", alg: "U' R U' R' U2 R U' R'", kind: "sb" },
+            { id: "sb_33", alg: "U2 R U M' U R'", kind: "sb" },
+            { id: "sb_34", alg: "U R U R' U2 R U R'", kind: "sb" },
+            { id: "sb_35", alg: "r U' r' M U' r U' r'", kind: "sb" },
+            { id: "sb_36", alg: "r U' M2 U2 M' U' r'", kind: "sb" },
+            { id: "sb_37", alg: "R U' R' U2 M U' r U' r'", kind: "sb" },
+            { id: "sb_38", alg: "r U' r' M U r U' r'", kind: "sb" },
+            { id: "sb_39", alg: "r U r' U M' U2 R U R'", kind: "sb" },
+            { id: "sb_40", alg: "r U r' U' M' r U r'", kind: "sb" },
+            { id: "sb_41", alg: "r U r' F' U' F", kind: "sb" },
+            { id: "sb_42", alg: "R U R' U r U' r'", kind: "sb" },
+            { id: "sb_43", alg: "M' r U r'", kind: "sb" },
+            { id: "sb_44", alg: "R U2 M' U' R'", kind: "sb" },
+            { id: "sb_45", alg: "M2 U2 R U' R'", kind: "sb" },
+            { id: "sb_46", alg: "r U' r'", kind: "sb" }
+        ]}
     }
 
     if (window.location.search.indexOf("enable-5-style") != -1) {
@@ -5427,7 +5589,17 @@ var Algs = (function () {
             { id: "phjq", alg: "E r' U S U M' S' U' M' S U' R E'", kind: "5sb" },
             { id: "hagv", alg: "M' U' S' U S M", kind: "5sb" },
             { id: "hbgv", alg: "S' M' U M U' S", kind: "5sb" },
-            { id: "higv", alg: "R' F' E' F E R", kind: "5sb" }]};
+            { id: "higv", alg: "R' F' E' F E R", kind: "5sb" }
+        ]};
+    }
+
+    for (var s in sets) {
+        var set = sets[s];
+        for (var a in set.algs) {
+            var alg = set.algs[a];
+            alg.display = alg.alg;
+            alg.alg = alg.alg.replace(/[\(\)]/g, '');
+        }
     }
 
     return {

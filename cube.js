@@ -44,7 +44,8 @@ var Cube = (function () {
             { p: 10, o: 1 },
             { p: 11, o: 1 },
             { p: 12, o: 1 }],
-        v: [0, 1, 2, 3, 4, 5]
+        v: [0, 1, 2, 3, 4, 5],
+        m: {}
     }
 
     function compare(cube0, cube1) {
@@ -111,7 +112,10 @@ var Cube = (function () {
                 vs[i] = cube.v[m[i]];
             }
         }
-        return { c: cs, e: es, v: vs };
+
+        var ms = JSON.parse(JSON.stringify(cube.m));
+
+        return { c: cs, e: es, v: vs, m: ms };
     }
 
     var orientations = [
@@ -270,6 +274,7 @@ var Cube = (function () {
             case "z": return map(z, cube);
             case "z2": return map(z, map(z, cube));
             case "z'": return map(z, map(z, map(z, cube)));
+            default: throw "Unknown notation: " + notation;
         }
     }
     
@@ -317,10 +322,89 @@ var Cube = (function () {
         return face.split('').sort().join('');
     }
 
-    const corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
-    const edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
+    const corners = {
+        "UBL": 1,
+        "ULF": 2,
+        "UFR": 3,
+        "URB": 4,
+        "DLB": 5,
+        "DFL": 6,
+        "DRF": 7,
+        "DBR": 8,
+        // canonical order also
+        "BLU": 1,
+        "FLU": 2,
+        "FRU": 3,
+        "BRU": 4,
+        "BDL": 5,
+        "DFR": 7,
+        "BDR": 8 };
+    var cornerKeys = Object.keys(corners);
+    function cornerNum(corner) { return corners[corner.toUpperCase()]; }
+    
+    const edges = {
+        "UB": 1,
+        "UL": 2,
+        "UF": 3,
+        "UR": 4,
+        "BL": 5,
+        "FL": 6,
+        "FR": 7,
+        "BR": 8,
+        "DB": 9,
+        "DL": 10,
+        "DF": 11,
+        "DR": 12,
+        // canonical order also
+        "BU": 1,
+        "LU": 2,
+        "FU": 3,
+        "RU": 4,
+        "BD": 9 };
+    var edgeKeys = Object.keys(edges);
+    function edgeNum(edge) { return edges[edge.toUpperCase()]; }
+    
+    const centers = {
+        "U": 0,
+        "D": 1,
+        "L": 2,
+        "R": 3,
+        "F": 4,
+        "B": 5 };
+    var centerKeys = Object.keys(centers);
+    function centerNum(center) { return centers[center.toUpperCase()]; }
 
-    function faces(cube) {
+    function getPiece(piece, cube) {
+        if (piece.length == 1) { // center
+            return centerKeys[cube.v[centerNum(piece)]];
+        } else {
+            var pov = "";
+            for (var i = 0; i < piece.length; i++) {
+                pov += centerKeys[cube.v[centers[piece[i]]]];
+            }
+            pov = canonical(pov);
+            switch (piece.length) {
+                case 2: // edge
+                    return edgeKeys[cube.e[edgeNum(pov) - 1].p - 1];
+                case 3: // corner
+                    return cornerKeys[cube.e[cornerNum(pov) - 1].p - 1];
+                default: throw "Invalid piece name: " + piece;
+            }
+        }
+    }
+
+    function maskPieces(pieces, cube) {
+        var cs = cube.c.slice(0);
+        var es = cube.e.slice(0);
+        var vs = cube.v.slice(0);
+        var ms = JSON.parse(JSON.stringify(cube.m));
+        for (var p in pieces) {
+            ms[canonical(getPiece(pieces[p], cube))] = true;
+        }
+        return { c: cs, e: es, v: vs, m: ms };
+    }
+
+    function faces(cube, simple) {
         function twistColors(colors, corner, twist) {
             var c0 = colors[0];
             var c1 = colors[1];
@@ -333,35 +417,39 @@ var Cube = (function () {
             }
         }
 
-        function side(s) {
-            return "udlrfb"[s];
-        }
-
         var faces = {
             // centers (orientation)
-            U: side(cube.v[0]).toUpperCase(),
-            D: side(cube.v[1]).toUpperCase(),
-            L: side(cube.v[2]).toUpperCase(),
-            R: side(cube.v[3]).toUpperCase(),
-            F: side(cube.v[4]).toUpperCase(),
-            B: side(cube.v[5]).toUpperCase(),
+            _U: centerKeys[cube.v[0]],
+            _D: centerKeys[cube.v[1]],
+            _L: centerKeys[cube.v[2]],
+            _R: centerKeys[cube.v[3]],
+            _F: centerKeys[cube.v[4]],
+            _B: centerKeys[cube.v[5]],
+            // center colors
+            U: simple && cube.m[centerKeys[cube.v[0]]] ? '.' : centerKeys[cube.v[0]],
+            D: simple && cube.m[centerKeys[cube.v[1]]] ? '.' : centerKeys[cube.v[1]],
+            L: simple && cube.m[centerKeys[cube.v[2]]] ? '.' : centerKeys[cube.v[2]],
+            R: simple && cube.m[centerKeys[cube.v[3]]] ? '.' : centerKeys[cube.v[3]],
+            F: simple && cube.m[centerKeys[cube.v[4]]] ? '.' : centerKeys[cube.v[4]],
+            B: simple && cube.m[centerKeys[cube.v[5]]] ? '.' : centerKeys[cube.v[5]],
         }
 
         // corners
         for (var c = 0; c < 8; c++) {
             var p = cube.c[c].p;
             if (p != 0) {
-                var colors = twistColors(corners[p - 1], c, cube.c[c].o);
+                var colors = twistColors(cornerKeys[p - 1], c, cube.c[c].o);
                 var c0 = colors[0];
                 var c1 = colors[1];
                 var c2 = colors[2];
-                var targets = corners[c].toLowerCase();
+                var targets = cornerKeys[c].toLowerCase();
                 var t0 = targets[0];
                 var t1 = targets[1];
                 var t2 = targets[2];
-                faces[canonical(t0.toUpperCase() + t1 + t2)] = c0;
-                faces[canonical(t0 + t1.toUpperCase() + t2)] = c1;
-                faces[canonical(t0 + t1 + t2.toUpperCase())] = c2;
+                var masked = simple && cube.m[canonical(c0 + c1 + c2).toUpperCase()];
+                faces[canonical(t0.toUpperCase() + t1 + t2)] = masked ? '.' : c0;
+                faces[canonical(t0 + t1.toUpperCase() + t2)] = masked ? '.' : c1;
+                faces[canonical(t0 + t1 + t2.toUpperCase())] = masked ? '.' : c2;
             }
         }
 
@@ -369,13 +457,14 @@ var Cube = (function () {
         for (var e = 0; e < 12; e++) {
             var p = cube.e[e].p;
             if (p != 0) {
-                var colors = edges[p - 1];
+                var colors = edgeKeys[p - 1];
                 var flipped = cube.e[e].o == 2;
                 var c0 = flipped ? colors[1] : colors[0];
                 var c1 = flipped ? colors[0] : colors[1];
-                var edge = edges[e].toLowerCase();
-                faces[canonical(edge[0].toUpperCase() + edge[1])] = c0;
-                faces[canonical(edge[0] + edge[1].toUpperCase())] = c1;
+                var edge = edgeKeys[e].toLowerCase();
+                var masked = simple && cube.m[canonical(c0 + c1).toUpperCase()];
+                faces[canonical(edge[0].toUpperCase() + edge[1])] = masked ? '.' : c0;
+                faces[canonical(edge[0] + edge[1].toUpperCase())] = masked ? '.' : c1;
             }
         }
 
@@ -387,7 +476,7 @@ var Cube = (function () {
         var pov = "";
         for (var i = 0; i < face.length; i++) {
             var f = face[i].toUpperCase();
-            var m = faces[f]; // map to pov
+            var m = faces['_' + f]; // map to pov
             pov += (f != face[i] ? m.toLowerCase() : m); // match case
         }
         return faces[canonical(pov)];
@@ -432,6 +521,8 @@ var Cube = (function () {
         faces: faces,
         faceColor: faceColor,
         toString: toString,
-        matchPattern: matchPattern
+        matchPattern: matchPattern,
+        getPiece: getPiece,
+        maskPieces: maskPieces
     }
 }());

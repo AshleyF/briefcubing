@@ -11,7 +11,7 @@
 * Discoverability text about U/U' to Next/Retry
 * Connection error messaging and help page
 * Allow algs with parenthesis
-* Choice of side colors
+* Choice of side colors (EO, L4E, SB, F2L)
 
 ## Bugs
 

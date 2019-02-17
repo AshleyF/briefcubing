@@ -325,10 +325,11 @@
                         else if (alg.startsWith("U2 ")) sansAuf = alg.substr(3);
                     }
                     var testInstance = Cube.alg(solution, Cube.solved, true); // apply random AUF + alg to solved
-                    if (verifyComplete(Cube.alg(sansAuf, testInstance))) return sansAuf;
-                    if (verifyComplete(Cube.alg("U " + sansAuf, testInstance))) return simplifyAuf("(U) " + sansAuf);
-                    if (verifyComplete(Cube.alg("U' " + sansAuf, testInstance))) return simplifyAuf("(U') " + sansAuf);
-                    if (verifyComplete(Cube.alg("U2 " + sansAuf, testInstance))) return "(U2) " + sansAuf;
+                    var sansAufSansParens = sansAuf.replace(/[\(\)]/g, '');
+                    if (verifyComplete(Cube.alg(sansAufSansParens, testInstance))) return sansAuf;
+                    if (verifyComplete(Cube.alg("U " + sansAufSansParens, testInstance))) return simplifyAuf("(U) " + sansAuf);
+                    if (verifyComplete(Cube.alg("U' " + sansAufSansParens, testInstance))) return simplifyAuf("(U') " + sansAuf);
+                    if (verifyComplete(Cube.alg("U2 " + sansAufSansParens, testInstance))) return "(U2) " + sansAuf;
                     throw "No possible solution!";
                 }
                 function lookupAlg(name) {
@@ -350,7 +351,7 @@
                     var params = Algs.kindToParams(kind);
                     var scramble = params.scramble;
                     if (!cas) cas = { id: "unknown", name: "", alg: "", kind: "coll" }; // solved (default)
-                    auf = Settings.values.randomAuf && scramble.auf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
+                    auf = Settings.values.randomAuf && scramble.allowAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
                     if (scramble.randomSingleU) auf = randomElement(["U ", "U' "]); // used by L4E algs
                     solution = auf + cas.alg;
                     instance = Cube.solved;
@@ -366,6 +367,9 @@
                     instance = Cube.random(rot, 1, instance);
                     if (scramble.randomOrientationAroundY) {
                         instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
+                    }
+                    if (Settings.values.simpleDiagram) {
+                        instance = Display.maskPieces(params.diagram.simplified, instance)
                     }
                     var upColor = Cube.faceColor("U", Cube.faces(instance));
                     if (scramble.randomMU) {
@@ -407,7 +411,7 @@
                         continue;
                     }
                     challenge(lookup.alg);
-                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(auf, lookup.alg.alg) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(auf, lookup.alg.display) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                     setStatus("init");
                     break;
                 }
