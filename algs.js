@@ -217,8 +217,8 @@ var Algs = (function () {
                     partial: undefined,
                     solved: "............LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L
                     eo: false,
-                    allowRandomM: true,
-                    allowRandomM2: true
+                    allowRandomM: false,
+                    allowRandomM2: false
                 },
                 scramble: {
                     allowAuf: true,
@@ -245,8 +245,8 @@ var Algs = (function () {
                     partial: undefined,
                     solved: "............LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B...", // F2B
                     eo: false,
-                    allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM: true,
+                    allowRandomM2: true
                 },
                 scramble: {
                     allowAuf: true,
