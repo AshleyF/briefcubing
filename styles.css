@@ -46,3 +46,7 @@ input.color {
 a {
     color: #aaa !important;
 }
+
+.ui-slider-track {
+    margin-left: 3em;
+}

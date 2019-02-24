@@ -112,6 +112,9 @@
                     var chosen = Settings.values.lang || "en";
                     htm += '<option id="lang_' + l + '" value="' + l + '"' + (chosen == l ? ' selected="selected"' : '') + '>' + Localization.getString("lang_" + l) + '</option>';
                 }
+                var timeout = Settings.values.timeout;
+                $("#timeout").prop('value', timeout).slider('refresh');
+                document.getElementById("timeout_value").innerText = timeout == 10.5 ? '∞' : timeout;
                 document.getElementById("language").innerHTML = htm;
                 $("#language").selectmenu("refresh");
                 $("#colorSchemeU").spectrum("set", Display.faceToCssColor("U"));
@@ -155,6 +158,8 @@
                     $('#' + s).prop('checked', all).checkboxradio('refresh');
                     document.getElementById(s + "_title").style.color = (some ? "#6ad" : "white");
                 }
+                Settings.values.timeout = document.getElementById("timeout").value;
+                document.getElementById("timeout_value").innerText = Settings.values.timeout == 10.5 ? '∞' : Settings.values.timeout;
                 Settings.values.lang = $("#language option:selected").val();
                 Settings.save();
                 Ui.next();
@@ -178,6 +183,7 @@
                 $("#simple_label").text(Localization.getString("simplifiedDiagram"));
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
+                $("#timeout_label").text(Localization.getString("timeout"));
                 $("#upColors_label").html(Localization.getString("upColors") + ' <a href="#colorScheme" data-rel="popup" style="font-size: small; float: right">' + Localization.getString("customScheme") + '</a>');
                 $("#customSchemeReset").text(Localization.getString("customSchemeReset"));
                 $("#feedback").text(Localization.getString("feedback"));
@@ -321,6 +327,9 @@
                     <option value="off"></option>
                     <option value="on"></option>
                 </select>
+                <label id="timeout_label" for="timeout"></label>
+                <span style="font-weight: bold; padding: 0.5em; float: left" id="timeout_value">10</span>
+                <input style="display: none" type="range" name="timeout" id="timeout" min="0.5" max="10.5" step=".5" value="3" data-highlight="true" onchange="settingsUpdate()">
                 <div class="ui-field-contain">
                     <select name="language" id="language" data-mini="true" onchange="localizationUpdate()">
                     </select>

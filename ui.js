@@ -2,7 +2,10 @@
             var timer;
             function checkProgress() {
                 if (timer) window.clearTimeout(timer);
-                timer = window.setTimeout(function () { if (lastStatus == "progress") setStatus("incorrect"); }, 3000);
+                var timeout = Settings.values.timeout * 1000;
+                if (timeout <= 10000) {
+                    timer = window.setTimeout(function () { if (lastStatus == "progress") setStatus("incorrect"); }, timeout);
+                }
             }
 
             var lastStatus = "init";
@@ -229,7 +232,19 @@
                 }
                 if (t == "") return;
                 alg += t + ' ';
-                var len = alg.split(' ').length;
+                var twists = alg.split(' ');
+                var len = twists.length;
+                if (len > 4) {
+                    var a = twists[len - 2];
+                    var b = twists[len - 3];
+                    var c = twists[len - 4];
+                    var d = twists[len - 5];
+                    if (a == b && b == c && c == d) {
+                        setStatus("incorrect");
+                        window.setTimeout(function() { if (t.endsWith("'")) retry(); else next(); }, 500);
+                        return;
+                    }
+                }
                 var progress = "";
                 for (var i = 1; i < len; i++) {
                     progress += "&bull; ";

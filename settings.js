@@ -8,6 +8,7 @@ var Settings = (function () {
         randomOrder: false,
         upColors: { yellow: true, red: true, blue: false },
         algs: ["cmll_s_left_bar"],
+        timeout: 3,
         lang: "en"
     };
     if (localStorage.settings) {
