@@ -94,6 +94,16 @@
                         partial = null;
                         initiallyPartial = false;
                         break;
+                    case "skip":
+                        stopExecution();
+                        incorrect.play();
+                        document.getElementById("diagram").style.backgroundColor = "gray";
+                        document.getElementById("retry").disabled = false;
+                        document.getElementById("next").disabled = false;
+                        completed = true;
+                        partial = null;
+                        initiallyPartial = false;
+                        break;
                     case "progress":
                         startOrContinueExecution();
                         document.getElementById("diagram").style.backgroundColor = (partial ? "goldenrod" : "#444");
@@ -240,7 +250,7 @@
                     var c = twists[len - 4];
                     var d = twists[len - 5];
                     if (a == b && b == c && c == d) {
-                        setStatus("incorrect");
+                        setStatus("skip");
                         window.setTimeout(function() { if (t.endsWith("'")) retry(); else next(); }, 500);
                         return;
                     }
