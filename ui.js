@@ -410,7 +410,7 @@
                     instance = Cube.alg(solution, instance, true);
                     if (params.diagram.simplified.hideUCenter) {
                         var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
-                        if (numColors > 1) {
+                        if (numColors > 1 || params.diagram.simplified.hideInsignificantCornerFaces) {
                             // adjust M-slice so center top indicates color (too confusing otherwise!)
                             while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
                                 instance = Cube.alg("M", instance);
