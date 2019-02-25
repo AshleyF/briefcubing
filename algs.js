@@ -5,16 +5,142 @@ var Algs = (function () {
         var solvedCmllPattern = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // F2B+CO/CP
         var partialCmllPattern = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // F2B+CO
         switch (kind) {
+            case "2lpllcp": return {
+                diagram: {
+                    type: "up",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: true,
+                        hideCorners: false,
+                        hideULayer: false,
+                        hideMSlice: false,
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: undefined,
+                    solved: solvedPattern, // F2L+EO/CO+EP/CP
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            }
+            case "2lpllep": return {
+                diagram: {
+                    type: "up",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: true,
+                        hideCorners: false,
+                        hideULayer: false,
+                        hideMSlice: false,
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: undefined,
+                    solved: "UUUUUUUUU.L.LLLLLL.F.FFFFFF.R.RRRRRRDDDDDDDDDBBBBBB.B.", // F2L+EO/CO+EP
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            }
+            case "2lollco": return {
+                diagram: {
+                    type: "up",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: true,
+                        hideCorners: false,
+                        hideULayer: false,
+                        hideMSlice: false,
+                        hideInsignificantCornerFaces: true,
+                        hideInsignificantEdgeFaces: true
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: undefined,
+                    solved: "UUUUUUUUU...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+EO/CO
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            }
+            case "2lolleo": return {
+                diagram: {
+                    type: "up",
+                    simplified: {
+                        hideUCenter: false,
+                        hideEdges: false,
+                        showEdgeU: true,
+                        hideCorners: true,
+                        hideULayer: false,
+                        hideMSlice: false,
+                        hideInsignificantCornerFaces: true,
+                        hideInsignificantEdgeFaces: true
+                    },
+                    stripAuf: true,
+                    eo: false
+                },
+                verify: {
+                    partial: undefined,
+                    solved: ".U.UUU.U....LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+EO
+                    eo: false,
+                    allowRandomM: false,
+                    allowRandomM2: false
+                },
+                scramble: {
+                    allowAuf: true,
+                    randomSingleU: false,
+                    randomOrientationAroundY: true,
+                    randomMU: false,
+                    allowEOFlips: false
+                }
+            }
             case "2lcmpll": return { // corner permutation (ignoring M-slice) of last layer (Roux)
                 diagram: {
                     type: "up",
                     simplified: {
                         hideUCenter: true,
-                        hideCenterEdges: true,
-                        showCenterEdgeU: false,
+                        hideEdges: true,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: true
+                        hideInsignificantCornerFaces: true,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: false
@@ -39,11 +165,13 @@ var Algs = (function () {
                     type: "up",
                     simplified: {
                         hideUCenter: true,
-                        hideCenterEdges: true,
-                        showCenterEdgeU: false,
+                        hideEdges: true,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: true
+                        hideInsignificantCornerFaces: true,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: false
@@ -68,11 +196,13 @@ var Algs = (function () {
                     type: "up",
                     simplified: {
                         hideUCenter: true,
-                        hideCenterEdges: true,
-                        showCenterEdgeU: false,
+                        hideEdges: true,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: false
@@ -97,11 +227,13 @@ var Algs = (function () {
                     type: "up",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: true,
-                        showCenterEdgeU: true,
+                        hideEdges: true,
+                        showEdgeU: true,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: false
@@ -126,11 +258,13 @@ var Algs = (function () {
                     type: "up",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: false
@@ -155,11 +289,13 @@ var Algs = (function () {
                     type: "up",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: false
@@ -184,11 +320,13 @@ var Algs = (function () {
                     type: "up-front",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: true,
                     eo: true
@@ -213,11 +351,13 @@ var Algs = (function () {
                     type: "up-front-ul-ur",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: false,
                     eo: false
@@ -242,11 +382,13 @@ var Algs = (function () {
                     type: "blind",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: false,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: false,
                     eo: false
@@ -271,11 +413,13 @@ var Algs = (function () {
                     type: "up-front-right",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: true,
                         hideMSlice: false,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: false,
                     eo: false
@@ -300,11 +444,13 @@ var Algs = (function () {
                     type: "up-front-right",
                     simplified: {
                         hideUCenter: false,
-                        hideCenterEdges: false,
-                        showCenterEdgeU: false,
+                        hideEdges: false,
+                        showEdgeU: false,
+                        hideCorners: false,
                         hideULayer: true,
                         hideMSlice: true,
-                        hideInsignificantCornerFaces: false
+                        hideInsignificantCornerFaces: false,
+                        hideInsignificantEdgeFaces: false
                     },
                     stripAuf: false,
                     eo: false
@@ -371,6 +517,18 @@ var Algs = (function () {
             { id: "h_3", alg: "F R U' R' U R U2 R' U' R U R' U' F'", kind: "coll" },
             { id: "h_4", alg: "R' F' R U2 R U2 R' F U' R U' R'", kind: "coll" }
         ]},
+        oll2l: { name: "2LOLL", source: "http://www.cubewhiz.com/2lookoll.php", algs: [
+            { id: "2l_oll_bar", alg: "F (R U R' U') F'", kind: "2lolleo" },
+            { id: "2l_oll_l", alg: "f (R U R' U') f'", kind: "2lolleo" },
+            { id: "2l_oll_all", alg: "F (R U R' U') F' f (R U R' U') f'", kind: "2lolleo" },
+            { id: "2l_oll_h", alg: "(R U2) (R' U' R U R' U' R U' R')", kind: "2lollco" },
+            { id: "2l_oll_pi", alg: "(l' U') (L U) (R U') (r' F)", kind: "2lollco" },
+            { id: "2l_oll_u", alg: "(R2' D) (R' U2) (R D') (R' U2 R')", kind: "2lollco" },
+            { id: "2l_oll_t", alg: "(R U2') (R2' U') (R2 U') (R2' U2' R)", kind: "2lollco" },
+            { id: "2l_oll_s", alg: "(R U R' U) (R U2 R')", kind: "2lollco" },
+            { id: "2l_oll_as", alg: "(R U2) (R' U' R U' R')", kind: "2lollco" },
+            { id: "2l_oll_l", alg: "(R' F) (R B') (R' F') (R B)", kind: "2lollco" }
+        ]},
         oll: { name: "OLL", source: "http://www.cyotheking.com/oll", algs: [
             { id: "all_edges1", alg: "R U R' U R U2 R'", kind: "oll" },
             { id: "all_edges2", alg: "R' U' R U' R' U2 R", kind: "oll" },
@@ -429,6 +587,15 @@ var Algs = (function () {
             { id: "awkward4", alg: "R' U' R U' R' U2 R F R U R' U' F'", kind: "oll" },
             { id: "all_corners1", alg: "r U R' U' r' R U R U' R'", kind: "oll" },
             { id: "all_corners2", alg: "R U R' U' r R' U R U' r'", kind: "oll" }
+        ]},
+        pll2l: { name: "2LPLL", source: "http://www.cubewhiz.com/2lookpll.php", algs: [
+            { id: "2l_pll_ua", alg: "(R U' R U) (R U) (R U') (R' U' R2)", kind: "2lpllep" },
+            { id: "2l_pll_ub", alg: "(R2 U) (R U R' U') (R' U') (R' U R')", kind: "2lpllep" },
+            { id: "2l_pll_h", alg: "(M2' U) (M2' U2) (M2' U) M2'", kind: "2lpllep" },
+            { id: "2l_pll_z", alg: "(M2' U) (M2' U) (M' U2) (M2' U2) M'", kind: "2lpllep" },
+            { id: "2l_pll_aa", alg: "x (R' U R') D2 (R U' R') D2 R2 x'", kind: "2lpllcp" },
+            { id: "2l_pll_ab", alg: "x R2 D2 (R U R') D2 (R U' R) x'", kind: "2lpllcp" },
+            { id: "2l_pll_e", alg: "x' (R U') (R' D) (R U R' D') (R U R' D) (R U') (R' D') x", kind: "2lpllcp" }
         ]},
         pll: { name: "PLL", source: "http://www.cyotheking.com/pll", algs: [
             { id: "ub", alg: "M2 U' M U2 M' U' M2", kind: "pll" },
@@ -496,16 +663,16 @@ var Algs = (function () {
             { id: "f2l_40", alg: "(F' U F) U2 (R U R' U) (R U' R')", kind: "f2l" },
             { id: "f2l_41", alg: "(R U R' U') (R U' R') U2 y' (R' U' R)", kind: "f2l" }
         ]},
-        cmll2l: { name: "2L CMLL", source: "http://lubixcube.com/CMLL.html", algs: [
-            { id: "2l_o_adjacent_swap", alg: "R U R' F' (R U R' U') R' F R2 U' R'", kind: "2lcmpll" },
-            { id: "2l_o_diagonal_swap", alg: "F R U' R' U' R U R' F' (R U R' U') R' F R F'", kind: "2lcmpll" }, // note, the following it better, but flips centers: F R U' R' U' R U R' F' (R U R' U') R' F R F'
+        cmll2l: { name: "2LCMLL", source: "http://lubixcube.com/CMLL.html", algs: [
             { id: "2l_h", alg: "F (R U R' U') (R U R' U') (R U R' U') F'", kind: "2lcmoll" },
             { id: "2l_pi", alg: "F (R U R' U') (R U R' U') F'", kind: "2lcmoll" },
             { id: "2l_u", alg: "F (R U R' U') F'", kind: "2lcmoll" },
             { id: "2l_t", alg: "(R U R' U') R' F R F'", kind: "2lcmoll" },
             { id: "2l_s", alg: "R U R' U R U2 R'", kind: "2lcmoll" },
             { id: "2l_as", alg: "R' U' R U' R' U2 R", kind: "2lcmoll" },
-            { id: "2l_l", alg: "R U2 R' U' (R U R' U') (R U R' U') R U' R'", kind: "2lcmoll" }
+            { id: "2l_l", alg: "R U2 R' U' (R U R' U') (R U R' U') R U' R'", kind: "2lcmoll" },
+            { id: "2l_o_adjacent_swap", alg: "R U R' F' (R U R' U') R' F R2 U' R'", kind: "2lcmpll" },
+            { id: "2l_o_diagonal_swap", alg: "F R U' R' U' R U R' F' (R U R' U') R' F R F'", kind: "2lcmpll" } // note, the following it better, but flips centers: F R U' R' U' R U R' F' (R U R' U') R' F R F'
         ]},
         cmll: { name: "CMLL", source: "https://sites.google.com/view/kianroux/cmll", algs: [
             { id: "o_adjacent_swap", alg: "R U R' F' R U R' U' R' F R2 U' R'", kind: "cmll" },
@@ -5676,7 +5843,7 @@ var Algs = (function () {
         var set = sets[s];
         for (var a in set.algs) {
             var alg = set.algs[a];
-            alg.display = alg.alg;
+            alg.display = alg.alg.replace(/[xyz]'?$/g, '');
             alg.alg = alg.alg.replace(/[\(\)]/g, '');
         }
     }

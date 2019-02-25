@@ -103,48 +103,61 @@ var Display = (function () {
         function col(face) {
             var col = faceColor(face, faces);
             if (simple) {
-                var len = face.length;
-                if (diag.simplified.hideUCenter && len == 1) {
-                    var upcols = Settings.values.upColors;
-                    var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
-                    return numColors > 1 && !diag.simplified.hideInsignificantCornerFaces ? col : gray;
-                }
-                else if (diag.simplified.hideCenterEdges && len == 2) {
-                    return diag.simplified.showCenterEdgeU && face.indexOf('U') != -1 ? col : gray;
-                }
-                else if (diag.simplified.hideInsignificantCornerFaces && len == 3) {
-                    var ucol = faceColor("U", faces);
-                    if (col == ucol) return col;
-                    var cornersOriented = faceColor("Ubl", faces) == ucol && faceColor("Urb", faces) == ucol && faceColor("Ulf", faces) == ucol && faceColor("Ufr", faces) == ucol;
-                    if (cornersOriented) {
-                        switch (face) {
-                            case "uBl":
-                                if (faceColor("urB", faces) == col) return purple;
-                                break;
-                            case "urB":
-                                if (faceColor("uBl", faces) == col) return purple;
-                                break;
-                            case "ubL":
-                                if (faceColor("uLf", faces) == col) return purple;
-                                break;
-                            case "uLf":
-                                if (faceColor("ubL", faces) == col) return purple;
-                                break;
-                            case "uRb":
-                                if (faceColor("ufR", faces) == col) return purple;
-                                break;
-                            case "ufR":
-                                if (faceColor("uRb", faces) == col) return purple;
-                                break;
-                            case "ulF":
-                                if (faceColor("uFr", faces) == col) return purple;
-                                break;
-                            case "uFr":
-                                if (faceColor("ulF", faces) == col) return purple;
-                                break;
+                switch (face.length) {
+                    case 1:
+                        if (diag.simplified.hideUCenter) {
+                            var upcols = Settings.values.upColors;
+                            var numColors = (upcols.yellow ? 1 : 0) + (upcols.white ? 1 : 0) + (upcols.red ? 1 : 0) + (upcols.orange ? 1 : 0) + (upcols.green ? 1 : 0) + (upcols.blue ? 1 : 0);
+                            return numColors > 1 && !diag.simplified.hideInsignificantCornerFaces ? col : gray;
                         }
-                    }
-                    return gray;
+                        break;
+                    case 2:
+                        if (diag.simplified.hideEdges) {
+                            return diag.simplified.showEdgeU && face.indexOf('U') != -1 ? col : gray;
+                        }
+                        else if (diag.simplified.hideInsignificantEdgeFaces) {
+                            return col == faceColor("U", faces) ? col : gray;
+                        }
+                        break;
+                    case 3:
+                        if (diag.simplified.hideCorners) {
+                            return gray;
+                        }
+                        else if (diag.simplified.hideInsignificantCornerFaces) {
+                            var ucol = faceColor("U", faces);
+                            if (col == ucol) return col;
+                            var cornersOriented = faceColor("Ubl", faces) == ucol && faceColor("Urb", faces) == ucol && faceColor("Ulf", faces) == ucol && faceColor("Ufr", faces) == ucol;
+                            if (cornersOriented) {
+                                switch (face) {
+                                    case "uBl":
+                                        if (faceColor("urB", faces) == col) return purple;
+                                        break;
+                                    case "urB":
+                                        if (faceColor("uBl", faces) == col) return purple;
+                                        break;
+                                    case "ubL":
+                                        if (faceColor("uLf", faces) == col) return purple;
+                                        break;
+                                    case "uLf":
+                                        if (faceColor("ubL", faces) == col) return purple;
+                                        break;
+                                    case "uRb":
+                                        if (faceColor("ufR", faces) == col) return purple;
+                                        break;
+                                    case "ufR":
+                                        if (faceColor("uRb", faces) == col) return purple;
+                                        break;
+                                    case "ulF":
+                                        if (faceColor("uFr", faces) == col) return purple;
+                                        break;
+                                    case "uFr":
+                                        if (faceColor("ulF", faces) == col) return purple;
+                                        break;
+                                }
+                            }
+                            return gray;
+                        }
+                        break;
                 }
                 return col;
             } else {
