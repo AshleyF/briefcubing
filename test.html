@@ -23,7 +23,7 @@
             }
 
             function tests() {
-                document.getElementById("debug").innerText = navigator.userAgent;
+                document.getElementById("debug").innerHTML = "Name: " + navigator.appName + "<br />CodeName: " + navigator.appCodeName + "<br />Agent: " + navigator.userAgent;
                 var results = "";
                 function test(name, fn) {
                     results += "<li style='color:" + (fn() ? "green" : "red") + "'>" + name + "</li>";
