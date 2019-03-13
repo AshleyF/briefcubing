@@ -23,6 +23,7 @@
             }
 
             function tests() {
+                document.getElementById("debug").innerText = navigator.userAgent;
                 var results = "";
                 function test(name, fn) {
                     results += "<li style='color:" + (fn() ? "green" : "red") + "'>" + name + "</li>";
@@ -108,7 +109,7 @@
         <div id="ll"></div>
         <div id="cube" style="width: 100%"></div>
         <div id="uf"></div>
-        <p id="debug"></p>
+        <p id="debug" style="color: white"></p>
         <ol id="results">
         </ol>
     </body>
