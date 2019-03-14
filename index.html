@@ -30,8 +30,16 @@
         <script src="nosleep.min.js"></script>
         <script src="spectrum/spectrum.js"></script>
         <script>
-            const version = "0.1.3";
+            const version = "0.1.4";
             var nosleep = new NoSleep();
+
+            function allowSleep(allow) {
+                if (allow || Settings.values.allowSleep) {
+                    nosleep.disable();
+                } else {
+                    nosleep.enable();
+                }
+            }
 
             $(window).resize(setMainHeightToFit);
 
@@ -114,6 +122,7 @@
                 }
                 var timeout = Settings.values.timeout;
                 $("#timeout").prop('value', timeout).slider('refresh');
+                $("#allowSleep").prop('value', Settings.values.allowSleep ? "on" : "off").slider('refresh');
                 document.getElementById("timeout_value").innerText = timeout == 10.5 ? '∞' : timeout;
                 document.getElementById("language").innerHTML = htm;
                 $("#language").selectmenu("refresh");
@@ -160,6 +169,7 @@
                 }
                 Settings.values.timeout = document.getElementById("timeout").value;
                 document.getElementById("timeout_value").innerText = Settings.values.timeout == 10.5 ? '∞' : Settings.values.timeout;
+                Settings.values.allowSleep = document.getElementById("allowSleep").value == "on";
                 Settings.values.lang = $("#language option:selected").val();
                 Settings.save();
                 Ui.next();
@@ -184,6 +194,9 @@
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#timeout_label").text(Localization.getString("timeout"));
+                $("#allowSleep_label").text(Localization.getString("allowSleep"));
+                $("#allowSleep").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
+                $("#allowSleep").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#upColors_label").html(Localization.getString("upColors") + ' <a href="#colorScheme" data-rel="popup" style="font-size: small; float: right">' + Localization.getString("customScheme") + '</a>');
                 $("#customSchemeReset").text(Localization.getString("customSchemeReset"));
                 $("#feedback").text(Localization.getString("feedback"));
@@ -286,7 +299,7 @@
             </div>
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
                 <div id="giiker" style="margin-top: -30px; margin-bottom: -20px">
-                    <button id="giikerConnect" onclick="nosleep.enable(); Ui.giikerConnect()" class="ui-btn ui-mini"></button>
+                    <button id="giikerConnect" onclick="allowSleep(false); Ui.giikerConnect()" class="ui-btn ui-mini"></button>
                     <a id="giikerBuy" target="_blank" href="https://amzn.to/2DVcCnV" style="padding-left: 20px"></a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden; margin-bottom: 80px" style="display: none"></h1>
@@ -299,7 +312,7 @@
             </div>
             <div id="options" data-role="panel" data-display="overlay">
                 <div id="giikerDisconnectSection" style="display:none">
-                    <button id="giikerDisconnect" onclick="nosleep.disable(); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true"></button>
+                    <button id="giikerDisconnect" onclick="allowSleep(true); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true"></button>
                     <hr />
                 </div>
                 <fieldset id="upColors" data-role="controlgroup" data-type="horizontal">
@@ -330,6 +343,11 @@
                 <label id="timeout_label" for="timeout"></label>
                 <span style="font-weight: bold; padding: 0.5em; float: left" id="timeout_value">10</span>
                 <input style="display: none" type="range" name="timeout" id="timeout" min="0.5" max="10.5" step=".5" value="3" data-highlight="true" onchange="settingsUpdate()">
+                <label id="allowSleep_label" for="allowSleep"></label>
+                <select id="allowSleep" data-role="slider" data-mini="true" onchange="settingsUpdate()">
+                    <option value="off"></option>
+                    <option value="on"></option>
+                </select>
                 <div class="ui-field-contain">
                     <select name="language" id="language" data-mini="true" onchange="localizationUpdate()">
                     </select>
