@@ -170,6 +170,7 @@
                 Settings.values.timeout = document.getElementById("timeout").value;
                 document.getElementById("timeout_value").innerText = Settings.values.timeout == 10.5 ? '∞' : Settings.values.timeout;
                 Settings.values.allowSleep = document.getElementById("allowSleep").value == "on";
+                if (Giiker.connected()) allowSleep(false); // updates nosleep
                 Settings.values.lang = $("#language option:selected").val();
                 Settings.save();
                 Ui.next();
