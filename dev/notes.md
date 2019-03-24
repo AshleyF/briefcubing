@@ -5,12 +5,8 @@
 * Use [jQuery custom bundle](http://jquerymobile.com/download-builder/)
 * Cube status icon (top right) -> battery, disconnect, etc.
 * Roux EOLR support
-* F2L/SB support
 * Full-screen mode and no sleep then
-* More algs
 * Discoverability text about U/U' to Next/Retry
-* Connection error messaging and help page
-* Allow algs with parenthesis
 * Choice of side colors (EO, L4E, SB, F2L)
 
 ## Bugs

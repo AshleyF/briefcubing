@@ -91,6 +91,7 @@
                 setMainHeightToFit();
                 if (!Giiker.connected()) Ui.showConnectButton();
                 Ui.next();
+                $("#diagram").bind("click", Ui.adjustAUF);
             });
 
             $(document).on("panelbeforeopen", "#options", function() {

@@ -251,7 +251,7 @@
                     var d = twists[len - 5];
                     if (a == b && b == c && c == d) {
                         setStatus("skip");
-                        window.setTimeout(function() { if (t.endsWith("'")) retry(); else next(); }, 500);
+                        window.setTimeout(function() { if (t.endsWith("'")) retry(); else next(); }, 300);
                         return;
                     }
                 }
@@ -318,6 +318,7 @@
 
             var instance = Cube.solved;
             var alg = "";
+            var algId = "";
             var auf = "";
             var solution = "";
             var id = "";
@@ -376,7 +377,14 @@
                     var params = Algs.kindToParams(kind);
                     var scramble = params.scramble;
                     if (!cas) cas = { id: "unknown", name: "", alg: "", kind: "coll" }; // solved (default)
-                    auf = Settings.values.randomAuf && scramble.allowAuf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
+                    auf = "";
+                    if (scramble.allowAuf) {
+                        if (Settings.values.randomAuf) {
+                            auf = randomElement(["", "U ", "U' ", "U2 "]);
+                        } else {
+                            auf = Settings.values.algAufPrefs[algId] || "";
+                        }
+                    }
                     if (scramble.randomSingleU) auf = randomElement(["U ", "U' "]); // used by L4E algs
                     solution = auf + cas.alg;
                     instance = Cube.solved;
@@ -435,6 +443,7 @@
                         Settings.save();
                         continue;
                     }
+                    algId = lookup.alg.kind + "_" + lookup.alg.id;
                     challenge(lookup.alg);
                     document.getElementById("popup").innerHTML = '<h4>' + prependAuf(auf, lookup.alg.display) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                     setStatus("init");
@@ -447,6 +456,23 @@
                 }
                 update(instance);
                 $("#popup").popup("close");
+            }
+
+            function adjustAUF() {
+                function next() {
+                    switch (auf) { // reversed because applied as scramble
+                        case "": return "U' ";
+                        case "U' ": return "U2 ";
+                        case "U2 ": return "U ";
+                        case "U ": return "";
+                    }
+                }
+                auf = next();
+                Settings.values.algAufPrefs[algId] = auf;
+                Settings.save();
+                instance = Cube.alg("U", instance);
+                var a = alg;
+                update(instance);
             }
 
             function retry() {
@@ -462,6 +488,7 @@
                 giikerDisconnect: giikerDisconnect,
                 next: next,
                 retry: retry,
+                adjustAUF: adjustAUF,
                 showConnectButton: showConnectButton
             };
         }());
