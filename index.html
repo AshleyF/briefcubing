@@ -249,7 +249,8 @@
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = s + '_' + alg.id;
-                        var diag = Display.diagramAlg(rot, alg, "5.1em");
+                        var auf = Settings.values.algAufPrefs[id] || "";
+                        var diag = Display.diagramAlg(rot, auf, alg, "5.1em");
                         htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
                     }
                     htm += '</fieldset>';
@@ -266,8 +267,10 @@
                     var set = Algs.sets[s];
                     for (var a in set.algs) {
                         var alg = set.algs[a];
-                        var id = "diag_" + s + '_' + alg.id;
-                        var diag = Display.diagramAlg(rot, alg, "5.1em");
+                        var algId = s + '_' + alg.id;
+                        var id = "diag_" + algId;
+                        var auf = Settings.values.algAufPrefs[algId] || "";
+                        var diag = Display.diagramAlg(rot, auf, alg, "5.1em");
                         document.getElementById(id).innerHTML = diag;
                     }
                 }

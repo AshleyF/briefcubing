@@ -72,13 +72,14 @@ var Display = (function () {
         }
     }
 
-    function diagramAlg(rot, alg, size) {
+    function diagramAlg(rot, auf, alg, size) {
+        var algTwists = auf + alg.alg;
         var diag = Algs.kindToParams(alg.kind).diagram;
         switch (diag.type) {
-            case "up": return diagramLLAlg(rot, alg.alg, diag, size);
-            case "up-front": return diagramUFAlg(rot, alg.alg, diag, size);
-            case "up-front-ul-ur": return diagramUFULURAlg(rot, alg.alg, diag, size);
-            case "up-front-right": return diagramUFRAlg(rot, alg.alg, alg.kind, size);
+            case "up": return diagramLLAlg(rot, algTwists, diag, size);
+            case "up-front": return diagramUFAlg(rot, algTwists, diag, size);
+            case "up-front-ul-ur": return diagramUFULURAlg(rot, algTwists, diag, size);
+            case "up-front-right": return diagramUFRAlg(rot, algTwists, alg.kind, size);
             case "blind": return diagramBLD(alg.id, size);
             default: throw "Unknown diagram type: " + diag.type;
         }
