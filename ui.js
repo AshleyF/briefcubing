@@ -331,11 +331,24 @@
                 document.getElementById("cube").innerHTML = Display.diagram(cube, diag, id, simple);
             }
 
-            function next() {
-                function randomElement(arr) {
-                    return arr[Math.floor(Math.random() * arr.length)];
+            function lookupAlg(name) {
+                for (var s in Algs.sets) {
+                    var set = Algs.sets[s];
+                    for (var a in set.algs) {
+                        var alg = set.algs[a];
+                        if (name == (s + '_' + alg.id)) {
+                            id = set.algs[a].id;
+                            kind = set.algs[a].kind;
+                            setName = set.name;
+                            return { set: set, alg: set.algs[a] };
+                        }
+                    }
                 }
-                function prependAuf(auf, alg) {
+                return undefined;
+            }
+
+            function next() {
+                function prependAuf(alg) {
                     function simplifyAuf(alg) {
                         // applies to L4E algs
                         if (alg.startsWith("(U) U2 ")) return "U' " + alg.substr(7);
@@ -358,20 +371,8 @@
                     if (verifyComplete(Cube.alg("U2 " + sansAufSansParens, testInstance))) return "(U2) " + sansAuf;
                     throw "No possible solution!";
                 }
-                function lookupAlg(name) {
-                    for (var s in Algs.sets) {
-                        var set = Algs.sets[s];
-                        for (var a in set.algs) {
-                            var alg = set.algs[a];
-                            if (name == (s + '_' + alg.id)) {
-                                id = set.algs[a].id;
-                                kind = set.algs[a].kind;
-                                setName = set.name;
-                                return { set: set, alg: set.algs[a] };
-                            }
-                        }
-                    }
-                    return undefined;
+                function randomElement(arr) {
+                    return arr[Math.floor(Math.random() * arr.length)];
                 }
                 function challenge(cas) {
                     var params = Algs.kindToParams(kind);
@@ -445,7 +446,7 @@
                     }
                     algId = lookup.alg.kind + "_" + lookup.alg.id;
                     challenge(lookup.alg);
-                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(auf, lookup.alg.display) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(lookup.alg.display) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                     setStatus("init");
                     break;
                 }
@@ -458,21 +459,27 @@
                 $("#popup").popup("close");
             }
 
-            function adjustAUF() {
+            function adjustAUF(e) {
                 function next() {
-                    switch (auf) { // reversed because applied as scramble
+                    switch (auf) {
                         case "": return "U' ";
                         case "U' ": return "U2 ";
                         case "U2 ": return "U ";
                         case "U ": return "";
                     }
                 }
-                auf = next();
-                Settings.values.algAufPrefs[algId] = auf;
-                Settings.save();
-                instance = Cube.alg("U", instance);
-                var a = alg;
-                update(instance);
+                var x = e.offsetX / e.currentTarget.clientWidth;
+                var y = e.offsetY / e.currentTarget.clientHeight;
+                if (x > 0.15 && x < 0.85 && y > 0.15 && y < 0.85) { // near center to avoid intercepting taps on other UI elements
+                    auf = next();
+                    Settings.values.algAufPrefs[algId] = auf;
+                    Settings.save();
+                    instance = Cube.alg("U", instance);
+                    update(instance);
+                    var aufDisplay = auf == "" ? "" : "(" + auf.substr(0, auf.length - 1) + ") ";
+                    var lookup = lookupAlg(algId);
+                    document.getElementById("popup").innerHTML = '<h4>' + aufDisplay + lookup.alg.display + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                }
             }
 
             function retry() {

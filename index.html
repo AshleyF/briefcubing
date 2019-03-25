@@ -91,7 +91,7 @@
                 setMainHeightToFit();
                 if (!Giiker.connected()) Ui.showConnectButton();
                 Ui.next();
-                $("#diagram").bind("click", Ui.adjustAUF);
+                $("#cube").bind("click", Ui.adjustAUF);
             });
 
             $(document).on("panelbeforeopen", "#options", function() {
@@ -308,7 +308,7 @@
                     <a id="giikerBuy" target="_blank" href="https://amzn.to/2DVcCnV" style="padding-left: 20px"></a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden; margin-bottom: 80px" style="display: none"></h1>
-                <div id="cube" style="text-align: center; margin-top: -80px"></div>
+                <div id="cube" style="text-align: center; margin-top: -80px;"></div>
                 <div id="message" style="text-align: center; margin-top: -3em"></div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
