@@ -1,6 +1,6 @@
 var Settings = (function () {
 
-    const VERSION = 2;
+    const VERSION = 3;
 
     var settings = { // defaults
         version: VERSION,
@@ -9,6 +9,7 @@ var Settings = (function () {
         upColors: { yellow: true, red: true, blue: false },
         algs: ["cmll_s_left_bar"],
         algAufPrefs: {},
+        algStats: {},
         timeout: 3,
         lang: "en"
     };
@@ -22,7 +23,12 @@ var Settings = (function () {
                     settings.algAufPrefs = {};
                     saveSettings();
                     break;
-                case 2: // accept version 2
+                case 2: // migrate to version 3
+                    stored.version = VERSION;
+                    settings = stored;
+                    settings.algStats = {};
+                    break;
+                case 3: // accept version 3
                     settings = stored;
                     break;
                 default: return; // discard unknown version

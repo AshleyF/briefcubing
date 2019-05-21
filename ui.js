@@ -23,8 +23,9 @@
             var executionStart = null;
             var executionStop = null;
 
-            function renderTimer() {
+            function updateStats() {
                 function renderSpan(span) {
+                    span = Math.trunc(span);
                     var ms = span % 1000;
                     span = (span - ms) / 1000;
                     var s = span % 60;
@@ -37,13 +38,37 @@
                         (m > 0 && s < 10 ? '0' : '') + s + '.' +
                         (ms < 100 ? '0' : '') + (ms < 10 ? '0' : '') + ms;
                 }
+                function addStatAndAverage(stat, val) {
+                    stat.push(val);
+                    while (stat.length > 5) stat.shift();
+                    var sum = 0;
+                    var count = 0;
+                    for (var i = 0; i < stat.length; i++) {
+                        var s = stat[i];
+                        if (s < 10000) { // ignore 10sec+
+                            sum += s;
+                            count++;
+                        }
+                    }
+                    if (count <= 1) return undefined;
+                    return sum / count;
+                }
+                function renderAvg(show, span) {
+                    return show ? " (" + Localization.getString("meanTime") + " " + renderSpan(span) + ")" : "";
+                }
                 var now = new Date();
                 var reco = recognitionStart ? (executionStart || now) - recognitionStart : 0;
                 var exec = executionStart ? (executionStop || now) - executionStart : 0;
+                var stats = Settings.values.algStats[algId];
+                if (!stats) stats = Settings.values.algStats[algId] = { reco: [], exec: [] };
+                var avgReco = addStatAndAverage(stats.reco, reco);
+                var avgExec = addStatAndAverage(stats.exec, exec);
+                Settings.save();
+                var showAvg = avgReco && avgExec;
                 var htm = '<table style="margin-left:auto;margin-right:auto">';
-                htm += '<tr><td align="right">' + Localization.getString("recognitionTime") + ':</td><td>' + renderSpan(reco) + '</td></tr>';
-                htm += '<tr><td align="right">' + Localization.getString("executionTime") + ':</td><td>' + renderSpan(exec) + '</td></tr>';
-                htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + '</td></tr>';
+                htm += '<tr><td align="right">' + Localization.getString("recognitionTime") + ':</td><td>' + renderSpan(reco) + renderAvg(showAvg, avgReco) + '</td></tr>';
+                htm += '<tr><td align="right">' + Localization.getString("executionTime") + ':</td><td>' + renderSpan(exec) + renderAvg(showAvg, avgExec) + '</td></tr>';
+                htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + renderAvg(showAvg, avgReco + avgExec) + '</td></tr>';
                 htm += '</table>';
                 document.getElementById("message").innerHTML = htm;
             }
@@ -67,7 +92,7 @@
                 switch (status) {
                     case "correct":
                         stopExecution();
-                        renderTimer();
+                        updateStats();
                         correct.play();
                         document.getElementById("diagram").style.backgroundColor = "green";
                         document.getElementById("retry").disabled = false;
