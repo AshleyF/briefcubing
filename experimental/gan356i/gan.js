@@ -118,80 +118,10 @@ async function connect()
             }
             document.getElementById("twists").innerHTML = htm;
         });
-
-       /*
-        var lastCount = undefined;
-        while (true)
-        {
-            var c = characteristics[4];
-            var value = await c.readValue();
-            var len = value.byteLength;
-            var bytes = [];
-            for (var k = 0; k < len; k++)
-            {
-                var b = value.getUint8(k);
-                bytes.push(b);
-                var count = value.getUint8(12);
-                var diff = count - lastCount;
-                if (diff < 0) diff += 255;
-                // console.log("Count: ", diff);
-                if (lastCount === undefined)
-                {
-                    lastCount = count;
-                }
-                if (count != lastCount)
-                {
-                    var twist = value.getUint8(18);
-                    switch (twist) 
-                    {
-                        case 0:
-                            console.log("Twist: U");
-                            break;
-                        case 2:
-                            console.log("Twist: U'");
-                            break;
-                        case 3:
-                            console.log("Twist: R");
-                            break;
-                        case 5:
-                            console.log("Twist: R'");
-                            break;
-                        case 6:
-                            console.log("Twist: F");
-                            break;
-                        case 8:
-                            console.log("Twist: F'");
-                            break;
-                        case 9:
-                            console.log("Twist: D");
-                            break;
-                        case 11:
-                            console.log("Twist: D'");
-                            break;
-                        case 12:
-                            console.log("Twist: L");
-                            break;
-                        case 14:
-                            console.log("Twist: L'");
-                            break;
-                        case 15:
-                            console.log("Twist: B");
-                            break;
-                        case 17:
-                            console.log("Twist: B'");
-                            break;
-                        default:
-                            console.log("Twist: ERROR!");
-                            break;
-                    }
-                    lastCount = count;
-                }
-            }
-        }
-        */
     }
     catch (ex)
     {
         console.log("ERROR: ", ex);
+        alert("ERROR: " + ex);
     }
 }
