@@ -78,7 +78,13 @@ var BtCube = (function () {
     async function onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback) {
         try {
             const twists = ["U", "?", "U'", "R", "?", "R'", "F", "?", "F'", "D", "?", "D'", "L", "?", "L'", "B", "?", "B'"]
-            var val = await cubeCharacteristic.readValue();
+            var val;
+            try
+            {
+                val = await cubeCharacteristic.readValue();
+            } catch {
+                return; // disconnected
+            }
             var count = val.getUint8(12);
             if (lastCount == -1) lastCount = count;
             if (count != lastCount) {
@@ -93,7 +99,7 @@ var BtCube = (function () {
             }
             window.setTimeout(async function() { await onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback); }, 50);
         } catch (ex) {
-            // ignore: disconnected
+            alert("ERROR (G): " + ex.message);
         }
     }
     
