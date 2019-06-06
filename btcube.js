@@ -22,10 +22,7 @@ var BtCube = (function () {
             if (server.device.name.startsWith("GAN-")) {
                 var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
-                cubeCharacteristic.addEventListener("characteristicvaluechanged", onGanCubeCharacteristicChanged.bind(twistCallback));
-                alert("TEST");
-                val = await cubeCharacteristic.readValue();
-                alert("DONE: " + val);
+                onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback);
             } else if (server.device.name.startsWith("Gi")) {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
@@ -38,7 +35,6 @@ var BtCube = (function () {
             device.addEventListener('gattserverdisconnected', disconnected.bind(errorCallback));
             connectedCallback();
         } catch (ex) {
-            alert("ERROR (C): " + ex);
             device = null;
             errorCallback(ex);
         }
@@ -79,11 +75,10 @@ var BtCube = (function () {
     }
 
     var lastCount = -1;
-    function onGanCubeCharacteristicChanged(event) {
+    async function onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback) {
         try {
-            alert("UPDATE");
             const twists = ["U", "?", "U'", "R", "?", "R'", "F", "?", "F'", "D", "?", "D'", "L", "?", "L'", "B", "?", "B'"]
-            var val = event.target.value;
+            var val = await cubeCharacteristic.readValue();
             var count = val.getUint8(12);
             if (lastCount == -1) lastCount = count;
             if (count != lastCount) {
@@ -92,28 +87,16 @@ var BtCube = (function () {
                     lastCount = count;
                     for (var i = 19 - missed; i < 19; i++) {
                         var t = val.getUint8(i);
-                        console.log(t);
-                        alert("TWIST: " + t);
-                        this(twists[t]);
+                        twistCallback(twists[t]);
                     }
                 }
             }
-            alert("UPDATE_DONE");
-            window.setTimeout(async function() { await pollGan(event.target); }, 50);
-            alert("SCHED");
+            window.setTimeout(async function() { await onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback); }, 50);
         } catch (ex) {
             alert("ERROR (G): " + ex.message);
         }
     }
     
-    async function pollGan(characteristic) {
-        try {
-            await characteristic.readValue();
-        } catch(ex) {
-            alert("ERROR (P): " + ex);
-        }
-    }
-
     return {
         connect: connect,
         connected: connected,
