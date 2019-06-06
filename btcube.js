@@ -23,7 +23,7 @@ var BtCube = (function () {
                 var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGanCubeCharacteristicChanged.bind(twistCallback));
-                cubeCharacteristic.readValue();
+                await cubeCharacteristic.readValue();
             } else if (server.device.name.startsWith("Gi")) {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
@@ -90,7 +90,7 @@ var BtCube = (function () {
                     this(twists[t]);
                 }
             }
-            window.setTimeout(function () { event.target.readValue(); }, 100);
+            window.setTimeout(async function () { try { await event.target.readValue(); } catch(ex) { /* ignore: disconnected */ }}, 100);
         } catch (ex) {
             alert("ERROR: " + ex.message);
         }
