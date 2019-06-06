@@ -1,10 +1,3 @@
-var cube = {};
-
-function display()
-{
-
-}
-
 async function connect()
 {
     try
@@ -14,22 +7,13 @@ async function connect()
 
         var device = await window.navigator.bluetooth.requestDevice({ filters: [{ namePrefix: "GAN-" }], optionalServices: [PRIMARY_UUID] });
         console.log("Device: ", device);
-        cube.name = device.name;
-        cube.id = device.id;
-        device.addEventListener("gattserverdisconnected", event =>
-        {
-            alert("Disconnected!");
-            cube.connected = false;
-            display();
-        });
+        device.addEventListener("gattserverdisconnected", event => { alert("Disconnected!"); });
 
         var server = await device.gatt.connect();
         console.log("Server: ", server);
-        cube.connected = server.connected;
 
         var service = await server.getPrimaryService(PRIMARY_UUID);
         console.log("Service: ", service);
-        cube.service = service.uuid;
 
         var characteristics = await service.getCharacteristics();
         console.log(characteristics);
@@ -52,8 +36,7 @@ async function connect()
                 htm.id = c.uuid;
                 document.getElementById("raw").appendChild(htm);
                 c.addEventListener('characteristicvaluechanged', event =>
-                {
-                    var value = event.target.value;
+                { var value = event.target.value;
                     var len = value.byteLength;
                     var bytes = [];
                     for (var k = 0; k < len; k++)

@@ -291,19 +291,19 @@
             }
 
             function showConnectButton() {
-                var btn = document.getElementById("giikerConnect");
+                var btn = document.getElementById("btCubeConnect");
                 btn.disabled = false;
-                btn.innerText = Localization.getString("giikerConnect");
-                document.getElementById("giiker").style.display = "";
-                document.getElementById("giikerDisconnectSection").style.display = "none";
+                btn.innerText = Localization.getString("btCubeConnect");
+                document.getElementById("btCube").style.display = "";
+                document.getElementById("btCubeDisconnectSection").style.display = "none";
                 document.getElementById("cube").style.marginTop = "-80px";
                 document.getElementById("status").style.marginBottom = "80px";
                 document.getElementById("message").style.marginTop = "-3em";
             }
 
             function hideConnectButton() {
-                document.getElementById("giiker").style.display = "none";
-                document.getElementById("giikerDisconnectSection").style.display = "";
+                document.getElementById("btCube").style.display = "none";
+                document.getElementById("btCubeDisconnectSection").style.display = "";
                 document.getElementById("cube").style.marginTop = "0";
                 document.getElementById("status").style.marginBottom = "0";
                 document.getElementById("message").style.marginTop = "-1em";
@@ -329,16 +329,16 @@
                 }
             }
 
-            function giikerConnect() {
-                var btn = document.getElementById("giikerConnect");
+            function btCubeConnect() {
+                var btn = document.getElementById("btCubeConnect");
                 btn.disabled = true;
-                btn.innerText = Localization.getString("giikerConnecting");
-                Giiker.connect(connected, twist, error);
+                btn.innerText = Localization.getString("btCubeConnecting");
+                BtCube.connect(connected, twist, error);
             }
 
-            function giikerDisconnect() {
+            function btCubeDisconnect() {
                 showConnectButton();
-                Giiker.disconnect();
+                BtCube.disconnect();
             }
 
             var instance = Cube.solved;
@@ -516,8 +516,8 @@
 
             return {
                 twist: twist,
-                giikerConnect: giikerConnect,
-                giikerDisconnect: giikerDisconnect,
+                btCubeConnect: btCubeConnect,
+                btCubeDisconnect: btCubeDisconnect,
                 next: next,
                 retry: retry,
                 adjustAUF: adjustAUF,

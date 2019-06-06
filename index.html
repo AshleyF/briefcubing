@@ -22,7 +22,7 @@
         <script src="jquery/jquery.mobile-1.4.5.min.js"></script>
         <script src="cube.js"></script>
         <script src="display.js"></script>
-        <script src="giiker.js"></script>
+        <script src="btcube.js"></script>
         <script src="settings.js"></script>
         <script src="algs.js"></script>
         <script src="localization.js"></script>
@@ -89,7 +89,7 @@
             $(document).on("pagebeforeshow", "#main", function(event) {
                 localize();
                 setMainHeightToFit();
-                if (!Giiker.connected()) Ui.showConnectButton();
+                if (!BtCube.connected()) Ui.showConnectButton();
                 Ui.next();
                 $("#cube").bind("click", Ui.adjustAUF);
             });
@@ -171,7 +171,7 @@
                 Settings.values.timeout = document.getElementById("timeout").value;
                 document.getElementById("timeout_value").innerText = Settings.values.timeout == 10.5 ? '∞' : Settings.values.timeout;
                 Settings.values.allowSleep = document.getElementById("allowSleep").value == "on";
-                if (Giiker.connected()) allowSleep(false); // updates nosleep
+                if (BtCube.connected()) allowSleep(false); // updates nosleep
                 Settings.values.lang = $("#language option:selected").val();
                 Settings.save();
                 Ui.next();
@@ -202,9 +202,9 @@
                 $("#upColors_label").html(Localization.getString("upColors") + ' <a href="#colorScheme" data-rel="popup" style="font-size: small; float: right">' + Localization.getString("customScheme") + '</a>');
                 $("#customSchemeReset").text(Localization.getString("customSchemeReset"));
                 $("#feedback").text(Localization.getString("feedback"));
-                $("#giikerConnect").text(Localization.getString("giikerConnect"));
-                $("#giikerDisconnect").text(Localization.getString("giikerDisconnect"));
-                $("#giikerBuy").text(Localization.getString("giikerBuy"));
+                $("#btCubeConnect").text(Localization.getString("btCubeConnect"));
+                $("#btCubeDisconnect").text(Localization.getString("btCubeDisconnect"));
+                $("#btCubeBuy").text(Localization.getString("btCubeBuy"));
                 $("#retry").text(Localization.getString("retry"));
                 $("#next").text(Localization.getString("next"));
                 $("#visualcube").html(Localization.getString("diagramCredit").replace("[LINK]", '<a href="http://cube.crider.co.uk/visualcube.php" target="_blank">VisualCube</a>'));
@@ -303,9 +303,9 @@
                 <h1><img src="logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> <span id="drills"></span></h1>
             </div>
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
-                <div id="giiker" style="margin-top: -30px; margin-bottom: -20px">
-                    <button id="giikerConnect" onclick="allowSleep(false); Ui.giikerConnect()" class="ui-btn ui-mini"></button>
-                    <a id="giikerBuy" target="_blank" href="https://amzn.to/2DVcCnV" style="padding-left: 20px"></a>
+                <div id="btCube" style="margin-top: -30px; margin-bottom: -20px">
+                    <button id="btCubeConnect" onclick="allowSleep(false); Ui.btCubeConnect()" class="ui-btn ui-mini"></button>
+                    <a id="btCubeBuy" target="_blank" href="https://amzn.to/2DVcCnV" style="padding-left: 20px"></a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden; margin-bottom: 80px" style="display: none"></h1>
                 <div id="cube" style="text-align: center; margin-top: -80px;"></div>
@@ -316,8 +316,8 @@
                 <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r"></button>
             </div>
             <div id="options" data-role="panel" data-display="overlay">
-                <div id="giikerDisconnectSection" style="display:none">
-                    <button id="giikerDisconnect" onclick="allowSleep(true); Ui.giikerDisconnect()" class="ui-btn ui-mini" data-mini="true"></button>
+                <div id="btCubeDisconnectSection" style="display:none">
+                    <button id="btCubeDisconnect" onclick="allowSleep(true); Ui.btCubeDisconnect()" class="ui-btn ui-mini" data-mini="true"></button>
                     <hr />
                 </div>
                 <fieldset id="upColors" data-role="controlgroup" data-type="horizontal">
