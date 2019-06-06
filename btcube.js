@@ -81,6 +81,7 @@ var BtCube = (function () {
     var lastCount = -1;
     function onGanCubeCharacteristicChanged(event) {
         try {
+            alert("UPDATE");
             const twists = ["U", "?", "U'", "R", "?", "R'", "F", "?", "F'", "D", "?", "D'", "L", "?", "L'", "B", "?", "B'"]
             var val = event.target.value;
             var count = val.getUint8(12);
@@ -92,11 +93,14 @@ var BtCube = (function () {
                     for (var i = 19 - missed; i < 19; i++) {
                         var t = val.getUint8(i);
                         console.log(t);
+                        alert("TWIST: " + t);
                         this(twists[t]);
                     }
                 }
             }
+            alert("UPDATE_DONE");
             window.setTimeout(async function() { await pollGan(event.target); }, 50);
+            alert("SCHED");
         } catch (ex) {
             alert("ERROR (G): " + ex.message);
         }
