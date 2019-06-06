@@ -171,7 +171,6 @@
                 Settings.values.timeout = document.getElementById("timeout").value;
                 document.getElementById("timeout_value").innerText = Settings.values.timeout == 10.5 ? '∞' : Settings.values.timeout;
                 Settings.values.allowSleep = document.getElementById("allowSleep").value == "on";
-                if (BtCube.connected()) allowSleep(false); // updates nosleep
                 Settings.values.lang = $("#language option:selected").val();
                 Settings.save();
                 Ui.next();
@@ -304,7 +303,7 @@
             </div>
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
                 <div id="btCube" style="margin-top: -30px; margin-bottom: -20px">
-                    <button id="btCubeConnect" onclick="allowSleep(false); Ui.btCubeConnect()" class="ui-btn ui-mini"></button>
+                    <button id="btCubeConnect" onclick="Ui.btCubeConnect()" class="ui-btn ui-mini"></button>
                     <a id="btCubeBuy" target="_blank" href="https://amzn.to/2DVcCnV" style="padding-left: 20px"></a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden; margin-bottom: 80px" style="display: none"></h1>

@@ -23,12 +23,12 @@ var BtCube = (function () {
                 var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGanCubeCharacteristicChanged.bind(twistCallback));
-                cubeCharacteristic.readValue();
+                await cubeCharacteristic.readValue();
             } else if (server.device.name.startsWith("Gi")) {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGiikerCubeCharacteristicChanged.bind(twistCallback));
-                cubeCharacteristic.startNotifications();
+                await cubeCharacteristic.startNotifications();
             } else {
                 throw "Unknown device: " + server.device.name;
             }
@@ -36,6 +36,7 @@ var BtCube = (function () {
             device.addEventListener('gattserverdisconnected', disconnected.bind(errorCallback));
             connectedCallback();
         } catch (ex) {
+            alert("ERROR (C): " + ex);
             device = null;
             errorCallback(ex);
         }
@@ -71,7 +72,7 @@ var BtCube = (function () {
             var amount = state[33];
             this(["?", "B", "D", "L", "U", "R", "F"][face] + ["", "", "2", "'"][amount == 9 ? 2 : amount]); // twistCallback
         } catch (ex) {
-            alert("ERROR: " + ex.message);
+            alert("ERROR (K): " + ex.message);
         }
     }
 
@@ -88,13 +89,22 @@ var BtCube = (function () {
                     lastCount = count;
                     for (var i = 19 - missed; i < 19; i++) {
                         var t = val.getUint8(i);
+                        console.log(t);
                         this(twists[t]);
                     }
                 }
             }
-            event.target.readValue();
+            window.setTimeout(async function() { await pollGan(event.target); }, 50);
         } catch (ex) {
-            alert("ERROR: " + ex.message);
+            alert("ERROR (G): " + ex.message);
+        }
+    }
+    
+    async function pollGan(characteristic) {
+        try {
+            await characteristic.readValue();
+        } catch(ex) {
+            alert("ERROR (P): " + ex);
         }
     }
 
