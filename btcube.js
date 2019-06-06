@@ -23,12 +23,12 @@ var BtCube = (function () {
                 var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGanCubeCharacteristicChanged.bind(twistCallback));
-                await cubeCharacteristic.readValue();
+                cubeCharacteristic.readValue();
             } else if (server.device.name.startsWith("Gi")) {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGiikerCubeCharacteristicChanged.bind(twistCallback));
-                await cubeCharacteristic.startNotifications();
+                cubeCharacteristic.startNotifications();
             } else {
                 throw "Unknown device: " + server.device.name;
             }
@@ -78,19 +78,21 @@ var BtCube = (function () {
     var lastCount = -1;
     function onGanCubeCharacteristicChanged(event) {
         try {
-            var val = event.target.value;
             const twists = ["U", "?", "U'", "R", "?", "R'", "F", "?", "F'", "D", "?", "D'", "L", "?", "L'", "B", "?", "B'"]
+            var val = event.target.value;
             var count = val.getUint8(12);
             if (lastCount == -1) lastCount = count;
             if (count != lastCount) {
                 var missed = (count - lastCount) & 0xff;
-                lastCount = count;
-                for (var i = 19 - missed; i < 19; i++) {
-                    var t = val.getUint8(i);
-                    this(twists[t]);
+                if (missed < 6) {
+                    lastCount = count;
+                    for (var i = 19 - missed; i < 19; i++) {
+                        var t = val.getUint8(i);
+                        this(twists[t]);
+                    }
                 }
             }
-            window.setTimeout(async function () { try { await event.target.readValue(); } catch(ex) { /* ignore: disconnected */ }}, 100);
+            event.target.readValue();
         } catch (ex) {
             alert("ERROR: " + ex.message);
         }
