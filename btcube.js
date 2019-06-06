@@ -90,7 +90,7 @@ var BtCube = (function () {
                     this(twists[t]);
                 }
             }
-            event.target.readValue(); // TODO: delay
+            window.setTimeout(function () { event.target.readValue(); }, 100);
         } catch (ex) {
             alert("ERROR: " + ex.message);
         }
