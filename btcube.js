@@ -93,7 +93,7 @@ var BtCube = (function () {
             }
             window.setTimeout(async function() { await onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback); }, 50);
         } catch (ex) {
-            alert("ERROR (G): " + ex.message);
+            // ignore: disconnected
         }
     }
     
