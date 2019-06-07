@@ -66,8 +66,8 @@ var Display = (function () {
             case "up": return diagramLL(Cube.faces(cube, simple), diag, simple, size);
             case "up-front": return diagramUF(cube, diag, simple, false, size);
             case "up-front-ul-ur": return diagramUF(cube, diag, simple, true, size);
-            case "up-front-right": return diagramUFR(cube, simple, size);
-            case "blind": return diagramBLD(id, size);
+            case "up-front-right": return diagramUFR(cube, simple, size, "");
+            case "blind": return diagramUFR(cube, simple, size, id);
             default: throw "Unknown diagram type: " + diag.type;
         }
     }
@@ -79,7 +79,7 @@ var Display = (function () {
             case "up": return diagramLLAlg(rot, algTwists, diag, size);
             case "up-front": return diagramUFAlg(rot, algTwists, diag, size);
             case "up-front-ul-ur": return diagramUFULURAlg(rot, algTwists, diag, size);
-            case "up-front-right": return diagramUFRAlg(rot, algTwists, alg.kind, size);
+            case "up-front-right": return diagramUFRAlg(rot, algTwists, alg.kind, size, "");
             case "blind": return diagramBLD(alg.id, size);
             default: throw "Unknown diagram type: " + diag.type;
         }
@@ -278,13 +278,13 @@ var Display = (function () {
                '</svg>';
     }
 
-    function diagramUFRAlg(rot, alg, kind, size) {
+    function diagramUFRAlg(rot, alg, kind, size, label) {
         var cube = Cube.alg(rot, Cube.solved);
         var simplified = Algs.kindToParams(kind).diagram.simplified;
-        return diagramUFR(Cube.alg(alg, maskPieces(simplified, cube), true), true, size);
+        return diagramUFR(Cube.alg(alg, maskPieces(simplified, cube), true), true, size, label);
     }
 
-    function diagramUFR(cube, simple, size) {
+    function diagramUFR(cube, simple, size, label) {
         var faces = Cube.faces(cube, simple);
         function col(face) {
             var col = faceColor(face, faces);
@@ -330,6 +330,8 @@ var Display = (function () {
                             '<polygon id="dFl" fill="' + col("dFl") + '" stroke="#000"  points="-0.67687496656198,0.16576684053069 -0.49588798311312,0.28473732508503 -0.48089110525928,0.50715283955335 -0.6560433501047,0.38415069918051"/>' +
                             '<polygon id="dF" fill="' + col("dF") + '" stroke="#000"  points="-0.46322848371637,0.30695545587912 -0.26719979923154,0.43581349381808 -0.25907759614827,0.66220596812605 -0.44823160586253,0.52937097034744"/>' +
                             '<polygon id="dFr" fill="' + col("dFr") + '" stroke="#000"  points="-0.23182332941007,0.45988002752827 -0.018796486168384,0.59991168218429 -0.018796486168384,0.83016851261279 -0.2237011263268,0.68627250183624"/>' +
+                            '<text fill="red" font-size="0.5" dy="0.05" dominant-baseline="middle" text-anchor="middle"" style="stroke:#000000; stroke-width:0.15em; stroke-opacity:1">' + label.toUpperCase() + '</text>' +
+                            '<text fill="white" font-size="0.5" dy="0.05" dominant-baseline="middle" text-anchor="middle"">' + label.toUpperCase() + '</text>' +
                         '</g>' +
                      '</svg>';
     }

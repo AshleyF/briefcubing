@@ -808,6 +808,7 @@ var Algs = (function () {
     }
 
     if (window.location.search.indexOf("enable-5-style") != -1) {
+        alert("WARNING: Loading and generating diagrams for the 6500+ 5-style algs may take several minutes!");
         sets.bld5style = { name: "5-Style BLD", source: "https://www.youtube.com/channel/UCa7dTclUqnR9VwSeOCpRwAQ", algs: [
             { id: "abcd", alg: "M U2 M' U' M2 U' M2", kind: "5sb" },
             { id: "abch", alg: "S U M' U M U' S' M' U' M", kind: "5sb" },
@@ -1201,7 +1202,7 @@ var Algs = (function () {
             { id: "bdpu", alg: "U R U M2 U' R' U' M2", kind: "5sb" },
             { id: "begu", alg: "D2 M' U' M U2 M' D2 U' M", kind: "5sb" },
             { id: "behc", alg: "M' U' M U M' U' M U", kind: "5sb" },
-            { id: "behm", alg: "R' M' U' M U M' U' M UR", kind: "5sb" },
+            { id: "behm", alg: "R' M' U' M U M' U' M U R", kind: "5sb" },
             { id: "behp", alg: "R M' U' M U M' U' M U R'", kind: "5sb" },
             { id: "behv", alg: "R2 M' U' M U M' U' M U R2", kind: "5sb" },
             { id: "beip", alg: "U R' D F' M F D F M' F' D2 R U'", kind: "5sb" },
@@ -2811,7 +2812,7 @@ var Algs = (function () {
             { id: "gnfu", alg: "U F D' R' L S' R S L' D F' U'", kind: "5sb" },
             { id: "gnhl", alg: "L' D F R E R' E' F' D' L", kind: "5sb" },
             { id: "gnjd", alg: "L D F' R E R' E' F D' L'", kind: "5sb" },
-            { id: "gnlm", alg: "L U M' U' R' U' M U L’ R", kind: "5sb" },
+            { id: "gnlm", alg: "L U M' U' R' U' M U L' R", kind: "5sb" },
             { id: "gnoa", alg: "D S' R' D2 S D M' D R D' M", kind: "5sb" },
             { id: "gnpi", alg: "D' S' R' S E R D2 R E' R' D'", kind: "5sb" },
             { id: "gnpj", alg: "u F E F' U'", kind: "5sb" },
@@ -3446,7 +3447,7 @@ var Algs = (function () {
             { id: "itmf", alg: "F' D F' U' S R' S' R U F D' F", kind: "5sb" },
             { id: "itmg", alg: "F' E' L' U' M F' M' F U L E F", kind: "5sb" },
             { id: "itol", alg: "R' F U L' S L S' U' F' R", kind: "5sb" },
-            { id: "itre", alg: "E S D U2 S2 R D S D' R' u U D’", kind: "5sb" },
+            { id: "itre", alg: "E S D U2 S2 R D S D' R' u U D'", kind: "5sb" },
             { id: "itro", alg: "F U L' D' S L S' L' D L U' F'", kind: "5sb" },
             { id: "itsb", alg: "M' F D L' F' M' F R F' U' r' l", kind: "5sb" },
             { id: "itsl", alg: "F U L' S L S' U' F'", kind: "5sb" },
@@ -3947,7 +3948,7 @@ var Algs = (function () {
             { id: "kfou", alg: "D L' F' M2 D M' D' M' F L D'", kind: "5sb" },
             { id: "kfqj", alg: "S' L D S' D' S L2 D M' D' l S", kind: "5sb" },
             { id: "kfvd", alg: "F E F D M D' F E' F U' S U", kind: "5sb" },
-            { id: "kgha", alg: "B' (M' U M U')x2 B", kind: "5sb" },
+            { id: "kgha", alg: "B' (M' U M U') x2 B", kind: "5sb" },
             { id: "kgpa", alg: "E L' B M U M U' M2 B' L E'", kind: "5sb" },
             { id: "kgpm", alg: "U B2 E B M' F' M B E' F U'", kind: "5sb" },
             { id: "kgpt", alg: "D S L D S' U' M' F' D' M U D'", kind: "5sb" },
