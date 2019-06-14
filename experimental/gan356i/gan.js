@@ -36,7 +36,8 @@ async function connect()
                 htm.id = c.uuid;
                 document.getElementById("raw").appendChild(htm);
                 c.addEventListener('characteristicvaluechanged', event =>
-                { var value = event.target.value;
+                {
+                    var value = event.target.value;
                     var len = value.byteLength;
                     var bytes = [];
                     for (var k = 0; k < len; k++)
@@ -61,6 +62,10 @@ async function connect()
                 }
                 if (c.properties.notify)
                 {
+                    c.addEventListener('characteristicvaluechanged', event =>
+                    {
+                        var value = event.target.value;
+                    });
                     c.startNotifications();
                 }
             }
