@@ -752,7 +752,7 @@ var Algs = (function () {
             { id: "l4ebars0", alg: "U2 M2 U2", kind: "l4e" },
             { id: "l4ebars1", alg: "U2 M2 U2 M2", kind: "l4e" },
             { id: "l4ecolumns0", alg: "M U2 M2 U2 M'", kind: "l4e" },
-            { id: "l4ecolumns1", alg: "M U2 M2 U2 M", kind: "l4e" },
+            { id: "l4ecolumns1", alg: "M' U2 M2 U2 M'", kind: "l4e" },
             { id: "l4edots0", alg: "E2 M E2 M", kind: "l4e" },
             { id: "l4edots1", alg: "E2 M E2 M'", kind: "l4e" }
         ]},
