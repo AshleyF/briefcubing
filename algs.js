@@ -664,20 +664,20 @@ var Algs = (function () {
             { id: "f2l_41", alg: "(R U R' U') (R U' R') U2 y' (R' U' R)", kind: "f2l" }
         ]},
         cmll2l: { name: "2LCMLL", source: "http://lubixcube.com/CMLL.html", algs: [
-            { id: "2l_h", alg: "F (R U R' U') (R U R' U') (R U R' U') F'", kind: "2lcmoll" },
+            { id: "2l_h", alg: "F (R U R' U') (R U R' U') (R U R' U') F'", kind: "2lcmoll" }, // better: R U R' U R U' R' U R U2 R'
             { id: "2l_pi", alg: "F (R U R' U') (R U R' U') F'", kind: "2lcmoll" },
             { id: "2l_u", alg: "F (R U R' U') F'", kind: "2lcmoll" },
             { id: "2l_t", alg: "(R U R' U') R' F R F'", kind: "2lcmoll" },
             { id: "2l_s", alg: "R U R' U R U2 R'", kind: "2lcmoll" },
             { id: "2l_as", alg: "R' U' R U' R' U2 R", kind: "2lcmoll" },
-            { id: "2l_l", alg: "R U2 R' U' (R U R' U') (R U R' U') R U' R'", kind: "2lcmoll" },
+            { id: "2l_l", alg: "F R' F' R U R U' R'", kind: "2lcmoll" },
             { id: "2l_o_adjacent_swap", alg: "R U R' F' (R U R' U') R' F R2 U' R'", kind: "2lcmpll" },
             { id: "2l_o_diagonal_swap", alg: "F R U' R' U' R U R' F' (R U R' U') R' F R F'", kind: "2lcmpll" } // note, the following it better, but flips centers: F R U' R' U' R U R' F' (R U R' U') R' F R F'
         ]},
         cmll: { name: "CMLL", source: "https://sites.google.com/view/kianroux/cmll", algs: [
             { id: "o_adjacent_swap", alg: "R U R' F' R U R' U' R' F R2 U' R'", kind: "cmll" },
             { id: "o_diagonal_swap", alg: "r2 D r' U r D' R2 U' F' U' F", kind: "cmll" },
-            { id: "h_columns", alg: "R U2 R' U' R U R' U' R U' R'", kind: "cmll" },
+            { id: "h_columns", alg: "R U R' U R U' R' U R U2 R'", kind: "cmll" },
             { id: "h_rows", alg: "F R U R' U' R U R' U' R U R' U' F'", kind: "cmll" },
             { id: "h_column", alg: "U R U2' R2' F R F' U2 R' F R F'", kind: "cmll" },
             { id: "h_row", alg: "r U' r2' D' r U' r' D r2 U r'", kind: "cmll" },
