@@ -672,7 +672,7 @@ var Algs = (function () {
             { id: "2l_as", alg: "R' U' R U' R' U2 R", kind: "2lcmoll" },
             { id: "2l_l", alg: "F R' F' R U R U' R'", kind: "2lcmoll" },
             { id: "2l_o_adjacent_swap", alg: "R U R' F' (R U R' U') R' F R2 U' R'", kind: "2lcmpll" },
-            { id: "2l_o_diagonal_swap", alg: "r2 D r' U r D' R2 U' F' U' F", kind: "2lcmpll" }
+            { id: "2l_o_diagonal_swap", alg: "F R U' R' U' R U R' F' (R U R' U') R' F R F'", kind: "2lcmpll" } // better, but flips centers: r2 D r' U r D' R2 U' F' U' F
         ]},
         cmll: { name: "CMLL", source: "https://sites.google.com/view/kianroux/cmll", algs: [
             { id: "o_adjacent_swap", alg: "R U R' F' R U R' U' R' F R2 U' R'", kind: "cmll" },
