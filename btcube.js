@@ -7,15 +7,19 @@ var BtCube = (function () {
     const GAN_SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
     const GAN_CHARACTERISTIC_UUID = "0000fff5-0000-1000-8000-00805f9b34fb";
 
+    const GOCUBE_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    const GOCUBE_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
     var device;
 
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             device = await window.navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }],
+            filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }],
             optionalServices: [
                 GIIKER_SERVICE_UUID,
-                GAN_SERVICE_UUID
+                GAN_SERVICE_UUID,
+                GOCUBE_SERVICE_UUID
             ]
             });
             var server = await device.gatt.connect();
@@ -27,6 +31,11 @@ var BtCube = (function () {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGiikerCubeCharacteristicChanged.bind(twistCallback));
+                await cubeCharacteristic.startNotifications();
+            } else if (server.device.name.startsWith("GoCube_")) {
+                var cubeService = await server.getPrimaryService(GOCUBE_SERVICE_UUID);
+                var cubeCharacteristic = await cubeService.getCharacteristic(GOCUBE_CHARACTERISTIC_UUID);
+                cubeCharacteristic.addEventListener("characteristicvaluechanged", onGoCubeCharacteristicChanged.bind(twistCallback));
                 await cubeCharacteristic.startNotifications();
             } else {
                 throw "Unknown device: " + server.device.name;
@@ -103,6 +112,18 @@ var BtCube = (function () {
         }
     }
     
+    function onGoCubeCharacteristicChanged(event) {
+        try {
+            var val = event.target.value;
+            var len = val.byteLength;
+            if (len = 8 && val.getUint8(1) /* payload len */ == 6) {
+                this(["B", "B'", "F", "F'", "U", "U'", "D", "D'", "R", "R'", "L", "L'"][val.getUint8(3)]);
+            }
+        } catch (ex) {
+            alert("ERROR (K): " + ex.message);
+        }
+    }
+
     return {
         connect: connect,
         connected: connected,
