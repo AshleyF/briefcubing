@@ -1,8 +1,10 @@
 # GoCube
 
+https://briefcubing.com/experimental/gocube/
+
 ## Primary Service UUID: 6e400001-b5a3-f393-e0a9-e50e24dcca9e
 
-## Characteristisc
+## Characteristics
 
 Two characteristics. One is notify-only; appearing to publish the cube state. The other is write-only and the purpose is unknown (setting cube state?).
 
@@ -10,7 +12,7 @@ Two characteristics. One is notify-only; appearing to publish the cube state. Th
 
 The format seems to always begin with a 0x2A (42) byte, followed by a length (number of bytes to follow). At a fast rate (~20Hz) some kind of pose information is published. The length varies from ~20-30 bytes and is very noisy. It may be pose information or raw accelerometer/gyro, etc.
 
-When a twist is made on the cube, a single 8-byte packet is sent. That is 42, 6, followed by six bytes. The first byte has always been observed to be 1. The second seems do be the twist/turn just made:
+When a twist is made on the cube, a single 8-byte packet is sent. That is 42, 6, followed by six bytes. The first payload byte has always been observed to be 1. The second seems do be the twist/turn just made:
 
 * B = 0
 * B' = 1
@@ -40,7 +42,6 @@ Some samples:
 * R2: 42,6,1,8,6,63,13,10
 * R3: 42,6,1,8,9,66,13,10
 * R4: 42,6,1,8,0,57,13,10
-
 
 Notify-only.
 
