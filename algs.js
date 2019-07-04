@@ -710,7 +710,7 @@ var Algs = (function () {
             { id: "as_back_slash", alg: "U' F' L F L' U2' L' U2 L", kind: "cmll" },
             { id: "as_x_checkerboard", alg: "U' R U2' R' U2 R' F R F'", kind: "cmll" },
             { id: "as_forward_slash", alg: "U' L' U R U' L U R'", kind: "cmll" },
-            { id: "as_left_bar", alg: "R' U' R U' R' U R' F R F' U R", kind: "cmll" },
+            { id: "as_left_bar", alg: "R' U' R U' L U' R' U L' U2 R", kind: "cmll" },
             { id: "l_mirror", alg: "F R U' R' U' R U R' F'", kind: "cmll" },
             { id: "l_inverse", alg: "F R' F' R U R U' R'", kind: "cmll" },
             { id: "l_pure", alg: "R U2 R' U' R U R' U' R U R' U' R U' R'", kind: "cmll" },
