@@ -19,14 +19,29 @@ var BtCube = (function () {
             optionalServices: [
                 GIIKER_SERVICE_UUID,
                 GAN_SERVICE_UUID,
-                GOCUBE_SERVICE_UUID
+                GOCUBE_SERVICE_UUID,
+                "device_information"
             ]
             });
             var server = await device.gatt.connect();
             if (server.device.name.startsWith("GAN-")) {
-                var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
-                var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
-                onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback);
+                var hwVersion =
+                    await server.getPrimaryService("device_information")
+                    .then(info => info.getCharacteristic('hardware_revision_string'))
+                    .then(hw => hw.readValue());
+                var major = hwVersion.getUint8(0);
+                var minor = hwVersion.getUint8(1);
+                var patch = hwVersion.getUint8(2)
+                if (major <= 3 && minor <= 1) {
+                    // initial China release (JUN 2019)
+                    var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
+                    var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
+                    onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback);
+                } else {
+                    // later US Nationals release (AUG 2019)
+                    alert("The newest GAN 356i hardware (released at US Nationals in August 2019) is not yet supported. Please check back later and follow us on facebook.com/briefcubing for updates.");
+                    errorCallback()
+                }
             } else if (server.device.name.startsWith("Gi")) {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);

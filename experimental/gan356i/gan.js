@@ -5,7 +5,8 @@ async function connect()
         console.log("Attempting to pair.")
         const PRIMARY_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
 
-        var device = await window.navigator.bluetooth.requestDevice({ filters: [{ namePrefix: "GAN-" }], optionalServices: [PRIMARY_UUID] });
+        var device = await window.navigator.bluetooth.requestDevice({ filters: [{ namePrefix: "GAN-" }], optionalServices: [PRIMARY_UUID, "device_information"] });
+
         console.log("Device: ", device);
         device.addEventListener("gattserverdisconnected", event => { alert("Disconnected!"); });
 
@@ -14,6 +15,14 @@ async function connect()
 
         var service = await server.getPrimaryService(PRIMARY_UUID);
         console.log("Service: ", service);
+
+        var hwVersion = await server.getPrimaryService("device_information")
+                                    .then(info => info.getCharacteristic('hardware_revision_string'))
+                                    .then(hw => hw.readValue());
+        var major = hwVersion.getUint8(0);
+        var minor = hwVersion.getUint8(1);
+        var patch = hwVersion.getUint8(2);
+        document.getElementById("info").innerText = "Hardware Version: " + major + "." + minor + "." + patch + " (" + (major <= 3 && minor <= 1 ? "OLD" : "NEW") + ")";
 
         var characteristics = await service.getCharacteristics();
         console.log(characteristics);
