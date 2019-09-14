@@ -54,12 +54,16 @@ async function connect()
                         var b = value.getUint8(k);
                         bytes.push(b);
                     }
-                    console.log("Data: ", { i: i, data: bytes });
+                    var report = "";
                     var htm = "<table width='100%'><tr><td colspan='" + len + "'>" + event.target.uuid + "</td></tr><tr>";
                     for (var k = 0; k < len; k++)
                     {
                         var b = value.getUint8(k);
+                        report += b + " ";
                         htm += "<td width='" + Math.round(100 / len) + "%' align='center'>" + b + "</td>";
+                    }
+                    if (event.target.uuid.startsWith("0000fff2")) {
+                        console.log("Report: " + report);
                     }
                     htm += "</tr></table>"
                     document.getElementById(event.target.uuid).innerHTML = htm;
