@@ -86,9 +86,24 @@ var BtCube = (function () {
             }
             var val = event.target.value;
             var state = [];
-            for (var i = 0; i < 20; i++) {
-                state.push(Math.floor(val.getUint8(i) / 16));
-                state.push(val.getUint8(i) % 16);
+            if (val.getUint8(18) == 0xa7) { // decrypt
+                var key = [176, 81, 104, 224, 86, 137, 237, 119, 38, 26, 193, 161, 210, 126, 150, 81, 93, 13, 236, 249, 89, 235, 88, 24, 113, 81, 214, 131, 130, 199, 2, 169, 39, 165, 171, 41];
+                var k = val.getUint8(19);
+                var k1 = k >> 4 & 0xf;
+                var k2 = k & 0xf;
+                for (var i = 0; i < 20; i++) {
+                    var v = (val.getUint8(i) + key[i + k1] + key[i + k2]) & 0xff;
+                    state.push(v >> 4 & 0xf);
+                    state.push(v & 0xf);
+                }
+            }
+            else // not encrypted
+            {
+                for (var i = 0; i < 20; i++) {
+                    var v = val.getUint8(i);
+                    state.push(v >> 4 & 0xf);
+                    state.push(v & 0xf);
+                }
             }
             var face = state[32];
             var amount = state[33];
