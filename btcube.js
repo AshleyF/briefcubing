@@ -25,7 +25,7 @@ var BtCube = (function () {
             filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }],
             optionalServices: [
                 GIIKER_SERVICE_UUID,
-                GAN_SERVICE_UUID,
+                GAN_SERVICE_UUID, GAN_SERVICE_UUID_META,
                 GOCUBE_SERVICE_UUID
             ]
             });
