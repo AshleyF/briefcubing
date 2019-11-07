@@ -271,7 +271,7 @@ var Algs = (function () {
                 },
                 verify: {
                     partial: undefined,
-                    solved: "UUUUUUUUUL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
+                    solved: "UUUUUUUUU...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+CO/EO
                     eo: false,
                     allowRandomM: false,
                     allowRandomM2: false
