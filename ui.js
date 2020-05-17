@@ -192,11 +192,13 @@
                     }
                     return true;
                 }
-                function matchWithAdjustments(pat, allowRandomM, allowRandomM2) {
+                function matchWithAdjustments(pat, allowRandomM, allowRandomM2, allowRandomU) {
                     if (Cube.matchPattern(pat, result)) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
+                    if (allowRandomU) {
+                        if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
+                        if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
+                        if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
+                    }
                     if (allowRandomM2 || allowRandomM) {
                         // try flipping up/down centers (maintaining edge orientation)
                         if (Cube.matchPattern(pat, Cube.alg("L2 R2", result))) return true;
@@ -218,7 +220,7 @@
                 }
                 var verify = Algs.kindToParams(kind).verify;
                 if (verify.eo && !checkEO()) return false;
-                return (verify.solved != undefined && matchWithAdjustments(verify.solved, verify.allowRandomM, verify.allowRandomM2));
+                return (verify.solved != undefined && matchWithAdjustments(verify.solved, verify.allowRandomM, verify.allowRandomM2, verify.allowRandomU));
             }
 
             function verify(result, includePartial) {

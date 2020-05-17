@@ -26,7 +26,8 @@ var Algs = (function () {
                     solved: solvedPattern, // F2L+EO/CO+EP/CP
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -57,7 +58,8 @@ var Algs = (function () {
                     solved: "UUUUUUUUU.L.LLLLLL.F.FFFFFF.R.RRRRRRDDDDDDDDDBBBBBB.B.", // F2L+EO/CO+EP
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -88,7 +90,8 @@ var Algs = (function () {
                     solved: "UUUUUUUUU...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+EO/CO
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -119,7 +122,8 @@ var Algs = (function () {
                     solved: ".U.UUU.U....LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+EO
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -150,7 +154,8 @@ var Algs = (function () {
                     solved: solvedCmllPattern, // F2B+CO/CP
                     eo: false,
                     allowRandomM: true,
-                    allowRandomM2: true
+                    allowRandomM2: true,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -181,7 +186,8 @@ var Algs = (function () {
                     solved: partialCmllPattern, // F2B+CO (oriented considered solved)
                     eo: false,
                     allowRandomM: true,
-                    allowRandomM2: true
+                    allowRandomM2: true,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -212,7 +218,8 @@ var Algs = (function () {
                     solved: solvedCmllPattern, // F2B+CO/CP
                     eo: false,
                     allowRandomM: true,
-                    allowRandomM2: true
+                    allowRandomM2: true,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -243,7 +250,8 @@ var Algs = (function () {
                     solved: "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B", // F2L+CO/CP
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -274,7 +282,8 @@ var Algs = (function () {
                     solved: "UUUUUUUUU...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L+CO/EO
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -305,7 +314,8 @@ var Algs = (function () {
                     solved: solvedPattern, // complete
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -336,7 +346,8 @@ var Algs = (function () {
                     solved: solvedCmllPattern, // F2B+CO/CP
                     eo: true,
                     allowRandomM: false,
-                    allowRandomM2: true
+                    allowRandomM2: true,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -367,7 +378,8 @@ var Algs = (function () {
                     solved: solvedPattern, // complete
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: false,
@@ -398,7 +410,8 @@ var Algs = (function () {
                     solved: solvedPattern, // complete
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: false,
@@ -429,7 +442,8 @@ var Algs = (function () {
                     solved: "............LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", // F2L
                     eo: false,
                     allowRandomM: false,
-                    allowRandomM2: false
+                    allowRandomM2: false,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
@@ -460,7 +474,8 @@ var Algs = (function () {
                     solved: "............LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B...", // F2B
                     eo: false,
                     allowRandomM: true,
-                    allowRandomM2: true
+                    allowRandomM2: true,
+                    allowRandomU: true
                 },
                 scramble: {
                     allowAuf: true,
