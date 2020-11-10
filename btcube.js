@@ -14,6 +14,7 @@ var BtCube = (function () {
         "NoRgnAHANATADDWJYwMxQOxiiEcfYgSK6Hpr4TYCs0IG1OEAbDszALpA",
         "NoNg7ANATFIQnARmogLBRUCs0oAYN8U5J45EQBmFADg0oJAOSlUQF0g"];
 
+    //Used for GoCube and Rubiks Connected    
     const GOCUBE_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     const GOCUBE_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
@@ -22,7 +23,7 @@ var BtCube = (function () {
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             device = await window.navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }],
+            filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }, { namePrefix: "Rubiks_" }],
             optionalServices: [
                 GIIKER_SERVICE_UUID,
                 GAN_SERVICE_UUID, GAN_SERVICE_UUID_META,
@@ -59,7 +60,7 @@ var BtCube = (function () {
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGiikerCubeCharacteristicChanged.bind(twistCallback));
                 await cubeCharacteristic.startNotifications();
-            } else if (server.device.name.startsWith("GoCube_")) {
+            } else if (server.device.name.startsWith("GoCube_") || server.device.name.startsWith("Rubiks_")) {
                 var cubeService = await server.getPrimaryService(GOCUBE_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GOCUBE_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGoCubeCharacteristicChanged.bind(twistCallback));
