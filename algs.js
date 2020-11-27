@@ -542,7 +542,7 @@ var Algs = (function () {
             { id: "2l_oll_t", alg: "(R U2') (R2' U') (R2 U') (R2' U2' R)", kind: "2lollco" },
             { id: "2l_oll_s", alg: "(R U R' U) (R U2 R')", kind: "2lollco" },
             { id: "2l_oll_as", alg: "(R U2) (R' U' R U' R')", kind: "2lollco" },
-            { id: "2l_oll_l", alg: "(R' F) (R B') (R' F') (R B)", kind: "2lollco" }
+            { id: "2l_oll_op", alg: "(R' F) (R B') (R' F') (R B)", kind: "2lollco" }
         ]},
         oll: { name: "OLL", source: "http://www.cyotheking.com/oll", algs: [
             { id: "all_edges1", alg: "R U R' U R U2 R'", kind: "oll" },
