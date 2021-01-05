@@ -1,6 +1,6 @@
 var Settings = (function () {
 
-    const VERSION = 3;
+    const VERSION = 4;
 
     var settings = { // defaults
         version: VERSION,
@@ -31,6 +31,11 @@ var Settings = (function () {
                     settings.algStats = {};
                     break;
                 case 3: // accept version 3
+                    stored.version = VERSION;
+                    settings = stored;
+                    settings.llHide = "show_all";
+                    break;
+                case 4: // accept version 3
                     settings = stored;
                     break;
                 default: return; // discard unknown version
