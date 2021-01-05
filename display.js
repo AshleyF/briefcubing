@@ -104,9 +104,9 @@ var Display = (function () {
         function col(face) {
             var col = faceColor(face, faces);
             if (
-                (face.indexOf('B') != -1 && hide.indexOf("_back") != -1) ||
-                (face.indexOf('L') != -1 && hide.indexOf("_left") != -1) ||
-                (face.indexOf('R') != -1 && hide.indexOf("_right") != -1)) {
+                (face.indexOf('B') != -1 && hide && hide.indexOf("_back") != -1) ||
+                (face.indexOf('L') != -1 && hide && hide.indexOf("_left") != -1) ||
+                (face.indexOf('R') != -1 && hide && hide.indexOf("_right") != -1)) {
                 col = gray;
             }
             if (simple) {
