@@ -354,8 +354,9 @@
 
             function update(cube) {
                 var simple = Settings.values.simpleDiagram;
+                var hide = Settings.values.llHide;
                 var diag = Algs.kindToParams(kind).diagram;
-                document.getElementById("cube").innerHTML = Display.diagram(cube, diag, id, simple);
+                document.getElementById("cube").innerHTML = Display.diagram(cube, diag, id, simple, hide);
             }
 
             function lookupAlg(name) {

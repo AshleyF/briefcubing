@@ -61,9 +61,9 @@ var Display = (function () {
         return cube;
     }
 
-    function diagram(cube, diag, id, simple, size) {
+    function diagram(cube, diag, id, simple, hide, size) {
         switch (diag.type) {
-            case "up": return diagramLL(Cube.faces(cube, simple), diag, simple, size);
+            case "up": return diagramLL(Cube.faces(cube, simple), diag, simple, hide, size);
             case "up-front": return diagramUF(cube, diag, simple, false, size);
             case "up-front-ul-ur": return diagramUF(cube, diag, simple, true, size);
             case "up-front-right": return diagramUFR(cube, simple, size, "");
@@ -97,12 +97,18 @@ var Display = (function () {
     }
 
     function diagramLLAlg(rot, alg, diag, size) {
-        return diagramLL(Cube.faces(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), true), diag, true, size);
+        return diagramLL(Cube.faces(Cube.alg(alg, Cube.alg(rot, Cube.solved), true), true), diag, true, "show_all", size);
     }
 
-    function diagramLL(faces, diag, simple, size) {
+    function diagramLL(faces, diag, simple, hide, size) {
         function col(face) {
             var col = faceColor(face, faces);
+            if (
+                (face.indexOf('B') != -1 && hide.indexOf("_back") != -1) ||
+                (face.indexOf('L') != -1 && hide.indexOf("_left") != -1) ||
+                (face.indexOf('R') != -1 && hide.indexOf("_right") != -1)) {
+                col = gray;
+            }
             if (simple) {
                 switch (face.length) {
                     case 1:

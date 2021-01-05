@@ -105,6 +105,7 @@
                 $("#auf").prop('value', Settings.values.randomAuf ? "on" : "off").slider('refresh');
                 $("#order").prop('value', Settings.values.randomOrder ? "on" : "off").slider('refresh');
                 $("#simple").prop('value', Settings.values.simpleDiagram ? "on" : "off").slider('refresh');
+                $("#llHide").prop('value', Settings.values.llHide).selectmenu("refresh");
                 for (var c in Settings.values.upColors) {
                     $('#' + c).prop('checked', Settings.values.upColors[c]).checkboxradio('refresh');
                 }
@@ -141,6 +142,7 @@
                 Settings.values.randomAuf = document.getElementById("auf").value == "on";
                 Settings.values.randomOrder = document.getElementById("order").value == "on";
                 Settings.values.simpleDiagram = document.getElementById("simple").value == "on";
+                Settings.values.llHide = $("#llHide option:selected").val();
                 var upcols = Settings.values.upColors;
                 for (var c in colors) {
                     var col = colors[c];
@@ -192,6 +194,12 @@
                 $("#order").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#order").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#simple_label").text(Localization.getString("simplifiedDiagram"));
+                $("#hide_label").text(Localization.getString("llHide"));
+                $("#hide_none").text(Localization.getString("llHideNone"));
+                $("#hide_back").text(Localization.getString("llHideBack"));
+                $("#hide_back_left").text(Localization.getString("llHideBackLeft"));
+                $("#hide_back_right").text(Localization.getString("llHideBackRight"));
+                $("#llHide").selectmenu("refresh");
                 $("#simple").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#simple").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#timeout_label").text(Localization.getString("timeout"));
@@ -343,6 +351,13 @@
                 <select id="simple" data-role="slider" data-mini="true" onchange="settingsUpdate()">
                     <option value="off"></option>
                     <option value="on"></option>
+                </select>
+                <label id="hide_label" for="llHide"></label>
+                <select name="llHide" id="llHide" onchange="settingsUpdate()">
+                    <option id="hide_none" value="show_all" selected="selected"></option>
+                    <option id="hide_back" value="hide_back"></option>
+                    <option id="hide_back_left" value="hide_back_left"></option>
+                    <option id="hide_back_right" value="hide_back_right"></option>
                 </select>
                 <label id="timeout_label" for="timeout"></label>
                 <span style="font-weight: bold; padding: 0.5em; float: left" id="timeout_value">10</span>

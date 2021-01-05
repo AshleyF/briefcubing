@@ -6,6 +6,8 @@ var Settings = (function () {
         version: VERSION,
         randomAuf: true,
         randomOrder: false,
+        simpleDiagram: false,
+        llHide: "show_all",
         upColors: { yellow: true, red: true, blue: false },
         algs: ["cmll_s_left_bar"],
         algAufPrefs: {},
