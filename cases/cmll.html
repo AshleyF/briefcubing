@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Brief Cubing</title>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75630988-2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-75630988-2');
+        </script>
+        <meta charset="UTF-8">
+        <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../styles.css" />
+        <script src="../cube.js"></script>
+        <script src="../display.js"></script>
+        <script src="../algs.js"></script><!-- TODO: remove this dependency -->
+        <style>
+            body { font-family: sans-serif; }
+            h1, h2, h3 { color: white }
+        </style>
+        <script>
+            var Settings = (function () {
+                var settings = { // defaults
+                    randomAuf: false,
+                    simpleDiagram: false,
+                    llHide: "show_all",
+                    upColors: { yellow: true },
+                };
+                return { values: settings };
+            }());
+
+            var rot = ""; // yellow up
+            var auf = ""; // no AUF
+            function loaded() {
+                var htm = "";
+
+                function head(name) {
+                    htm += "<h2>" + name + "</h2>"
+                }
+
+                function sub(name) {
+                    htm += "<h3>" + name + "</h3>"
+                }
+
+                function diag(alg) {
+                    htm += Display.diagramAlg(rot, auf, { alg: alg, kind: "cmll" }, "10em");
+                }
+
+head("O Cases");
+sub("O-Adjacent Swap");
+diag("R U R2 F' R U R U' R' F R U' R' U");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("U' R U R2 F' R U R U' R' F R U' R' U");
+diag("U R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+sub("O-Diagonal Swap");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+head("H Cases");
+sub("H-Columns");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+sub("H-Rows");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+sub("H-Column");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' U2");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
+sub("H-Row");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("U R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+head("Pi Cases");
+sub("Pi-Right-Bar");
+diag("R U2 R' U' R U' R' U' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' U2");
+diag("U' R U2 R' U' R U' R' U R U2 R' U' R U' R' U2");
+diag("U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U");
+sub("Pi-Back-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R'");
+sub("Pi-X-Checkerboard");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U2 R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+sub("Pi-Forward-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+sub("Pi-Columns");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U'");
+diag("U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+sub("Pi-Left-Bar");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R'");
+head("U Cases");
+sub("U-Forward-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+sub("U-Back-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+sub("U-Front-Row");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R'");
+sub("U-Rows");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' U2");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U R U2 R' U' R U' R' U2");
+sub("U-X-Checkerboard");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U2 R' U' R U' R'");
+sub("U-Back-Row");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("R U2 R' U' R U' R' U' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+head("T Cases");
+sub("T-Left-Bar");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+sub("T-Right-Bar");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+sub("T-Rows");
+diag("R U2 R' U' R U' R' U' R U2 R' U' R U' R' U2 R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
+sub("T-Front-Row");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' U2 R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R'");
+sub("T-Back-Row");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+sub("T-Columns");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' U'");
+head("S Cases");
+sub("S-Left-Bar");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U2");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+sub("S-X-Checkerboard");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U'");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+sub("S-Forward-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' U'");
+diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R'");
+sub("S-Columns");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U'");
+sub("S-Right-Bar");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U");
+sub("S-Back-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U'");
+diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R'");
+diag("R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R'");
+head("AS Cases");
+sub("AS-Right-Bar");
+diag("R U2 R' U' R U' R' U'");
+diag("U' R U2 R' U' R U' R' U'");
+diag("U R U2 R' U' R U' R' U'");
+diag("U2 R U2 R' U' R U' R' U'");
+sub("AS-Columns");
+diag("R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' U'");
+diag("U R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R'");
+sub("AS-Back-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R'");
+diag("U' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R'");
+diag("U R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+sub("AS-X-Checkerboard");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R'");
+diag("U' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R'");
+sub("AS-Forward-Slash");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U2");
+diag("U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+sub("AS-Left-Bar");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R'");
+head("L Cases");
+sub("L-Mirror");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U'");
+sub("L-Inverse");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+sub("L-Pure");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R'");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+sub("L-Front_commutator");
+diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
+sub("L-Diag");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U'");
+diag("U R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R'");
+sub("L-Back-Commutator");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U'");
+diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
+diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
+
+                document.getElementById("cases").innerHTML = htm;
+            }
+        </script>
+    </head>
+    <body onload="loaded()">
+        <h1><img src="../logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> CMLL Cases</h1>
+        <div id="cases"></div>
+    </body>
+</html>
