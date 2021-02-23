@@ -2,6 +2,7 @@
 // GAN decryption is a modified version of code from https://github.com/cs0x7f/cstimer
 
 var BtCube = (function () {
+    // Used for Gikker and Mi Smart Magic Cube
     const GIIKER_SERVICE_UUID = "0000aadb-0000-1000-8000-00805f9b34fb";
     const GIIKER_CHARACTERISTIC_UUID = "0000aadc-0000-1000-8000-00805f9b34fb";
 
@@ -23,7 +24,7 @@ var BtCube = (function () {
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             device = await window.navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }, { namePrefix: "Rubiks_" }],
+            filters: [{ namePrefix: "Gi" }, { namePrefix: "Mi Smart Magic Cube" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }, { namePrefix: "Rubiks_" }],
             optionalServices: [
                 GIIKER_SERVICE_UUID,
                 GAN_SERVICE_UUID, GAN_SERVICE_UUID_META,
@@ -55,7 +56,7 @@ var BtCube = (function () {
                 var cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
                 onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback);
-            } else if (server.device.name.startsWith("Gi")) {
+            } else if (server.device.name.startsWith("Gi") || server.device.name.startsWith("Mi Smart Magic Cube")) {
                 var cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 var cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGiikerCubeCharacteristicChanged.bind(twistCallback));
