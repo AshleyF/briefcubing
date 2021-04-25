@@ -83,15 +83,11 @@
                     ['.', '.', 'B', 'D', 'L'],
                     ['.', '.', 'B', 'L', 'U'],
                 ]);
-                var htm = "<table><tr>";
+                var htm = "";
                 for (var i in cases) {
                     var c = cases[i];
-                    if (i != 0 && i % 4 == 0) htm += "</tr><tr>";
-                    htm += "<td>";
-                    htm += Display.diagram(c[0], c[1], c[2], c[3], c[4], "15em");
-                    htm += "</td>";
+                    htm += Display.diagram(c[0], c[1], c[2], c[3], c[4], "10em");
                 }
-                htm += "</tr></table>";
                 document.getElementById("cases").innerHTML = htm;
             }
 
@@ -102,7 +98,7 @@
         </script>
     </head>
     <body onload="loaded()">
-        <h1><img src="../logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> Hidden Corner Colors</h1>
+        <h1><img src="../logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> Hidden Corners</h1>
         <p>Tap to reveal. Refresh to shuffle.</p>
         <div id="cases"></div>
     </body>
