@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Brief Cubing</title>
+        <meta charset="UTF-8">
+        <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../styles.css" />
+        <script src="./display.js"></script>
+        <style>
+            body { font-family: sans-serif; }
+            h1, h2, h3, p { color: white }
+        </style>
+        <script>
+            function shuffle(arr) {
+                var current = arr.length, temp, rand;
+                while (0 !== current) {
+                    rand = Math.floor(Math.random() * current);
+                    current -= 1;
+                    temp = arr[current];
+                    arr[current] = arr[rand];
+                    arr[rand] = temp;
+                }
+
+                return arr;
+            }
+
+            function loaded() {
+                var cases = shuffle([
+                    ['L', 'U', '.', '.', 'B'],
+                    ['F', 'U', '.', '.', 'L'],
+                    ['R', 'U', '.', '.', 'F'],
+                    ['B', 'U', '.', '.', 'R'],
+                    ['.', '.', 'U', 'R', 'B'],
+                    ['.', '.', 'U', 'F', 'R'],
+                    ['.', '.', 'U', 'L', 'F'],
+                    ['.', '.', 'U', 'B', 'L'],
+
+                    ['L', 'D', '.', '.', 'F'],
+                    ['F', 'D', '.', '.', 'R'],
+                    ['R', 'D', '.', '.', 'B'],
+                    ['B', 'D', '.', '.', 'L'],
+                    ['.', '.', 'D', 'R', 'F'],
+                    ['.', '.', 'D', 'F', 'L'],
+                    ['.', '.', 'D', 'L', 'B'],
+                    ['.', '.', 'D', 'B', 'R'],
+
+                    ['D', 'L', '.', '.', 'B'],
+                    ['B', 'L', '.', '.', 'U'],
+                    ['U', 'L', '.', '.', 'F'],
+                    ['F', 'L', '.', '.', 'D'],
+                    ['.', '.', 'L', 'U', 'B'],
+                    ['.', '.', 'L', 'F', 'U'],
+                    ['.', '.', 'L', 'D', 'F'],
+                    ['.', '.', 'L', 'B', 'D'],
+
+                    ['U', 'R', '.', '.', 'B'],
+                    ['B', 'R', '.', '.', 'D'],
+                    ['D', 'R', '.', '.', 'F'],
+                    ['F', 'R', '.', '.', 'U'],
+                    ['.', '.', 'R', 'B', 'U'],
+                    ['.', '.', 'R', 'D', 'B'],
+                    ['.', '.', 'R', 'F', 'D'],
+                    ['.', '.', 'R', 'U', 'F'],
+
+                    ['L', 'F', '.', '.', 'U'],
+                    ['U', 'F', '.', '.', 'R'],
+                    ['R', 'F', '.', '.', 'D'],
+                    ['D', 'F', '.', '.', 'L'],
+                    ['.', '.', 'F', 'U', 'L'],
+                    ['.', '.', 'F', 'R', 'U'],
+                    ['.', '.', 'F', 'D', 'R'],
+                    ['.', '.', 'F', 'L', 'D'],
+
+                    ['R', 'B', '.', '.', 'U'],
+                    ['U', 'B', '.', '.', 'L'],
+                    ['L', 'B', '.', '.', 'D'],
+                    ['D', 'B', '.', '.', 'R'],
+                    ['.', '.', 'B', 'U', 'R'],
+                    ['.', '.', 'B', 'R', 'D'],
+                    ['.', '.', 'B', 'D', 'L'],
+                    ['.', '.', 'B', 'L', 'U'],
+                ]);
+                var htm = "<table><tr>";
+                for (var i in cases) {
+                    var c = cases[i];
+                    if (i != 0 && i % 4 == 0) htm += "</tr><tr>";
+                    htm += "<td>";
+                    htm += Display.diagram(c[0], c[1], c[2], c[3], c[4], "15em");
+                    htm += "</td>";
+                }
+                htm += "</tr></table>";
+                document.getElementById("cases").innerHTML = htm;
+            }
+
+            function reveal(target, left, upLeft, upRight, right, back) {
+                var htm = Display.diagram(left, upLeft, upRight, right, back, "15em", true);
+                target.parentElement.innerHTML = htm;
+            }
+        </script>
+    </head>
+    <body onload="loaded()">
+        <h1><img src="../logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> Hidden Corner Colors</h1>
+        <p>Tap to reveal. Refresh to shuffle.</p>
+        <div id="cases"></div>
+    </body>
+</html>
