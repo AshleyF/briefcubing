@@ -453,7 +453,8 @@ var Algs = (function () {
                     allowEOFlips: true
                 }
             };
-            case "sb": return {
+            case "sb": // second block (Roux)
+            case "sbb": return { // second block - black slot (Roux)
                 diagram: {
                     type: "up-front-right",
                     simplified: {
@@ -819,6 +820,55 @@ var Algs = (function () {
             { id: "sb_45", alg: "R U2 M' U' R'", kind: "sb" },
             { id: "sb_46", alg: "M2 U2 R U' R'", kind: "sb" },
             { id: "sb_47", alg: "r U' r'", kind: "sb" }
+        ]},
+        sbb: { name: "SB (back slot)", source: "https://sites.google.com/view/kianroux/second-block", algs: [
+            { id: "sbb_1", alg: "U' R' U R", kind: "sbb" },
+            { id: "sbb_2", alg: "r' U' r", kind: "sbb" },
+            { id: "sbb_3", alg: "U2 M' U r' U r", kind: "sbb" },
+            { id: "sbb_4", alg: "U M' U' M r' U' r", kind: "sbb" },
+            { id: "sbb_5", alg: "U M' U2 r' U r", kind: "sbb" },
+            { id: "sbb_6", alg: "r' U2 M2 U r", kind: "sbb" },
+            { id: "sbb_7", alg: "M' U' r' U r", kind: "sbb" },
+            { id: "sbb_8", alg: "R' U R U M' R' U R", kind: "sbb" },
+            { id: "sbb_9", alg: "R' U' R", kind: "sbb" },
+            { id: "sbb_10", alg: "B U B'", kind: "sbb" },
+            { id: "sbb_11", alg: "U R' U' R U' R' U' R", kind: "sbb" },
+            { id: "sbb_12", alg: "M2 U' r' U r", kind: "sbb" },
+            { id: "sbb_13", alg: "U R' U R U' R' U' R", kind: "sbb" },
+            { id: "sbb_14", alg: "U2 M2 U r' U r", kind: "sbb" },
+            { id: "sbb_15", alg: "r' M2 U2 M U r", kind: "sbb" },
+            { id: "sbb_16", alg: "U M2 U2 r' U r", kind: "sbb" },
+            { id: "sbb_17", alg: "U' R' U2 R U' R' U R", kind: "sbb" },
+            { id: "sbb_18", alg: "r' U r U2 M r' U' r", kind: "sbb" },
+            { id: "sbb_19", alg: "R' U R U2 R' U' R", kind: "sbb" },
+            { id: "sbb_20", alg: "r' U r U2 r' U' r", kind: "sbb" },
+            { id: "sbb_21", alg: "R' U2 R U R' U' R", kind: "sbb" },
+            { id: "sbb_22", alg: "M U' R' U2 R U' R' U R", kind: "sbb" },
+            { id: "sbb_23", alg: "r' U2 r U M r' U' r", kind: "sbb" },
+            { id: "sbb_24", alg: "U' r' U2 r U' r' U r", kind: "sbb" },
+            { id: "sbb_25", alg: "R' U' R U R' U' R", kind: "sbb" },
+            { id: "sbb_26", alg: "M U' R' U R U' R' U R", kind: "sbb" },
+            { id: "sbb_27", alg: "R' U R U' R' U R", kind: "sbb" },
+            { id: "sbb_28", alg: "R' U' R U r' U' r", kind: "sbb" },
+            { id: "sbb_29", alg: "U r' U M' U' r U", kind: "sbb" },
+            { id: "sbb_30", alg: "U' R' U M U' R", kind: "sbb" },
+            { id: "sbb_31", alg: "U2 r' U' r U' r' U r", kind: "sbb" },
+            { id: "sbb_32", alg: "R' U R U2 r' U' r", kind: "sbb" },
+            { id: "sbb_33", alg: "U R' U R U2 R' U R", kind: "sbb" },
+            { id: "sbb_34", alg: "U2 R' U' M U' R", kind: "sbb" },
+            { id: "sbb_35", alg: "U' R' U' R U2 R' U' R", kind: "sbb" },
+            { id: "sbb_36", alg: "r' U r M' U r' U r", kind: "sbb" },
+            { id: "sbb_37", alg: "r' U M2 U2 M U r", kind: "sbb" },
+            { id: "sbb_38", alg: "R' U R U2 M' U r' U r", kind: "sbb" },
+            { id: "sbb_39", alg: "r' U r M' U' r' U r", kind: "sbb" },
+            { id: "sbb_40", alg: "r' U' r U' M U2 R' U' R", kind: "sbb" },
+            { id: "sbb_41", alg: "r' U' r U M r' U' r", kind: "sbb" },
+            { id: "sbb_42", alg: "r' U' r B U B'", kind: "sbb" },
+            { id: "sbb_43", alg: "R' U' R U' r' U r", kind: "sbb" },
+            { id: "sbb_44", alg: "M r' U' r", kind: "sbb" },
+            { id: "sbb_45", alg: "R' U2 M U R", kind: "sbb" },
+            { id: "sbb_46", alg: "M2 U2 R' U R", kind: "sbb" },
+            { id: "sbb_47", alg: "r' U r", kind: "sbb" }
         ]}
     }
 
