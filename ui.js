@@ -70,10 +70,14 @@
                 var avgExec = addStatAndAverage(stats.exec, exec);
                 Settings.save();
                 var showAvg = avgReco && avgExec;
+                var successRate = (stats.solves.correct / stats.solves.total * 100).toFixed(2);
                 var htm = '<table style="margin-left:auto;margin-right:auto">';
                 htm += '<tr><td align="right">' + Localization.getString("recognitionTime") + ':</td><td>' + renderSpan(reco) + renderAvg(showAvg, avgReco) + '</td></tr>';
                 htm += '<tr><td align="right">' + Localization.getString("executionTime") + ':</td><td>' + renderSpan(exec) + renderAvg(showAvg, avgExec) + '</td></tr>';
                 htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + renderAvg(showAvg, avgReco + avgExec) + '</td></tr>';
+                if (Localization.getString("successRate")) {
+                    htm += '<tr><td align="right">' + Localization.getString("successRate") + ':</td><td align="left">' + successRate + '% (' + stats.solves.correct + '/' + stats.solves.total + ')' + '</td></tr>';
+                }
                 htm += '</table>';
                 document.getElementById("message").innerHTML = htm;
             }
