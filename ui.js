@@ -23,6 +23,12 @@
             var executionStart = null;
             var executionStop = null;
 
+            function getAlgStats() {
+                var stats = Settings.values.algStats[algId];
+                if (!stats) stats = Settings.values.algStats[algId] = { reco: [], exec: [], solves: {total: 0, correct: 0} };
+                return stats;
+            }
+
             function updateStats() {
                 function renderSpan(span) {
                     span = Math.trunc(span);
@@ -59,8 +65,7 @@
                 var now = new Date();
                 var reco = recognitionStart ? (executionStart || now) - recognitionStart : 0;
                 var exec = executionStart ? (executionStop || now) - executionStart : 0;
-                var stats = Settings.values.algStats[algId];
-                if (!stats) stats = Settings.values.algStats[algId] = { reco: [], exec: [] };
+                var stats = getAlgStats();
                 var avgReco = addStatAndAverage(stats.reco, reco);
                 var avgExec = addStatAndAverage(stats.exec, exec);
                 Settings.save();
@@ -71,6 +76,15 @@
                 htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + renderAvg(showAvg, avgReco + avgExec) + '</td></tr>';
                 htm += '</table>';
                 document.getElementById("message").innerHTML = htm;
+            }
+
+            function updateSolveCount(isCorrect) {
+                var stats = getAlgStats();
+                var solves = stats.solves;
+                if (!solves) solves = stats.solves = {total: 0, correct: 0};
+                solves.total += 1;
+                if (isCorrect) solves.correct += 1;
+                Settings.save();
             }
 
             function startRecognition() {
@@ -92,6 +106,7 @@
                 switch (status) {
                     case "correct":
                         stopExecution();
+                        updateSolveCount(true);
                         updateStats();
                         correct.play();
                         document.getElementById("diagram").style.backgroundColor = "green";
@@ -111,6 +126,7 @@
                         break;
                     case "incorrect":
                         stopExecution();
+                        updateSolveCount(false);
                         incorrect.play();
                         document.getElementById("diagram").style.backgroundColor = "darkred";
                         document.getElementById("retry").disabled = false;
