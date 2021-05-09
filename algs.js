@@ -821,7 +821,7 @@ var Algs = (function () {
             { id: "sb_46", alg: "M2 U2 R U' R'", kind: "sb" },
             { id: "sb_47", alg: "r U' r'", kind: "sb" }
         ]},
-        sbsb: { name: "SB (back slot)", source: "https://sites.google.com/view/kianroux/second-block", algs: [
+        sbb: { name: "SB (back slot)", source: "https://sites.google.com/view/kianroux/second-block", algs: [
             { id: "sbb_1", alg: "U' R' U R", kind: "sbb" },
             { id: "sbb_2", alg: "r' U' r", kind: "sbb" },
             { id: "sbb_3", alg: "U2 M' U r' U r", kind: "sbb" },
