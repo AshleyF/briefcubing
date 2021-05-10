@@ -503,29 +503,30 @@
                 kind = "pll"; // default
                 while (Settings.values.algs.length > 0) {
                     var nextAlg;
-                    // TODO: Update random UI options.
-                    if (Settings.values.randomOrder) {
-                        var selectedAlgs = Settings.values.algs;
-
-                        // if (balanced)
-                        nextAlg = randomElement(selectedAlgs);
-
-                        // else if (weighted)
-                        // Calculate the weights based on the success rate.
-                        var algWeights = [];
-                        for (var i = 0; i < selectedAlgs.length; i++) {
-                            var algStat = Settings.values.algStats[selectedAlgs[i]];
-                            var algWeight = 1;
-                            if (algStat && algStat.solves) {
-                                var successRate = algStat.solves.correct / (algStat.solves.total + 1); // + 1 to avoid weight being 0.
-                                algWeight = 1 - successRate;
+                    
+                    var selectedAlgs = Settings.values.algs;
+                    switch (Settings.values.randomOrder) {
+                        case "random_balanced":
+                            nextAlg = randomElement(selectedAlgs);
+                            break;
+                        case "random_weighted_incorrect":
+                            // Calculate the weights based on the incorrect rate.
+                            var algWeights = [];
+                            for (var i = 0; i < selectedAlgs.length; i++) {
+                                var algStat = Settings.values.algStats[selectedAlgs[i]];
+                                var algWeight = 1;
+                                if (algStat && algStat.solves) {
+                                    var successRate = algStat.solves.correct / (algStat.solves.total + 1); // + 1 to avoid weight being 0.
+                                    algWeight = 1 - successRate;
+                                }
+                                algWeights.push(algWeight);
                             }
-                            algWeights.push(algWeight);
-                        }
-                        nextAlg = weightedRandomElement(selectedAlgs, algWeights);
-                    } else {
-                        if (algIndex >= Settings.values.algs.length) algIndex = 0;
-                        nextAlg = Settings.values.algs[algIndex++];
+                            nextAlg = weightedRandomElement(selectedAlgs, algWeights);
+                            break;
+                        case "random_off":
+                        default:
+                            if (algIndex >= Settings.values.algs.length) algIndex = 0;
+                            nextAlg = Settings.values.algs[algIndex++];
                     }
                     var lookup = lookupAlg(nextAlg);
                     if (!lookup) {

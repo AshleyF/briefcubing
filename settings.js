@@ -1,11 +1,11 @@
 var Settings = (function () {
 
-    const VERSION = 4;
+    const VERSION = 5;
 
     var settings = { // defaults
         version: VERSION,
         randomAuf: true,
-        randomOrder: false,
+        randomOrder: "random_off",
         simpleDiagram: false,
         llHide: "show_all",
         upColors: { yellow: true, red: true, blue: false },
@@ -19,23 +19,34 @@ var Settings = (function () {
         var stored = JSON.parse(localStorage.settings);
         if (stored) {
             switch (stored.version) {
-                case 1: // migrate to version 2
+                case 1: // migrate to version 5
                     stored.version = VERSION;
                     settings = stored;
                     settings.algAufPrefs = {};
+                    settings.randomOrder = stored.randomOrder ? "random_balanced" : "random_off";
                     saveSettings();
                     break;
-                case 2: // migrate to version 3
+                case 2: // migrate to version 5
                     stored.version = VERSION;
                     settings = stored;
                     settings.algStats = {};
+                    settings.randomOrder = stored.randomOrder ? "random_balanced" : "random_off";
+                    saveSettings();
                     break;
-                case 3: // accept version 3
+                case 3: // migrate to version 5
                     stored.version = VERSION;
                     settings = stored;
                     settings.llHide = "show_all";
+                    settings.randomOrder = stored.randomOrder ? "random_balanced" : "random_off";
+                    saveSettings();
                     break;
-                case 4: // accept version 3
+                case 4: // migrate to version 5
+                    stored.version = VERSION;
+                    settings = stored;
+                    settings.randomOrder = stored.randomOrder ? "random_balanced" : "random_off";
+                    saveSettings();
+                    break;
+                case 5: // accept version 5
                     settings = stored;
                     break;
                 default: return; // discard unknown version
