@@ -103,7 +103,7 @@
             function settingsToUi() {
                 algIndex = 0;
                 $("#auf").prop('value', Settings.values.randomAuf ? "on" : "off").slider('refresh');
-                $("#order").prop('value', Settings.values.randomOrder ? "on" : "off").slider('refresh');
+                $("#order").prop('value', Settings.values.randomOrder).selectmenu('refresh');
                 $("#simple").prop('value', Settings.values.simpleDiagram ? "on" : "off").slider('refresh');
                 $("#llHide").prop('value', Settings.values.llHide).selectmenu("refresh");
                 for (var c in Settings.values.upColors) {
@@ -140,7 +140,7 @@
 
             function settingsUpdate() {
                 Settings.values.randomAuf = document.getElementById("auf").value == "on";
-                Settings.values.randomOrder = document.getElementById("order").value == "on";
+                Settings.values.randomOrder = $("#order option:selected").val();
                 Settings.values.simpleDiagram = document.getElementById("simple").value == "on";
                 Settings.values.llHide = $("#llHide option:selected").val();
                 var upcols = Settings.values.upColors;
@@ -191,8 +191,10 @@
                 $("#auf").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
                 $("#auf").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
                 $("#order_label").text(Localization.getString("randomOrder"));
-                $("#order").next("div").children("span:nth-child(1)").text(Localization.getString("on"));
-                $("#order").next("div").children("span:nth-child(2)").text(Localization.getString("off"));
+                $("#random_off").text(Localization.getString("off"));
+                $("#random_balanced").text(Localization.getString("randomBalanced"));
+                $("#random_weighted_incorrect").text(Localization.getString("randomWeightedIncorrect"));
+                $("#order").selectmenu("refresh");
                 $("#simple_label").text(Localization.getString("simplifiedDiagram"));
                 $("#hide_label").text(Localization.getString("llHide"));
                 $("#hide_none").text(Localization.getString("llHideNone"));
@@ -343,9 +345,10 @@
                     <option value="on"></option>
                 </select>
                 <label id="order_label" for="order"></label>
-                <select id="order" data-role="slider" data-mini="true" onchange="settingsUpdate()">
-                    <option value="off"></option>
-                    <option value="on"></option>
+                <select name="order" id="order" onchange="settingsUpdate()">
+                    <option id="random_off" value="random_off" selected="selected"></option>
+                    <option id="random_balanced" value="random_balanced"></option>
+                    <option id="random_weighted_incorrect" value="random_weighted_incorrect"></option>
                 </select>
                 <label id="simple_label" for="simple"></label>
                 <select id="simple" data-role="slider" data-mini="true" onchange="settingsUpdate()">

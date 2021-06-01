@@ -23,6 +23,12 @@
             var executionStart = null;
             var executionStop = null;
 
+            function getAlgStats() {
+                var stats = Settings.values.algStats[algId];
+                if (!stats) stats = Settings.values.algStats[algId] = { reco: [], exec: [], solves: {total: 0, correct: 0} };
+                return stats;
+            }
+
             function updateStats() {
                 function renderSpan(span) {
                     span = Math.trunc(span);
@@ -59,18 +65,28 @@
                 var now = new Date();
                 var reco = recognitionStart ? (executionStart || now) - recognitionStart : 0;
                 var exec = executionStart ? (executionStop || now) - executionStart : 0;
-                var stats = Settings.values.algStats[algId];
-                if (!stats) stats = Settings.values.algStats[algId] = { reco: [], exec: [] };
+                var stats = getAlgStats();
                 var avgReco = addStatAndAverage(stats.reco, reco);
                 var avgExec = addStatAndAverage(stats.exec, exec);
                 Settings.save();
                 var showAvg = avgReco && avgExec;
+                var successRate = (stats.solves.correct / stats.solves.total * 100).toFixed(2);
                 var htm = '<table style="margin-left:auto;margin-right:auto">';
                 htm += '<tr><td align="right">' + Localization.getString("recognitionTime") + ':</td><td>' + renderSpan(reco) + renderAvg(showAvg, avgReco) + '</td></tr>';
                 htm += '<tr><td align="right">' + Localization.getString("executionTime") + ':</td><td>' + renderSpan(exec) + renderAvg(showAvg, avgExec) + '</td></tr>';
                 htm += '<tr><td align="right"></td><td style="font-weight: bold; border-top: 1px solid white">' + renderSpan(reco + exec) + renderAvg(showAvg, avgReco + avgExec) + '</td></tr>';
+                htm += '<tr><td align="right">' + Localization.getString("successRate") + ':</td><td align="left">' + successRate + '% (' + stats.solves.correct + '/' + stats.solves.total + ')' + '</td></tr>';
                 htm += '</table>';
                 document.getElementById("message").innerHTML = htm;
+            }
+
+            function updateSolveCount(isCorrect) {
+                var stats = getAlgStats();
+                var solves = stats.solves;
+                if (!solves) solves = stats.solves = {total: 0, correct: 0};
+                solves.total += 1;
+                if (isCorrect) solves.correct += 1;
+                Settings.save();
             }
 
             function startRecognition() {
@@ -92,6 +108,7 @@
                 switch (status) {
                     case "correct":
                         stopExecution();
+                        updateSolveCount(true);
                         updateStats();
                         correct.play();
                         document.getElementById("diagram").style.backgroundColor = "green";
@@ -111,6 +128,7 @@
                         break;
                     case "incorrect":
                         stopExecution();
+                        updateSolveCount(false);
                         incorrect.play();
                         document.getElementById("diagram").style.backgroundColor = "darkred";
                         document.getElementById("retry").disabled = false;
@@ -402,6 +420,29 @@
                 function randomElement(arr) {
                     return arr[Math.floor(Math.random() * arr.length)];
                 }
+                function weightedRandomElement(arr, weights) {
+                    if (arr.length !== weights.length) {
+                        return randomElement(arr);
+                    }
+
+                    var len = arr.length;
+                    var totalWeights = 0;
+                    for (var i = 0; i < len; i++) {
+                        totalWeights += weights[i];
+                    }
+
+                    // Pick a random value akin to random index.
+                    var threshold = Math.random() * totalWeights;
+                    var total = 0;
+                    for (var i = 0; i < len; i++) {
+                        total += weights[i];
+                        if (total >= threshold) {
+                            return arr[i];
+                        }
+                    }
+
+                    return arr[len - 1];
+                }
                 function challenge(cas) {
                     var params = Algs.kindToParams(kind);
                     var scramble = params.scramble;
@@ -460,11 +501,30 @@
                 kind = "pll"; // default
                 while (Settings.values.algs.length > 0) {
                     var nextAlg;
-                    if (Settings.values.randomOrder) {
-                        nextAlg = randomElement(Settings.values.algs);
-                    } else {
-                        if (algIndex >= Settings.values.algs.length) algIndex = 0;
-                        nextAlg = Settings.values.algs[algIndex++];
+                    
+                    var selectedAlgs = Settings.values.algs;
+                    switch (Settings.values.randomOrder) {
+                        case "random_balanced":
+                            nextAlg = randomElement(selectedAlgs);
+                            break;
+                        case "random_weighted_incorrect":
+                            // Calculate the weights based on the incorrect rate.
+                            var algWeights = [];
+                            for (var i = 0; i < selectedAlgs.length; i++) {
+                                var algStat = Settings.values.algStats[selectedAlgs[i]];
+                                var algWeight = 1;
+                                if (algStat && algStat.solves) {
+                                    var successRate = algStat.solves.correct / (algStat.solves.total + 1); // + 1 to avoid weight being 0.
+                                    algWeight = 1 - successRate;
+                                }
+                                algWeights.push(algWeight);
+                            }
+                            nextAlg = weightedRandomElement(selectedAlgs, algWeights);
+                            break;
+                        case "random_off":
+                        default:
+                            if (algIndex >= Settings.values.algs.length) algIndex = 0;
+                            nextAlg = Settings.values.algs[algIndex++];
                     }
                     var lookup = lookupAlg(nextAlg);
                     if (!lookup) {
