@@ -673,7 +673,7 @@ var Algs = (function () {
             { id: "f2l_34", alg: "U (R U R') U2 (R U R')", kind: "f2l" },
             { id: "f2l_35", alg: "(U' R U R') U y' (R' U' R)", kind: "f2l" },
             { id: "f2l_36", alg: "U (F' U' F) U' (R U R')", kind: "f2l" },
-            { id: "f2l_37", alg: "(R U' R') d (R' U2 R) U2' (R' U R)", kind: "f2l" },
+            { id: "f2l_37", alg: "(R U' R') y' U (R' U2 R) U2' (R' U R)", kind: "f2l" }, // y' U instead of d because verification was getting confused
             { id: "f2l_38", alg: "(R U' R' U') R U R' U2 (R U' R')", kind: "f2l" },
             { id: "f2l_39", alg: "(R U' R' U) (R U2' R') U (R U' R')", kind: "f2l" },
             { id: "f2l_40", alg: "(F' U F) U2 (R U R' U) (R U' R')", kind: "f2l" },
