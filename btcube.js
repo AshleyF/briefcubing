@@ -48,7 +48,9 @@ var BtCube = (function () {
     var mg3iDecoder = null;
     var mg3iLastSeq = null;
     var mg3iWarnedUnknownPacket = false;
+    var mg3iInvalidPacketCount = 0;
     var mg3iMac = null;
+    var mg3iMacStorageKey = null;
     var device = null;
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
@@ -123,6 +125,7 @@ var BtCube = (function () {
                 mg3iDecoder = new MG3IDecoder(mg3iMac, MG3I_MODEL_KEY, MG3I_MODEL_IV);
                 mg3iLastSeq = null;
                 mg3iWarnedUnknownPacket = false;
+                mg3iInvalidPacketCount = 0;
                 var cubeService = await server.getPrimaryService(MG3I_SERVICE_UUID);
                 console.log("Found MG3i cube service");
                 
@@ -250,6 +253,8 @@ var BtCube = (function () {
         mg3iDecoder = null;
         mg3iLastSeq = null;
         mg3iMac = null;
+        mg3iMacStorageKey = null;
+        mg3iInvalidPacketCount = 0;
     }
 
     function connected() {
@@ -358,12 +363,17 @@ var BtCube = (function () {
             var decoded = mg3iDecoder.decrypt(val);
             var messageType = extractBits(0, 0, 4, 1, decoded)[0];
             if (messageType != 2) {
+                mg3iInvalidPacketCount++;
                 if (!mg3iWarnedUnknownPacket) {
                     mg3iWarnedUnknownPacket = true;
                     console.log("MG3i ignoring packet type " + messageType);
                 }
+                if (mg3iInvalidPacketCount >= 3) {
+                    replaceMG3iMac();
+                }
                 return;
             }
+            mg3iInvalidPacketCount = 0;
             var seq = extractBits(0, 4, 8, 1, decoded)[0];
             var moveIds = extractBits(1, 4, 5, 7, decoded);
             if (mg3iLastSeq == null) {
@@ -390,6 +400,7 @@ var BtCube = (function () {
 
     async function getMG3iMac(dev) {
         var key = "mg3i-mac:" + (dev.id || dev.name || "default");
+        mg3iMacStorageKey = key;
         var mac = window.localStorage.getItem(key);
         if (isValidMG3iMac(mac)) {
             return normalizeMG3iMac(mac);
@@ -406,6 +417,28 @@ var BtCube = (function () {
             return mac;
         }
         throw new Error("Could not infer MG3i MAC from Bluetooth advertisements");
+    }
+
+    function replaceMG3iMac() {
+        var previousMac = mg3iMac;
+        try {
+            if (mg3iMacStorageKey) {
+                window.localStorage.removeItem(mg3iMacStorageKey);
+            }
+            alert("The saved MG3i MAC address appears to be wrong. Please enter it again.");
+            mg3iMac = promptForMG3iMac();
+            if (mg3iMacStorageKey) {
+                window.localStorage.setItem(mg3iMacStorageKey, mg3iMac);
+            }
+            mg3iDecoder = new MG3IDecoder(mg3iMac, MG3I_MODEL_KEY, MG3I_MODEL_IV);
+            mg3iLastSeq = null;
+            mg3iWarnedUnknownPacket = false;
+            mg3iInvalidPacketCount = 0;
+            console.log("MG3i MAC updated");
+        } catch (ex) {
+            mg3iMac = previousMac;
+            throw ex;
+        }
     }
 
     function promptForMG3iMac() {
