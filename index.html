@@ -304,13 +304,14 @@
         </script>
     </head>
     <body>
-        <div id="main" data-role="page">
-            <div data-role="header" style="height:40px">
-                <a href="#options" style="padding: 3px 6px 0 6px; margin: 2px; border: 0">
-                    <img src="hamburger.svg" width="22px" height="22px" />
-                </a>
-                <h1><img src="logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> <span id="drills"></span></h1>
-            </div>
+            <div id="main" data-role="page">
+                <div data-role="header" style="height:40px">
+                    <a href="#options" style="padding: 3px 6px 0 6px; margin: 2px; border: 0">
+                        <img src="hamburger.svg" width="22px" height="22px" />
+                    </a>
+                    <a href="#tips" data-rel="popup" data-position-to="window" style="padding: 8px 10px 0 10px; margin: 2px; border: 0; font-size: 14px">Tips</a>
+                    <h1><img src="logo_transparent.png" width="22px" height="22px" style="vertical-align: middle; margin-top: -7px" /> <span id="drills"></span></h1>
+                </div>
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
                 <div id="btCube" style="margin-top: -30px; margin-bottom: -20px">
                     <button id="btCubeConnect" onclick="Ui.btCubeConnect()" class="ui-btn ui-mini"></button>
@@ -321,8 +322,8 @@
                 <div id="message" style="text-align: center; margin-top: -3em"></div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
-                <button id="retry" onclick="Ui.retry()" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh"></button>
-                <button id="next" onclick="Ui.next()" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r"></button>
+                <button id="retry" onclick="Ui.retry()" title="Retry. You can also do U'." class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh"></button>
+                <button id="next" onclick="Ui.next()" title="Next. You can also do U." class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r"></button>
             </div>
             <div id="options" data-role="panel" data-display="overlay">
                 <div id="btCubeDisconnectSection" style="display:none">
@@ -377,6 +378,18 @@
                 <a id="feedback" href="mailto:feedback@briefcubing.com?Subject=Feedback%20%28v0.1.6%29%0A"></a>
                 <p style="font-size: xx-small; text-align: right">v0.1.6 &nbsp;&nbsp; &copy; <a href="https://github.com/AshleyF/briefcubing" target="_blank">Ashley Nathan Feniello</a>&nbsp;</p>
                 <p id="visualcube" style="font-size: xx-small; text-align: right"></p>
+            </div>
+            <div id="tips" data-role="popup" data-transition="pop" style="max-width: 28em">
+                <div style="padding: 1em 1.2em">
+                    <h3 style="margin-top: 0">Tips</h3>
+                    <ul style="padding-left: 1.2em; margin-bottom: 0">
+                        <li>When a drill is complete, do <code>U</code> for Next or <code>U'</code> for Retry with a smart cube.</li>
+                        <li>You can also use the footer buttons for Retry and Next.</li>
+                        <li>Tap or click near the center of the cube diagram to cycle the AUF.</li>
+                        <li>If you reach a valid partial state, Retry goes back to that saved partial state instead of the original start.</li>
+                        <li>Four identical turns in a row are treated as a skip and advance after a short delay.</li>
+                    </ul>
+                </div>
             </div>
             <div id="colorScheme" data-role="popup" data-transition="pop">
                 <div style="padding: 1em">
