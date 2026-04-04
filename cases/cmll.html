@@ -20,7 +20,7 @@
         <script src="../algs.js"></script><!-- TODO: remove this dependency -->
         <style>
             body { font-family: sans-serif; }
-            h1, h2, h3 { color: white }
+            h1, h2, h3, h4 { color: white }
         </style>
         <script>
             var Settings = (function () {
@@ -39,43 +39,62 @@
                 var htm = "";
 
                 function head(name) {
-                    htm += "<h2>" + name + "</h2>"
+                    htm += "<h2>" + name + "</h2>";
                 }
 
                 function sub(name) {
-                    htm += "<h3>" + name + "</h3>"
+                    htm += "<h3>" + name + "</h3>";
+                }
+
+                function desc(desc) {
+                    htm += "<h4>" + desc + "</h4>";
                 }
 
                 function diag(alg) {
                     htm += Display.diagramAlg(rot, auf, { alg: alg, kind: "cmll" }, "10em");
                 }
 
+                function rule() {
+                    htm += "<hr />"
+                }
 head("O Cases");
+desc("Top 4 Yellow.")
+sub("O-Solved");
+desc("Front & side match.")
+diag("");
 sub("O-Adjacent Swap");
-diag("R U R2 F' R U R U' R' F R U' R' U");
+desc("Front or side match.<br />" +
+     "One side adjacent. Other opposite (opposite side must match).");
+diag("y2 U' R U R2 F' R U R U' R' F R U' R' U U U");
+diag("y R U R2 F' R U R U' R' F R U' R' U");
+diag("y' U R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U");
 diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U U U");
-diag("U' R U R2 F' R U R U' R' F R U' R' U U U");
-diag("U R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U");
 sub("O-Diagonal Swap");
+desc("Front and side opposite.");
 diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' U U");
+rule();
 head("H Cases");
+desc("Side yellow pair (opposite side must also be yellow).")
 sub("H-Columns");
-diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U U U U");
-diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("y' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
+diag("y2 R U2 R' U' R U' R' R U2 R' U' R U' R' U U U U");
 sub("H-Rows");
-diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' U U U");
-diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U U");
+diag("y R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U U");
+diag("y2 R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' U U U");
 sub("H-Column");
+diag("y2 R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2 U");
+diag("y R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U U U U");
+diag("y' U' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' U2 U U");
-diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2 U");
-diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U U U U");
-diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2");
 sub("H-Row");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U U");
 diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U U U");
 diag("U R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U U U U");
+rule();
 head("Pi Cases");
+desc("Single side yellow and side pair (opposite side must also be single).<br />" +
+     "Single side yellow (far adjacent must be pair).");
 sub("Pi-Right-Bar");
 diag("R U2 R' U' R U' R' U' R U2 R' U' R U' R' U");
 diag("R U2 R' U' R U' R' U R U2 R' U' R U' R' U2 U");
@@ -106,7 +125,10 @@ diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U' R U R2 F' R U R U
 diag("R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U");
 diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U U");
 diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' U U U");
+rule();
 head("U Cases");
+desc("Yellow pair on top and pair on (opposite) side.<br />" +
+     "Yellow pair ot top (opposite side must be pair).");
 sub("U-Forward-Slash");
 diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R'");
 diag("R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' U U");
@@ -137,7 +159,9 @@ diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U 
 diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
 diag("R U2 R' U' R U' R' U' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U U");
 diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U");
+rule();
 head("T Cases");
+desc("Yellow pair on top and single on side (opposide side must be single).");
 sub("T-Left-Bar");
 diag("R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U U");
 diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U2 R U2 R' U' R U' R' R U2 R' U' R U' R' U");
@@ -168,7 +192,9 @@ diag("R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' R U2 R' U' R U' R' R
 diag("R U R2 F' R U R U' R' F R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U U");
 diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
 diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R' F R U' R' U' U U U");
+rule();
 head("S Cases");
+desc("Single yellow on top. Side yellows 'push' counter-clockwise.");
 sub("S-Left-Bar");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U U U");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U R U2 R' U' R U' R' U");
@@ -199,7 +225,9 @@ diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F
 diag("R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R'");
 diag("R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' U2 R U R2 F' R U R U' R' F R U' R' U2 R U2 R' U' R U' R' U U");
+rule();
 head("AS Cases");
+desc("Single yellow on top. Side yellows 'push' clockwise.");
 sub("AS-Right-Bar");
 diag("R U2 R' U' R U' R' U' U U U");
 diag("U' R U2 R' U' R U' R' U'");
@@ -230,7 +258,9 @@ diag("R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U R U R2 F' R U R U' R'
 diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R'");
 diag("R U R2 F' R U R U' R' F R U' R' U2 R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U U U");
 diag("R U R2 F' R U R U' R' F R U' R' U' R U R2 F' R U R U' R' F R U' R' U' R U2 R' U' R U' R' U");
+rule();
 head("L Cases");
+desc("Two yellow diagonally opposite on top. Side yellows face 'L' (inferred if unseen).");
 sub("L-Mirror");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' U' U U U");
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' U U U");
@@ -261,7 +291,17 @@ diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2
 diag("R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2 U U");
 diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' R U R2 F' R U R U' R' F R U' R'");
 diag("U' R U2 R' U' R U' R' R U2 R' U' R U' R' R U2 R' U' R U' R' U' R U R2 F' R U R U' R' F R U' R' U2 U U U");
-
+head("MISORIENTED");
+sub("O-Adjacent Swap");
+diag("y2 U' R U R2 F' R U R U' R' F R U' R' U U U");
+diag("y R U R2 F' R U R U' R' F R U' R' U");
+diag("y' U R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U U U");
+desc("Misoriented")
+diag("y2 U' R U R2 F' R U R U' R' F R U' R' U U U R2");
+diag("y R U R2 F' R U R U' R' F R U' R' U R2");
+diag("y' U R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U R2");
+diag("R U R2 F' R U R U' R' F R U' R' R U R2 F' R U R U' R' F R U' R' U U U R2");
                 document.getElementById("cases").innerHTML = htm;
             }
         </script>
