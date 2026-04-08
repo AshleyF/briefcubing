@@ -393,16 +393,27 @@
                 return undefined;
             }
 
+            function simplifyAuf(alg) {
+                // (U) combinations
+                if (alg.startsWith("(U) U' ")) return alg.substr(7);
+                if (alg.startsWith("(U) U2 ")) return "U' " + alg.substr(7);
+                if (alg.startsWith("(U) U2' ")) return "U' " + alg.substr(8);
+                if (alg.startsWith("(U) U ")) return "U2 " + alg.substr(6);
+                // (U') combinations
+                if (alg.startsWith("(U') U ")) return alg.substr(7);
+                if (alg.startsWith("(U') U2 ")) return "U " + alg.substr(8);
+                if (alg.startsWith("(U') U2' ")) return "U " + alg.substr(9);
+                if (alg.startsWith("(U') U' ")) return "U2 " + alg.substr(8);
+                // (U2) combinations
+                if (alg.startsWith("(U2) U2 ")) return alg.substr(8);
+                if (alg.startsWith("(U2) U2' ")) return alg.substr(9);
+                if (alg.startsWith("(U2) U' ")) return "U " + alg.substr(8);
+                if (alg.startsWith("(U2) U ")) return "U' " + alg.substr(7);
+                return alg;
+            }
+
             function next() {
                 function prependAuf(alg) {
-                    function simplifyAuf(alg) {
-                        // applies to L4E algs
-                        if (alg.startsWith("(U) U2 ")) return "U' " + alg.substr(7);
-                        if (alg.startsWith("(U) U2' ")) return "U' " + alg.substr(8);
-                        if (alg.startsWith("(U') U2 ")) return "U " + alg.substr(8);
-                        if (alg.startsWith("(U') U2' ")) return "U " + alg.substr(9);
-                        return alg;
-                    }
                     var sansAuf = alg;
                     if (Algs.kindToParams(kind).diagram.stripAuf) {
                         if (alg.startsWith("U ")) sansAuf = alg.substr(2);
@@ -414,7 +425,7 @@
                     if (verifyComplete(Cube.alg(sansAufSansParens, testInstance))) return sansAuf;
                     if (verifyComplete(Cube.alg("U " + sansAufSansParens, testInstance))) return simplifyAuf("(U) " + sansAuf);
                     if (verifyComplete(Cube.alg("U' " + sansAufSansParens, testInstance))) return simplifyAuf("(U') " + sansAuf);
-                    if (verifyComplete(Cube.alg("U2 " + sansAufSansParens, testInstance))) return "(U2) " + sansAuf;
+                    if (verifyComplete(Cube.alg("U2 " + sansAufSansParens, testInstance))) return simplifyAuf("(U2) " + sansAuf);
                     throw "No possible solution!";
                 }
                 function randomElement(arr) {
@@ -566,7 +577,8 @@
                     update(instance);
                     var aufDisplay = auf == "" ? "" : "(" + auf.substr(0, auf.length - 1) + ") ";
                     var lookup = lookupAlg(algId);
-                    document.getElementById("popup").innerHTML = '<h4>' + aufDisplay + lookup.alg.display + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                    var displayAlg = simplifyAuf(aufDisplay + lookup.alg.display);
+                    document.getElementById("popup").innerHTML = '<h4>' + displayAlg + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                 }
             }
 
