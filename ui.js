@@ -12,6 +12,7 @@
             var completed = false;
             var partial = null;
             var initiallyPartial = false;
+            var scramble = null;
             var algIndex = 0;
 
             var incorrect = new Audio("incorrect.wav");
@@ -545,6 +546,7 @@
                     }
                     algId = lookup.alg.kind + "_" + lookup.alg.id;
                     challenge(lookup.alg);
+                    scramble = instance;
                     document.getElementById("popup").innerHTML = '<h4>' + prependAuf(lookup.alg.display) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
                     setStatus("init");
                     break;
@@ -583,7 +585,7 @@
             }
 
             function retry() {
-                if (partial) instance = partial;
+                if (scramble) instance = scramble;
                 alg = "";
                 update(instance);
                 setStatus("init");

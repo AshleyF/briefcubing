@@ -92,6 +92,9 @@
                 if (!BtCube.connected()) Ui.showConnectButton();
                 Ui.next();
                 $("#cube").bind("click", Ui.adjustAUF);
+                $(document).on("keydown", function(e) {
+                    if (e.key === "ArrowRight") { Ui.next(); }
+                });
             });
 
             $(document).on("panelbeforeopen", "#options", function() {
@@ -323,7 +326,7 @@
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">
                 <button id="retry" onclick="Ui.retry()" title="Retry. You can also do U'." class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-refresh"></button>
-                <button id="next" onclick="Ui.next()" title="Next. You can also do U." class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r"></button>
+                <button id="next" onclick="Ui.next()" title="Next. You can also do U or press →." class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-carat-r"></button>
             </div>
             <div id="options" data-role="panel" data-display="overlay">
                 <div id="btCubeDisconnectSection" style="display:none">
@@ -383,7 +386,7 @@
                 <div style="padding: 1em 1.2em">
                     <h3 style="margin-top: 0">Tips</h3>
                     <ul style="padding-left: 1.2em; margin-bottom: 0">
-                        <li>After success: <code>U</code> = Next, <code>U'</code> = Retry.</li>
+                        <li>After success: <code>U</code> or <code>→</code> = Next, <code>U'</code> = Retry.</li>
                         <li>Tap the cube center to cycle AUF.</li>
                         <li>Four same turns in a row skip ahead.</li>
                     </ul>
