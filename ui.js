@@ -460,14 +460,18 @@
                     var scramble = params.scramble;
                     if (!cas) cas = { id: "unknown", name: "", alg: "", kind: "coll" }; // solved (default)
                     auf = "";
+                    var hasSavedAuf = Object.prototype.hasOwnProperty.call(Settings.values.algAufPrefs, algId);
                     if (scramble.allowAuf) {
-                        if (Settings.values.randomAuf) {
-                            auf = randomElement(["", "U ", "U' ", "U2 "]);
-                        } else {
+                        if (hasSavedAuf) {
                             auf = Settings.values.algAufPrefs[algId] || "";
+                        } else if (Settings.values.randomAuf) {
+                            auf = randomElement(["", "U ", "U' ", "U2 "]);
                         }
                     }
-                    if (scramble.randomSingleU) auf = randomElement(["U ", "U' "]); // used by L4E algs
+                    if (scramble.randomSingleU) {
+                        // For L4E-style drills, prefer the user's saved AUF if they clicked one.
+                        auf = hasSavedAuf ? (Settings.values.algAufPrefs[algId] || "") : randomElement(["U ", "U' "]);
+                    }
                     solution = auf + cas.alg;
                     instance = Cube.solved;
                     // up color
@@ -573,6 +577,9 @@
                 var y = e.offsetY / e.currentTarget.clientHeight;
                 if (x > 0.15 && x < 0.85 && y > 0.15 && y < 0.85) { // near center to avoid intercepting taps on other UI elements
                     auf = next();
+                    if (Settings.values.randomAuf) {
+                        Settings.values.randomAuf = false;
+                    }
                     Settings.values.algAufPrefs[algId] = auf;
                     Settings.save();
                     instance = Cube.alg("U", instance);

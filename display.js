@@ -253,6 +253,7 @@ var Display = (function () {
             }
         }
         return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
+                   'style="max-width: min(96vw, 58vh); max-height: min(96vw, 58vh)"' +
                    'width="' + (size || '100vmin') + '" height="' + (size || '100vmin') + '" viewBox="-0.9 -0.9 1.8 1.8">' +
                    '<rect fill="transparent" x="-0.9" y="-0.9" width="1.8" height="1.8"/>' +
                    '<g style="stroke-width:0.1;stroke-linejoin:round;opacity:1">' +
