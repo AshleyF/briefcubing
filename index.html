@@ -173,6 +173,7 @@
                     $('#' + s).prop('checked', all).checkboxradio('refresh');
                     document.getElementById(s + "_title").style.color = (some ? "#6ad" : "white");
                 }
+                refreshSetRatingFilterControls();
                 Settings.values.timeout = document.getElementById("timeout").value;
                 document.getElementById("timeout_value").innerText = Settings.values.timeout == 10.5 ? '∞' : Settings.values.timeout;
                 Settings.values.allowSleep = document.getElementById("allowSleep").value == "on";
@@ -187,7 +188,7 @@
                     $("#lang_" + l).text(Localization.getString("lang_" + l));
                 }
                 for (var s in Algs.sets) {
-                    $("#all_" + s).text(Localization.getString("allCases").replace("[ALG]", Algs.sets[s].name));
+                    $("#all_" + s).text(genericAllCasesLabel());
                     $("#info_" + s).text(Localization.getString("moreInfo"));
                 }
                 $("#auf_label").text(Localization.getString("randomAuf"));
@@ -216,7 +217,6 @@
                 $("#feedback").text(Localization.getString("feedback"));
                 $("#btCubeConnect").text(Localization.getString("btCubeConnect"));
                 $("#btCubeDisconnect").text(Localization.getString("btCubeDisconnect"));
-                $("#btCubeBuy").text(Localization.getString("btCubeBuy"));
                 $("#retry").text(Localization.getString("retry"));
                 $("#next").text(Localization.getString("next"));
                 $("#visualcube").html(Localization.getString("diagramCredit").replace("[LINK]", '<a href="http://cube.crider.co.uk/visualcube.php" target="_blank">VisualCube</a>'));
@@ -237,6 +237,78 @@
                 settingsUpdate();
             }
 
+            function settingsToggleRatedCases(name, rating) {
+                if (rating != "up" && rating != "down") return;
+                var set = Algs.sets[name];
+                if (!set) return;
+                var targets = [];
+                var allSelected = true;
+                for (var a in set.algs) {
+                    var alg = set.algs[a];
+                    var key = alg.kind + '_' + alg.id;
+                    if ((Settings.values.algRatings[key] || "") != rating) continue;
+                    var id = name + '_' + alg.id;
+                    var cb = document.getElementById(id);
+                    if (!cb) continue;
+                    targets.push({ id: id, checked: cb.checked });
+                    if (!cb.checked) allSelected = false;
+                }
+                if (targets.length == 0) return;
+
+                // Match the All cases behavior for this subgroup:
+                // if all are selected, turn all off; otherwise turn all on.
+                var targetChecked = !allSelected;
+                for (var i = 0; i < targets.length; i++) {
+                    var t = targets[i];
+                    $('#' + t.id).prop('checked', targetChecked).checkboxradio('refresh');
+                }
+                settingsUpdate();
+            }
+
+            function refreshSetRatingFilterControls() {
+                function setEnabled(btnId, enabled) {
+                    var btn = document.getElementById(btnId);
+                    if (!btn) return;
+                    btn.className = btn.className.replace(/\s*is-disabled\b/g, "");
+                    if (!enabled) btn.className += " is-disabled";
+                }
+                function setSelected(btnId, selected) {
+                    var btn = document.getElementById(btnId);
+                    if (!btn) return;
+                    btn.className = btn.className.replace(/\s*is-selected\b/g, "");
+                    if (selected) btn.className += " is-selected";
+                }
+                for (var s in Algs.sets) {
+                    var set = Algs.sets[s];
+                    var hasUp = false;
+                    var hasDown = false;
+                    var upTotal = 0;
+                    var downTotal = 0;
+                    var upSelected = 0;
+                    var downSelected = 0;
+                    for (var a in set.algs) {
+                        var alg = set.algs[a];
+                        var rating = Settings.values.algRatings[alg.kind + '_' + alg.id] || "";
+                        var cb = document.getElementById(s + '_' + alg.id);
+                        var checked = cb && cb.checked;
+                        if (rating == "up") {
+                            hasUp = true;
+                            upTotal++;
+                            if (checked) upSelected++;
+                        }
+                        else if (rating == "down") {
+                            hasDown = true;
+                            downTotal++;
+                            if (checked) downSelected++;
+                        }
+                    }
+                    setEnabled('toggle_up_' + s, hasUp);
+                    setEnabled('toggle_down_' + s, hasDown);
+                    setSelected('toggle_up_' + s, hasUp && upSelected == upTotal);
+                    setSelected('toggle_down_' + s, hasDown && downSelected == downTotal);
+                }
+            }
+
             function upColorToRot() {
                 var upcols = Settings.values.upColors;
                 if (upcols.yellow) return "";
@@ -248,6 +320,40 @@
             }
 
             var lastRot = undefined;
+
+            function genericAllCasesLabel() {
+                return Localization.getString("allCases")
+                    .replace("[ALG] ", "")
+                    .replace(" [ALG]", "")
+                    .replace("[ALG]", "")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            }
+
+            function ratingGlyph(rating) {
+                switch (rating) {
+                    case "up": return "&#10003;";
+                    case "down": return "&#10005;";
+                    default: return "";
+                }
+            }
+
+            function updateAlgRatingIndicators() {
+                for (var s in Algs.sets) {
+                    var set = Algs.sets[s];
+                    for (var a in set.algs) {
+                        var alg = set.algs[a];
+                        var id = s + '_' + alg.id;
+                        var ratingEl = document.getElementById('rating_' + id);
+                        if (!ratingEl) continue;
+                        var rating = Settings.values.algRatings[alg.kind + '_' + alg.id] || "";
+                        ratingEl.innerHTML = ratingGlyph(rating);
+                        ratingEl.className = 'menu-rating-overlay' + (rating ? (' menu-rating-' + rating) : '');
+                    }
+                }
+                refreshSetRatingFilterControls();
+            }
+
             function buildAlgOptions() {
                 var rot = upColorToRot();
                 if (rot == lastRot) return;
@@ -256,14 +362,21 @@
                 for (var s in Algs.sets) {
                     var set = Algs.sets[s];
                     htm += '<div id="cmllFieldset" data-role="collapsible"><h3><span id="' + s + '_title">' + set.name + '</span></h3>';
-                    htm += '<input id="' + s + '" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label id="all_' + s + '" for="' + s + '">' + Localization.getString("allCases").replace("[ALG]", set.name) + '</label>';
+                    htm += '<div class="set-all-row">';
+                    htm += '<input id="' + s + '" class="set-all-toggle" type="checkbox" onchange="settingsAllCasesUpdate(\'' + s + '\')" data-mini="true" /><label id="all_' + s + '" for="' + s + '">' + genericAllCasesLabel() + '</label>';
+                    htm += '<span class="set-filter-controls">';
+                    htm += '<a id="toggle_up_' + s + '" href="javascript:settingsToggleRatedCases(\'' + s + '\',\'up\')" class="set-filter-btn set-filter-up" title="Toggle selection for check-marked cases">&#10003;</a>';
+                    htm += '<a id="toggle_down_' + s + '" href="javascript:settingsToggleRatedCases(\'' + s + '\',\'down\')" class="set-filter-btn set-filter-down" title="Toggle selection for X-marked cases">&#10005;</a>';
+                    htm += '</span>';
+                    htm += '</div>';
                     htm += '<fieldset data-role="controlgroup" data-type="horizontal">';
                     for (var a in set.algs) {
                         var alg = set.algs[a];
                         var id = s + '_' + alg.id;
                         var auf = Settings.values.algAufPrefs[id] || "";
+                        var rating = Settings.values.algRatings[alg.kind + '_' + alg.id] || "";
                         var diag = Display.diagramAlg(rot, auf, alg, "5.1em");
-                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span id="diag_' + id + '">' + diag + '</span></label>';
+                        htm += '<input id="' + id + '" type="checkbox" onchange="settingsUpdate()" data-mini="true" /><label for="' + id + '"><span class="diag-wrap"><span id="diag_' + id + '">' + diag + '</span><span id="rating_' + id + '" class="menu-rating-overlay' + (rating ? (' menu-rating-' + rating) : '') + '">' + ratingGlyph(rating) + '</span></span></label>';
                     }
                     htm += '</fieldset>';
                     htm += '<a id="info_' + s + '" target="_blank" href="' + set.source + '">' + Localization.getString("moreInfo") + '</a>';
@@ -271,6 +384,8 @@
                 }
                 document.getElementById("algs").innerHTML = htm;
                 $("#options").trigger("create");
+                updateAlgRatingIndicators();
+                refreshSetRatingFilterControls();
             }
 
             function updateAlgColors() {
@@ -318,10 +433,13 @@
             <div id="diagram" role="main" class="ui-content" style="margin-left: -16px">
                 <div id="btCube" style="margin-top: -30px; margin-bottom: -20px">
                     <button id="btCubeConnect" onclick="Ui.btCubeConnect()" class="ui-btn ui-mini"></button>
-                    <a id="btCubeBuy" target="_blank" href="https://amzn.to/2DVcCnV" style="padding-left: 20px"></a>
                 </div>
                 <h1 id="status" style="text-align: center; width: 100%; overflow: hidden; margin-bottom: 80px" style="display: none"></h1>
                 <div id="cube" style="text-align: center; margin-top: -80px;"></div>
+                <div id="algRatingControls" style="text-align: center">
+                    <button id="thumbUp" onclick="Ui.toggleThumb('up')" class="ui-btn ui-btn-inline ui-mini rating-btn" title="Mark this algorithm as good"><span class="rating-glyph">&#10003;</span></button>
+                    <button id="thumbDown" onclick="Ui.toggleThumb('down')" class="ui-btn ui-btn-inline ui-mini rating-btn" title="Mark this algorithm as needs practice"><span class="rating-glyph">&#10005;</span></button>
+                </div>
                 <div id="message" style="text-align: center; margin-top: -3em"></div>
             </div>
             <div data-role="footer" data-position="fixed" style="height:52px">

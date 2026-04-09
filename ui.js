@@ -371,6 +371,36 @@
             var kind = "";
             var setName = "";
 
+            function currentRating() {
+                if (!algId) return "";
+                return Settings.values.algRatings[algId] || "";
+            }
+
+            function updateThumbButtons() {
+                var up = document.getElementById("thumbUp");
+                var down = document.getElementById("thumbDown");
+                if (!up || !down) return;
+
+                var rating = currentRating();
+                up.className = up.className.replace(/\s*is-selected\b/g, "");
+                down.className = down.className.replace(/\s*is-selected\b/g, "");
+                if (rating == "up") up.className += " is-selected";
+                if (rating == "down") down.className += " is-selected";
+            }
+
+            function persistRating(rating) {
+                if (!algId) return;
+                var curr = currentRating();
+                if (curr == rating) {
+                    delete Settings.values.algRatings[algId];
+                } else {
+                    Settings.values.algRatings[algId] = rating;
+                }
+                Settings.save();
+                updateThumbButtons();
+                if (typeof updateAlgRatingIndicators == "function") updateAlgRatingIndicators();
+            }
+
             function update(cube) {
                 var simple = Settings.values.simpleDiagram;
                 var hide = Settings.values.llHide;
@@ -551,17 +581,25 @@
                     algId = lookup.alg.kind + "_" + lookup.alg.id;
                     challenge(lookup.alg);
                     scramble = instance;
-                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(lookup.alg.display) + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(lookup.alg.display) + '</h4>';
                     setStatus("init");
+                    updateThumbButtons();
                     break;
                 }
                 if (Settings.values.algs.length == 0) {
                     challenge(undefined); // solved (default)
+                    algId = "";
                     document.getElementById("popup").innerText = "";
                     setStatus("error");
+                    updateThumbButtons();
                 }
                 update(instance);
                 $("#popup").popup("close");
+            }
+
+            function toggleThumb(rating) {
+                if (rating != "up" && rating != "down") return;
+                persistRating(rating);
             }
 
             function adjustAUF(e) {
@@ -587,7 +625,7 @@
                     var aufDisplay = auf == "" ? "" : "(" + auf.substr(0, auf.length - 1) + ") ";
                     var lookup = lookupAlg(algId);
                     var displayAlg = simplifyAuf(aufDisplay + lookup.alg.display);
-                    document.getElementById("popup").innerHTML = '<h4>' + displayAlg + '</h4><a target="_blank" style="padding-left: 0.5em" href="' + lookup.set.source + '">' + Localization.getString("moreInfo") + '</a>';
+                    document.getElementById("popup").innerHTML = '<h4>' + displayAlg + '</h4>';
                 }
             }
 
@@ -605,6 +643,7 @@
                 next: next,
                 retry: retry,
                 adjustAUF: adjustAUF,
+                toggleThumb: toggleThumb,
                 showConnectButton: showConnectButton
             };
         }());

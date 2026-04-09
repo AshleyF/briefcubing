@@ -29,6 +29,77 @@ hr {
     padding: 0.1em;
 }
 
+.set-all-row {
+    display: flex;
+    align-items: center;
+}
+
+.set-all-row label {
+    flex: 1;
+}
+
+.set-filter-controls {
+    white-space: nowrap;
+    margin-left: 0.4em;
+}
+
+.set-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.55em;
+    height: 1.55em;
+    font-size: 0.95em;
+    font-weight: 800;
+    text-decoration: none !important;
+    border: 1px solid #666;
+    border-radius: 0.2em;
+    background: #222;
+    color: #fff !important;
+    margin-left: 0.18em;
+}
+
+.set-filter-up {
+    color: #fff !important;
+}
+
+.set-filter-down {
+    color: #fff !important;
+}
+
+.set-filter-btn.is-selected {
+    background: #5393c5;
+    border-color: #2373a5;
+    color: #fff !important;
+}
+
+.set-filter-btn.is-disabled {
+    color: #666 !important;
+    border-color: #555;
+    background: #222;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* All cases checkbox: plain square, blue fill when checked (no checkmark glyph). */
+#algs .set-all-row .ui-btn.ui-checkbox-off:after,
+#algs .set-all-row .ui-btn.ui-checkbox-on:after {
+    background-image: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    margin-right: 2px;
+    border: 1px solid #666;
+    border-radius: 0.2em;
+    background-color: transparent;
+    opacity: 1;
+}
+
+#algs .set-all-row .ui-btn.ui-checkbox-on:after {
+    background-color: #5393c5;
+    border-color: #2373a5;
+}
+
 input.color {
     width: 3em;
     height: 3em;
@@ -49,4 +120,92 @@ a {
 
 .ui-slider-track {
     margin-left: 3em;
+}
+
+#algRatingControls {
+    margin-top: -0.2em;
+    margin-bottom: 0.5em;
+}
+
+.rating-btn {
+    opacity: 0.75;
+    color: #000 !important;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.rating-glyph {
+    font-size: 1.5em;
+    font-weight: 800;
+    line-height: 1;
+    display: inline-block;
+}
+
+.rating-btn.is-selected {
+    opacity: 1;
+    box-shadow: none;
+}
+
+#thumbUp.is-selected {
+    color: #127a12 !important;
+}
+
+#thumbDown.is-selected {
+    color: #cc1e1e !important;
+}
+
+/* Remove jQuery Mobile blue active/focus glow for these controls. */
+.rating-btn.ui-btn-active,
+.rating-btn.ui-focus,
+.rating-btn:focus {
+    background-color: transparent !important;
+    background-image: none !important;
+    text-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+#thumbUp.is-selected.ui-btn,
+#thumbUp.is-selected.ui-btn-active {
+    color: #127a12 !important;
+    border-color: #127a12 !important;
+}
+
+#thumbDown.is-selected.ui-btn,
+#thumbDown.is-selected.ui-btn-active {
+    color: #cc1e1e !important;
+    border-color: #cc1e1e !important;
+}
+
+.diag-wrap {
+    display: inline-block;
+    position: relative;
+}
+
+.menu-rating-overlay {
+    position: absolute;
+    bottom: 0.14em;
+    right: 0.18em;
+    display: none;
+    line-height: 1;
+    text-align: center;
+    font-size: 0.96em;
+    font-weight: 800;
+    color: #000;
+    opacity: 1;
+    pointer-events: none;
+}
+
+.menu-rating-up,
+.menu-rating-down {
+    display: block;
+}
+
+.menu-rating-up {
+    color: #127a12;
+}
+
+.menu-rating-down {
+    color: #cc1e1e;
 }
