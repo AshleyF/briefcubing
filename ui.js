@@ -370,6 +370,50 @@
             var id = "";
             var kind = "";
             var setName = "";
+            var history = [];
+            var historyIndex = -1;
+
+            function pushHistory(status, popupHtml) {
+                if (historyIndex < history.length - 1) {
+                    history = history.slice(0, historyIndex + 1);
+                }
+                history.push({
+                    instance: instance,
+                    scramble: scramble,
+                    algId: algId,
+                    auf: auf,
+                    solution: solution,
+                    id: id,
+                    kind: kind,
+                    setName: setName,
+                    status: status,
+                    popupHtml: popupHtml
+                });
+                historyIndex = history.length - 1;
+            }
+
+            function restoreHistory(entry) {
+                if (!entry) return;
+                instance = entry.instance;
+                scramble = entry.scramble;
+                algId = entry.algId;
+                auf = entry.auf;
+                solution = entry.solution;
+                id = entry.id;
+                kind = entry.kind;
+                setName = entry.setName;
+                alg = "";
+                partial = null;
+                initiallyPartial = false;
+                recognitionStart = null;
+                executionStart = null;
+                executionStop = null;
+                document.getElementById("popup").innerHTML = entry.popupHtml || "";
+                setStatus(entry.status || "init");
+                updateThumbButtons();
+                update(instance);
+                $("#popup").popup("close");
+            }
 
             function currentRating() {
                 if (!algId) return "";
@@ -545,6 +589,8 @@
                 alg = "";
                 id = "";
                 kind = "pll"; // default
+                var status = "error";
+                var popupHtml = "";
                 while (Settings.values.algs.length > 0) {
                     var nextAlg;
                     
@@ -581,20 +627,32 @@
                     algId = lookup.alg.kind + "_" + lookup.alg.id;
                     challenge(lookup.alg);
                     scramble = instance;
-                    document.getElementById("popup").innerHTML = '<h4>' + prependAuf(lookup.alg.display) + '</h4>';
-                    setStatus("init");
+                    popupHtml = '<h4>' + prependAuf(lookup.alg.display) + '</h4>';
+                    document.getElementById("popup").innerHTML = popupHtml;
+                    status = "init";
+                    setStatus(status);
                     updateThumbButtons();
                     break;
                 }
                 if (Settings.values.algs.length == 0) {
                     challenge(undefined); // solved (default)
                     algId = "";
-                    document.getElementById("popup").innerText = "";
-                    setStatus("error");
+                    scramble = instance;
+                    popupHtml = "";
+                    document.getElementById("popup").innerText = popupHtml;
+                    status = "error";
+                    setStatus(status);
                     updateThumbButtons();
                 }
+                pushHistory(status, popupHtml);
                 update(instance);
                 $("#popup").popup("close");
+            }
+
+            function previous() {
+                if (historyIndex <= 0) return;
+                historyIndex--;
+                restoreHistory(history[historyIndex]);
             }
 
             function toggleThumb(rating) {
@@ -641,6 +699,7 @@
                 btCubeConnect: btCubeConnect,
                 btCubeDisconnect: btCubeDisconnect,
                 next: next,
+                previous: previous,
                 retry: retry,
                 adjustAUF: adjustAUF,
                 toggleThumb: toggleThumb,

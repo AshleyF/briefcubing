@@ -92,8 +92,9 @@
                 if (!BtCube.connected()) Ui.showConnectButton();
                 Ui.next();
                 $("#cube").bind("click", Ui.adjustAUF);
-                $(document).on("keydown", function(e) {
+                $(document).off("keydown.briefcubingNav").on("keydown.briefcubingNav", function(e) {
                     if (e.key === "ArrowRight") { Ui.next(); }
+                    if (e.key === "ArrowLeft") { Ui.previous(); }
                 });
             });
 
