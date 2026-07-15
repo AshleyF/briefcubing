@@ -679,6 +679,7 @@
                     Settings.values.algAufPrefs[algId] = auf;
                     Settings.save();
                     instance = Cube.alg("U", instance);
+                    scramble = instance; // retry from the adjusted AUF, not the original challenge
                     update(instance);
                     var aufDisplay = auf == "" ? "" : "(" + auf.substr(0, auf.length - 1) + ") ";
                     var lookup = lookupAlg(algId);
