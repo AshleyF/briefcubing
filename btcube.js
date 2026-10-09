@@ -52,13 +52,14 @@ var BtCube = (function () {
     var mg3iMac = null;
     var mg3iMacStorageKey = null;
     var device = null;
+    var ganV4Connection = null;
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             device = await window.navigator.bluetooth.requestDevice({
             filters: [{ namePrefix: "Gi" }, { namePrefix: "Mi Smart Magic Cube" }, { namePrefix: "GAN" }, { namePrefix: "MG3i" }, { namePrefix: "GoCube_" }, { namePrefix: "Rubiks_" }],
             optionalServices: [
                 GIIKER_SERVICE_UUID,
-                GAN_SERVICE_UUID, GAN_SERVICE_UUID_META,
+                GAN_SERVICE_UUID, GAN_SERVICE_UUID_META, GanV4.SERVICE_UUID,
                 GOCUBE_SERVICE_UUID,
                 MG3I_SERVICE_UUID,  // GAN MonsterGo MG3i
                 "00001800-0000-1000-8000-00805f9b34fb",  // Generic Access
@@ -140,6 +141,9 @@ var BtCube = (function () {
                 console.log("Found MG3i cube characteristic, starting notifications");
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onMG3iCharacteristicChanged.bind(twistCallback));
                 await cubeCharacteristic.startNotifications();
+            } else if (server.device.name.startsWith("GAN") && await hasGanV4Service(server)) {
+                var ganV4Service = await server.getPrimaryService(GanV4.SERVICE_UUID);
+                ganV4Connection = await GanV4.connect(device, ganV4Service, twistCallback);
             } else if (server.device.name.startsWith("GAN")) {
                 console.log("Attempting to connect as GAN device");
                 ganDecoder = null;
@@ -243,12 +247,27 @@ var BtCube = (function () {
         } catch (ex) {
             console.error("Connection error: " + ex);
             console.error("Full error: ", ex);
+            if (ganV4Connection) ganV4Connection.close();
+            ganV4Connection = null;
+            if (device && device.gatt && device.gatt.connected) device.gatt.disconnect();
             device = null;
             errorCallback(ex);
         }
     }
 
+    async function hasGanV4Service(server) {
+        try {
+            await server.getPrimaryService(GanV4.SERVICE_UUID);
+            return true;
+        } catch (e) {
+            if (e.name === "NotFoundError") return false;
+            throw e;
+        }
+    }
+
     function disconnected() {
+        if (ganV4Connection) ganV4Connection.close();
+        ganV4Connection = null;
         device = null;
         mg3iDecoder = null;
         mg3iLastSeq = null;
@@ -263,6 +282,8 @@ var BtCube = (function () {
 
     function disconnect() {
         // note: does not call disconnectedCallback
+        if (ganV4Connection) ganV4Connection.close();
+        ganV4Connection = null;
         if (connected()) device.gatt.disconnect();
     }
 

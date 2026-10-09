@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GAN Gen4 hardware verification · Brief Drills</title>
+<style>
+:root{font:16px system-ui,-apple-system,sans-serif;color-scheme:dark;background:#141821;color:#eef3ff}
+body{max-width:920px;margin:24px auto;padding:0 16px 60px;line-height:1.5}
+h1{font-size:1.9rem;margin-bottom:0}h2{font-size:1.25rem}
+p{color:#cbd3e4}a{color:#9ccaff}small{color:#aeb9ce}
+button{font:inherit;padding:10px 15px;border:1px solid #64748b;border-radius:9px;background:#273344;color:white;cursor:pointer;margin:3px}
+button:disabled{opacity:.4;cursor:default}button.primary{background:#1865b9;border-color:#3989f1}
+section{border:1px solid #374151;border-radius:12px;padding:16px;margin-top:20px}
+.status{font-weight:700} .ok{color:#81dca8}.bad{color:#ff9a9a}.pending{color:#eace82}
+.step{border-top:1px solid #384253;padding:12px 0}.step:first-of-type{border-top:0}
+code,pre{font-family:ui-monospace,SFMono-Regular,monospace}pre{background:#0b1018;padding:12px;max-height:240px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.count{font-size:1.3rem;font-weight:700} .move{font-size:2rem;min-width:55px;display:inline-block;font-weight:700}
+fieldset{border:0;padding:0;margin:4px 0}label{margin-right:15px}
+</style>
+</head>
+<body>
+<h1>GAN Gen4 hardware verification</h1>
+<p>Manual hardware acceptance tests for <a href="https://github.com/AshleyF/briefcubing">Brief Drills</a>. This page runs entirely in your browser using the same <code>gan-v4.js</code> implementation as the proposed fix. It does not upload cube data or require an account.</p>
+<section>
+<h2>1. Connection</h2>
+<p>Use Chrome on macOS, Linux, or Android. Close csTimer/Cubeast before testing. Turn the cube to wake it. Bluetooth requires HTTPS (or localhost).</p>
+<p><button class="primary" id="connect">Connect cube</button><button id="disconnect" disabled>Disconnect</button><span class="status pending" id="status">Not connected</span></p>
+<div>Device: <code id="device">—</code> · Decrypted packets: <strong id="packets">0</strong> · decoded turns: <strong id="turns">0</strong></div>
+<p><small>On first connection you may be prompted for your cube's Bluetooth MAC. This is used locally to decrypt messages and stored only in this browser. Do not include the MAC in a shared test report.</small></p>
+</section>
+<section>
+<h2>2. Guided move verification</h2>
+<p>Do each step by physically turning the cube exactly once as shown. Use the clockwise direction relative to the face you're looking at. The checker rejects extra, missing, or wrong moves; it does not infer correctness from connection alone.</p>
+<div id="steps"></div>
+<p>Latest event: <span class="move" id="latest">—</span></p>
+</section>
+<section>
+<h2>3. Robustness checks</h2>
+<p>These checks require manual observation. Mark PASS only after testing them; leave anything untested as NOT RUN.</p>
+<div id="manual"></div>
+</section>
+<section>
+<h2>4. Share results</h2>
+<p>Export a JSON report containing only test outcomes, counted turns, browser information, and sanitized diagnostics. No cube MAC, Bluetooth device ID, or unencrypted raw packets are exported. Upload the file to the PR or paste its contents in the discussion.</p>
+<p><button id="download">Export JSON report</button><button id="copy">Copy JSON</button><button id="reset">Reset checks</button></p>
+<pre id="log" aria-live="polite"></pre>
+</section>
+<script src="btcube.js"></script>
+<script src="gan-v4.js"></script>
+<script>
+"use strict";
+const tests = [
+    {name:"U", expected:"U"}, {name:"U'", expected:"U'"},
+    {name:"R", expected:"R"}, {name:"R'", expected:"R'"},
+    {name:"F", expected:"F"}, {name:"F'", expected:"F'"},
+    {name:"D", expected:"D"}, {name:"D'", expected:"D'"},
+    {name:"L", expected:"L"}, {name:"L'", expected:"L'"},
+    {name:"B", expected:"B"}, {name:"B'", expected:"B'"}
+];
+const manual = [
+    ["Repeat a fast R U R' U' sequence 10 times","Compare the exact 40-move recording against the sequence. No drops or duplicates."],
+    ["Disconnect and reconnect","Disconnect using the button and reconnect. Verify the initial counter resets correctly."],
+    ["Leave the cube idle for 60 seconds","Turn R once afterwards. Verify that the site continues receiving moves."],
+    ["Use Brief Drills itself","On the branch build, run an OLL practice session and verify cube turns are tracked correctly."]
+];
+const $=id=>document.getElementById(id);
+let device=null,connection=null,packets=0,moves=[],events=[],status="not_run";
+let activeTest=-1,testStart=0,testResults=tests.map(()=> "not_run");
+let manualResults=manual.map(()=> "not_run"),busy=false;
+function log(message){
+    const time=new Date().toISOString();
+    events.push({time,message:String(message)});
+    if(events.length>200)events.shift();
+    $("log").textContent=events.slice(-20).map(x=>x.time+" "+x.message).join("\n");
+}
+function render(){
+    $("steps").innerHTML="";
+    tests.forEach((t,i)=>{
+        const div=document.createElement("div");div.className="step";
+        const title=document.createElement("strong");title.textContent=(i+1)+". "+t.expected+" — "+testResults[i].toUpperCase();
+        const btn=document.createElement("button");btn.textContent=activeTest===i?"Waiting for turn…":"Start";
+        btn.disabled=!connection||activeTest!==-1;
+        btn.onclick=()=>{activeTest=i;testStart=moves.length;render();log("Started "+t.expected+" verification");};
+        div.append(title,document.createTextNode(" "),btn);
+        $("steps").append(div);
+    });
+    $("manual").innerHTML="";
+    manual.forEach(([title,details],i)=>{
+        const div=document.createElement("div");div.className="step";
+        const name=document.createElement("strong");name.textContent=title;
+        const explain=document.createElement("p");explain.textContent=details;
+        const sel=document.createElement("select");
+        for (const [v,label] of [["not_run","NOT RUN"],["pass","PASS"],["fail","FAIL"]]){
+            const option=document.createElement("option");option.value=v;option.textContent=label;sel.append(option);
+        }
+        sel.value=manualResults[i];sel.onchange=()=>{manualResults[i]=sel.value};
+        div.append(name,explain,sel);$("manual").append(div);
+    });
+}
+function report(){
+    return {suite:"Brief Drills GAN Gen4 hardware verification",timestamp:new Date().toISOString(),
+        deviceModel:device?device.name:null,browser:navigator.userAgent,
+        connection:status,packetCount:packets,moveCount:moves.length,
+        guided:tests.map((t,i)=>({expected:t.expected,result:testResults[i]})),
+        manual:manual.map(([name],i)=>({name,result:manualResults[i]})),
+        recentMoves:moves.slice(-80).map(x=>x.move),
+        events:events.filter(e=>!e.message.includes("MAC")).slice(-80)};
+}
+function handleTurn(move){
+    moves.push({move,time:performance.now()});
+    $("turns").textContent=moves.length;
+    $("latest").textContent=move;
+    log("Move "+move);
+    if(activeTest!==-1){
+        let i=activeTest;
+        // Only a single turn is expected after pressing Start.
+        testResults[i]=move===tests[i].expected?"pass":"fail";
+        activeTest=-1;render();
+    }
+}
+function setStatus(value,message){
+    status=value;$("status").textContent=message;
+    $("status").className="status "+(value==="pass"?"ok":value==="fail"?"bad":"pending");
+}
+async function disconnect(){
+    if(connection){connection.close();connection=null}
+    if(device && device.gatt && device.gatt.connected)device.gatt.disconnect();
+    $("disconnect").disabled=true;$("connect").disabled=false;
+    activeTest=-1;setStatus("not_run","Disconnected");render();log("Disconnected");
+}
+$("connect").onclick=async()=>{
+    if(busy)return;busy=true;$("connect").disabled=true;
+    setStatus("not_run","Connecting...");
+    try{
+        if(!navigator.bluetooth)throw new Error("Web Bluetooth is unavailable. Use Chrome on HTTPS.");
+        device=await navigator.bluetooth.requestDevice({
+            filters:[{namePrefix:"GAN"}],
+            optionalServices:[GanV4.SERVICE_UUID],
+            optionalManufacturerData:GanV4.MANUFACTURER_IDS
+        });
+        $("device").textContent=device.name||"Unnamed GAN device";
+        device.addEventListener("gattserverdisconnected",()=>{
+            connection=null;activeTest=-1;
+            $("connect").disabled=false;$("disconnect").disabled=true;
+            setStatus("fail","Unexpected disconnect");log("Unexpected GATT disconnect");render();
+        },{once:true});
+        const server=await device.gatt.connect();
+        const service=await server.getPrimaryService(GanV4.SERVICE_UUID);
+        connection=await GanV4.connect(device,service,handleTurn,diagnostic=>{
+            if(diagnostic.type==="packet"){
+                packets++;$("packets").textContent=packets;
+                log("Packet type 0x"+diagnostic.packetType.toString(16)+" ("+diagnostic.bytes+" bytes)");
+            }
+        });
+        setStatus("pass","Connected; received initial cube-state notification");
+        $("disconnect").disabled=false;
+        log("Connected to "+(device.name||"unnamed GAN"));
+    }catch(error){
+        setStatus("fail","Connection failed: "+(error.message||String(error)));
+        log("Connection error "+(error.message||String(error)));
+        if(device&&device.gatt&&device.gatt.connected)device.gatt.disconnect();
+        connection=null;$("connect").disabled=false;
+    }finally{busy=false;render();}
+};
+$("disconnect").onclick=disconnect;
+$("reset").onclick=()=>{testResults=tests.map(()=>"not_run");manualResults=manual.map(()=>"not_run");activeTest=-1;render();log("Test results reset")};
+$("download").onclick=()=>{
+    const blob=new Blob([JSON.stringify(report(),null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="gan-v4-hardware-report.json";a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+};
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(report(),null,2));log("Report copied")}catch(e){log("Clipboard unavailable; use Export JSON")}};
+render();
+</script>
+</body>
+</html>
